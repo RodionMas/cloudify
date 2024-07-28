@@ -1,11 +1,16 @@
 import React from "react";
 import style from "./Register.module.css";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { useAppDispatch } from "../../../store/hooks";
-import { fetchRegister } from "../../../store/authSlice";
+import { useAppDispatch, useAppSelector } from "../../../store/hooks";
+import { changeRegUser, fetchRegister } from "../../../store/authSlice";
+import { selectAuth } from "../../../selectors/selectors";
+import { useNavigate } from "react-router-dom";
 
 const Register: React.FC = () => {
-  const appDispatch = useAppDispatch()
+  const appDispatch = useAppDispatch();
+  const errReducer = useAppSelector(selectAuth).err;
+  let userRegister = useAppSelector(selectAuth).userRegister;
+  const navigate = useNavigate();
   type Inputs = {
     username: string | undefined;
     password: string;
@@ -22,6 +27,8 @@ const Register: React.FC = () => {
   });
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     appDispatch(fetchRegister(data))
+    appDispatch(changeRegUser(data))
+    return navigate('/login')
   };
   return (
     <div className={style.wrapper}>
@@ -48,12 +55,12 @@ const Register: React.FC = () => {
               error:{" "}
               {errors.username.message
                 ? errors.username.message
-                : 'min length 3, max length 20'}
+                : "min length 3, max length 20"}
             </span>
           )}
           <label htmlFor="password">Password</label>
           <input
-          type="password"
+            type="password"
             className={style.password}
             placeholder="Create your password..."
             id="password"
@@ -63,7 +70,17 @@ const Register: React.FC = () => {
               maxLength: 20,
             })}
           />
-          {errors.password && <span>error: {errors.password.type === 'minLength' ? 'minLength 3' : 'maxLength 20'}</span>}
+          {errors.password && (
+            <span>
+              error:{" "}
+              {errors.password.type === "minLength"
+                ? "minLength 3"
+                : "maxLength 20"}
+            </span>
+          )}
+          {errReducer === "Request failed with status code 409" && (
+            <span>Such user already exists</span>
+          )}
           <input className={style.create} value={"Create"} type="submit" />
         </div>
       </form>

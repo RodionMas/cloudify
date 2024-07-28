@@ -1,11 +1,13 @@
 import React from 'react';
 import { useForm, SubmitHandler } from "react-hook-form";
 import style from './Login.module.css'
-import { useAppDispatch } from '../../../store/hooks';
+import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 import { fetchLogin } from '../../../store/authSlice';
+import { selectAuth } from '../../../selectors/selectors';
 
 const Login: React.FC = () => {
   const appDispatch = useAppDispatch()
+  const {userRegister} = useAppSelector(selectAuth)
     type Inputs = {
         username: string | undefined;
         password: string;
@@ -16,13 +18,17 @@ const Login: React.FC = () => {
         formState: { errors },
       } = useForm<Inputs>({
         defaultValues: {
-          username: "",
-          password: "",
+          username: `${userRegister.username || ''}`,
+          password: `${userRegister.password || ''}`,
         },
       });
       const onSubmit: SubmitHandler<Inputs> = (data) => {
         appDispatch(fetchLogin(data))
       };
+      console.log(userRegister)
+      React.useEffect(() => {
+        window.scrollTo(0, 0)
+      }, [])
       return (
         <div className={style.wrapper}>
           <h1 className={style.title}>Log in to your account</h1>
@@ -53,7 +59,7 @@ const Login: React.FC = () => {
               )}
               <label htmlFor="password">Password</label>
               <input
-              type='password'
+                type='password'
                 className={style.password}
                 placeholder="Enter your password..."
                 id="password"
