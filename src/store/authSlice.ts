@@ -88,11 +88,6 @@ export const authSlice = createSlice({
     });
     builder.addCase(fetchRegister.fulfilled, (state, action) => {
       state.loading = "succeeded";
-      // state.userRegister = {
-      //   ...state.userRegister,
-      //   username: action.payload.username,
-      //   password: action.payload.password,
-      // };
     });
     builder.addCase(fetchRegister.rejected, (state, action) => {
       state.err = action.payload;
@@ -103,7 +98,5 @@ export const authSlice = createSlice({
 });
 
 export const { changeRegUser } = authSlice.actions;
-
-// export const selectCount = (state: RootState) => state;
 
 export default authSlice.reducer;
