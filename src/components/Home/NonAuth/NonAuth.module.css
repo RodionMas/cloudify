@@ -1,0 +1,45 @@
+.wrapper {
+  margin-top: 100px;
+  width: 468px;
+}
+.title {
+  font-size: 70px;
+}
+.text {
+  margin-top: 20px;
+  color: #909090;
+  font-size: 24px;
+  line-height: 35px;
+}
+.registerBlock {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 36px;
+}
+.register {
+  background-color: #53008d;
+  color: #fff;
+  padding: 17px 62px 17px 62px;
+  text-decoration: none;
+  border-radius: 30px;
+  font-size: 24px;
+}
+.login {
+    box-shadow: 0 0 0 2px #909090;
+    color: #000;
+    padding: 17px 62px 17px 62px;
+    text-decoration: none;
+    border-radius: 30px;
+    font-size: 24px;
+}
+.gitLink{
+    display: flex;
+    font-size: 16px;
+    color: #53008D;
+    text-decoration: none;
+    margin-top: 154px;
+}
+.forwardArrow{
+    width: 18px;
+    height: 18px;
+}

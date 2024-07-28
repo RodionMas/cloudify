@@ -1,0 +1,45 @@
+.wrapper{
+    width: 468px;
+}
+.registerBlock {
+  display: flex;
+  flex-direction: column;
+  width: 468px;
+}
+.title {
+  font-size: 70px;
+}
+label {
+  color: #000;
+  font-size: 24px;
+  line-height: 35px;
+  margin-bottom: 15px;
+  margin-top: 20px;
+}
+.username,
+.password {
+  box-shadow: 0 0 0 2px #909090;
+  color: #000;
+  padding: 21px 62px 20px 62px;
+  text-decoration: none;
+  border-radius: 30px;
+  font-size: 24px;
+  border: none;
+}
+.create{
+    display: flex;
+}
+.create{
+    margin-top: 36px;
+    border-radius: 30px;
+    color: #fff;
+    background-color: #53008D;
+    border: none;
+    padding: 21px 62px 20px 62px;
+    font-size: 24px;
+    cursor: pointer;
+    background-image: url('../../../assets/img/Enter.png');
+    background-repeat: no-repeat;
+    background-position: 277px center; 
+}
+

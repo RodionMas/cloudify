@@ -1,0 +1,16 @@
+.wrapper {
+  display: flex;
+  margin-top: 54px;
+  align-items: center;
+  text-decoration: none;
+}
+.logoText {
+  margin-left: 15px;
+  font-size: 24px;
+
+  color: #000;
+}
+.logo {
+  height: 42px;
+  width: 42px;
+}
