@@ -1,9 +1,10 @@
-import { configureStore } from '@reduxjs/toolkit'
-import authReducer from './authSlice'
+import { configureStore } from "@reduxjs/toolkit";
+import authReducer from "./authSlice";
+import FoldersReducer from "./FoldersSlice";
 
 export const store = configureStore({
-  reducer: {authReducer},
-})
+  reducer: { authReducer, FoldersReducer },
+});
 
-export type RootState = ReturnType<typeof store.getState>
-export type AppDispatch = typeof store.dispatch
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;

@@ -58,7 +58,7 @@ const initialState: UserTypeState = {
 };
 
 export const authSlice = createSlice({
-  name: "counter",
+  name: "authSlice",
   initialState,
   reducers: {
     changeRegUser: (state, action: PayloadAction<User>) => {
@@ -90,7 +90,6 @@ export const authSlice = createSlice({
     });
     builder.addCase(fetchRegister.rejected, (state, action) => {
       state.err = action.payload;
-      console.log(action.payload);
       state.loading = "failed";
     });
   },

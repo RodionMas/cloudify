@@ -11,7 +11,7 @@ const Header: React.FC = () => {
   return (
     <>
       {isAuth ? (
-        <Link className={style.wrapper} to={"/"}>
+        <Link className={style.wrapper} to={"/home"}>
           <img className={style.logo} src={whiteLogo} alt="cloud" />
           <span className={style.logoTextAuth}>Cloudify</span>
         </Link>
