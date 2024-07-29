@@ -1,0 +1,13 @@
+.wrapper {
+  width: 320px;
+  background-color: #2d2d2e;
+  border-radius: 30px;
+  margin-top: 30px;
+  padding: 20px 25px;
+}
+.title {
+  color: #f1f1f1;
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 35px;
+}

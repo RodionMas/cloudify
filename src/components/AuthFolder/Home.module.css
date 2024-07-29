@@ -1,0 +1,20 @@
+.wrapper {
+  display: flex;
+  justify-content: center;
+}
+.logo {
+  width: 42px;
+  height: 42px;
+  margin-bottom: 3px;
+}
+.logoText {
+  font-size: 24px;
+}
+.cloudBlock{
+  width: 900px;
+  height: 100vh;
+}
+.authBlock{
+  padding-right: 132px;
+  padding-left: 100px;
+}

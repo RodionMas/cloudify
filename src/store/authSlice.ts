@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import type { RootState } from "./store";
 import axios from "../instanceAxios";
 
 interface UserTypeState {
@@ -55,7 +54,7 @@ const initialState: UserTypeState = {
   },
   loading: "idle",
   err: null,
-  isAuth: false,
+  isAuth: true,
 };
 
 export const authSlice = createSlice({

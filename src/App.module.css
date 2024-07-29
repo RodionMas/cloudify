@@ -1,5 +1,13 @@
-.wrapper {
+.container {
   width: 1600px;
   height: 100vh;
   margin: 0 auto;
+}
+.wrapperHome{
+  width: 100%;
+  background-color: #1D1D1D;
+}
+.wrapperAuth{
+  width: 100%;
+  background-color: #fff;
 }
