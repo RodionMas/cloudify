@@ -5,14 +5,12 @@ import { selectFolders } from "../../../../../../selectors/selectors";
 import Forward from "../../../../../../assets/img/dots/Forward.png";
 import Colors from "./Colors/Colors";
 
-interface RefType {
-  dotsRef: React.LegacyRef<HTMLDivElement>;
-}
-const DotsBlok: React.FC<RefType> = ({ dotsRef }) => {
+
+const DotsBlok: React.FC = () => {
   const { dots } = useSelector(selectFolders);
-  // const dotsRef = React.useRef<HTMLDivElement | null>(null);
   return (
-    <div ref={dotsRef} className={style.wrapper}>
+    <div
+      className={style.wrapper}>
       {dots.map((item, i) => {
         return (
           <button key={i} className={style.btn}>

@@ -6,9 +6,11 @@ import { Link } from "react-router-dom";
 import showAll from "../../../../assets/img/all.png";
 import more from "../../../../assets/img/More.png";
 import MoreFileSmall from "./MoreFileSmall/MoreFileSmall";
+import { useClickOutside } from "../../../../tools/tools";
 
 const FilesSmall: React.FC = () => {
   const sortBy = ["Name", "File Size", "Last Changes"];
+  const hideRef = React.useRef(null)
   const [sortArrow, setSortArrow] = React.useState(0);
   const [showMore, setShowMore] = React.useState(0)
   const [hideMore, setHideMore] = React.useState(false)
@@ -38,6 +40,24 @@ const FilesSmall: React.FC = () => {
     setShowMore(index)
     setHideMore(prev => !prev)
   }
+
+
+
+
+  const useClickOutside = (ref: React.MutableRefObject<HTMLDivElement | null>, callback: { (): void; (): void; }) => {
+    const handleClick = (event: any) => {
+      if (ref.current && !ref.current.contains(event.target)) {
+        callback()
+      }
+    }
+    React.useEffect(() => {
+      document.addEventListener("mousedown", handleClick)
+      return () => {
+        document.addEventListener("mousedown", handleClick)
+      }
+    }, [])
+  }
+  useClickOutside(hideRef, () => setHideMore(false))
   return (
     <div className={style.wrapper}>
       <div className={style.box}>
@@ -67,7 +87,7 @@ const FilesSmall: React.FC = () => {
         </div>
         {filesArr.map((item, i) => {
           return (
-            <div key={i} className={style.files}>
+            <div  key={i} className={style.files}>
               <div className={style.fileRow}>
                 <span>
                   {" "}
@@ -82,9 +102,9 @@ const FilesSmall: React.FC = () => {
               <div className={style.fileRow}>
                 <span>{item.memory}</span>
               </div>
-              <div className={style.fileRow}>
+              <div  className={style.fileRow}>
                 <span>{item.changes}</span>
-                <button onClick={() => toggleShow(i)} className={style.moreBtn}>
+                <button ref={hideRef} onClick={() => toggleShow(i)} className={style.moreBtn}>
                   <img src={more} alt="show more" />
                 </button>
               </div>

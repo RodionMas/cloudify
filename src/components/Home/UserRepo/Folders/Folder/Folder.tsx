@@ -9,7 +9,7 @@ const Folder: React.FC = () => {
   const dotsRef = React.useRef<HTMLDivElement | null>(null);
   const useClickOutside = (ref: React.MutableRefObject<HTMLDivElement | null>, callback: { (): void; (): void; }) => {
     const handleClick = (event: any) => {
-      if(ref.current && !ref.current.contains(event.target)){
+      if (ref.current && !ref.current.contains(event.target)) {
         callback()
       }
     }
@@ -29,7 +29,7 @@ const Folder: React.FC = () => {
           <img src={folderImg} alt="folder" />
           <span className={style.nameFolder}>Photos</span>
         </div>
-        <div className={style.dotsBlock}>
+        <div className={style.dotsBlock} ref={dotsRef}>
           <button
             onClick={() => setHiddenDotsMenu(!hiddenDotsMenu)}
             className={style.dotsBtn}
@@ -37,8 +37,7 @@ const Folder: React.FC = () => {
             <img src={more} alt="show-more" />
           </button>
         </div>
-        {hiddenDotsMenu && <DotsBlok dotsRef={dotsRef} />}
-        {/* {hiddenDotsMenu && <DotsBlok />} */}
+        {hiddenDotsMenu && <DotsBlok />}
       </div>
       <div className={style.aboutFile}>
         <span className={style.files}>1786 Files</span>
