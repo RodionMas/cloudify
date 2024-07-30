@@ -4,10 +4,14 @@ import arrow from "../../../../assets/img/Chevron Down.png";
 import fileImg from "../../../../assets/img/File.png";
 import { Link } from "react-router-dom";
 import showAll from "../../../../assets/img/all.png";
+import more from "../../../../assets/img/More.png";
+import MoreFileSmall from "./MoreFileSmall/MoreFileSmall";
 
 const FilesSmall: React.FC = () => {
   const sortBy = ["Name", "File Size", "Last Changes"];
   const [sortArrow, setSortArrow] = React.useState(0);
+  const [showMore, setShowMore] = React.useState(0)
+  const [hideMore, setHideMore] = React.useState(false)
   const filesArr = [
     {
       name: "MyBook.docx",
@@ -30,6 +34,10 @@ const FilesSmall: React.FC = () => {
       changes: "1 March 2024",
     },
   ];
+  const toggleShow = (index: number) => {
+    setShowMore(index)
+    setHideMore(prev => !prev)
+  }
   return (
     <div className={style.wrapper}>
       <div className={style.box}>
@@ -76,7 +84,11 @@ const FilesSmall: React.FC = () => {
               </div>
               <div className={style.fileRow}>
                 <span>{item.changes}</span>
+                <button onClick={() => toggleShow(i)} className={style.moreBtn}>
+                  <img src={more} alt="show more" />
+                </button>
               </div>
+              {showMore === i && hideMore && <MoreFileSmall />}
             </div>
           );
         })}

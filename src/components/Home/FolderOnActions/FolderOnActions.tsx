@@ -8,13 +8,13 @@ import Storage from './Storage/Storage';
 
 const FolderOnActions: React.FC = () => {
     return (
-        <div className={style.wrapper}>
+        <section className={style.wrapper}>
             <Header />
             <FileManagementButtons />
             <FileActions />
             <User />
             <Storage />
-        </div>
+        </section>
     );
 };
 

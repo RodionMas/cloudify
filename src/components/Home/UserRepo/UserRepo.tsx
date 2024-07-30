@@ -6,11 +6,11 @@ import FilesSmall from './FilesSmall/FilesSmall';
 
 const UserRepo: React.FC = () => {
     return (
-        <div className={style.wrapper}>
+        <section className={style.wrapper}>
             <Search />
             <Folders />
             <FilesSmall />
-        </div>
+        </section>
     );
 };
 

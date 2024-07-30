@@ -8,6 +8,7 @@ const Folders: React.FC = () => {
       <h1 className={style.title}>Folders</h1>
       <div className={style.grid}>
         <Folder />
+        <Folder />
       </div>
     </div>
   );
