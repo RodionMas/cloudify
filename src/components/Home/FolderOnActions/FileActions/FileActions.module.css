@@ -9,6 +9,11 @@
     font-size: 20px;
     text-decoration: none;
     color: #F1F1F1;
+    font-weight: 400;
+}
+.linkCategory:hover{
+    color: #fff;
+    font-weight: 700;
 }
 .linkCategory + .linkCategory{
     margin-top: 28px

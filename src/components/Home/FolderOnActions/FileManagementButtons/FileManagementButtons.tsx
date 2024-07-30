@@ -6,7 +6,7 @@ import folder from "../../../../assets/img/Folder.png";
 const FileManagementButtons: React.FC = () => {
   return (
     <div className={style.wrapper}>
-      <button className={style.uload}>
+      <button className={style.upload}>
         {" "}
         <img src={upload} alt="upload" />
         <span className={style.textBtn}>Upload File</span>
