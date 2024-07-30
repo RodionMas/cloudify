@@ -13,7 +13,7 @@
   flex-direction: column;
   /* padding: 15px 0 15px 30px; */
 }
-.btn{
+.btn {
   display: flex;
   align-items: center;
   border: none;
@@ -22,18 +22,57 @@
   z-index: 10;
   padding: 6px 30px;
 }
-.btn{
+.btn {
   margin-top: 6px;
 }
-.btn:hover{
-  background-color: #C9C9C9;
+.btn:hover {
+  background-color: #c9c9c9;
   border-radius: 5px;
 }
-.name{
+.btn:hover .wrapperColors {
+  display: block;
+}
+.wrapperColors:hover {
+  display: block;
+}
+.name {
   font-size: 20px;
   margin-left: 15px;
   line-height: 29px;
 }
-.forward{
+.forward {
   margin-left: 84px;
+}
+/* Для hover */
+
+.wrapperColors {
+  width: 228px;
+  height: 94px;
+  position: absolute;
+  box-sizing: border-box;
+  border: 1px solid rgba(144, 144, 144, 0.2);
+  border-radius: 30px;
+  box-shadow: 0px 4px 7px 6px rgba(0, 0, 0, 0.1);
+  background: rgb(244, 244, 244);
+  opacity: 0.7;
+  left: 225px;
+  bottom: 50px;
+  text-align: left;
+  padding: 12px 27px;
+  display: none;
+}
+.text {
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 26px;
+  letter-spacing: 2%;
+  color: #000000;
+}
+.color {
+  padding: 15px;
+  border-radius: 50%;
+}
+.colorsBox {
+  display: flex;
+  justify-content: space-between;
 }

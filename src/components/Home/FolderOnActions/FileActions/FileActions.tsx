@@ -29,7 +29,7 @@ const FileActions: React.FC = () => {
     <div className={style.wrapper}>
       {categoryArr.map((category, i) => {
         return (
-          <Link className={style.linkCategory} to={`/${category.name}`}>
+          <Link key={i} className={style.linkCategory} to={`/${category.name}`}>
             {" "}
             <img className={style.img} src={category.image} alt="" /> {category.name}
           </Link>
