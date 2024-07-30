@@ -7,3 +7,6 @@
     right: -240px;
     bottom: 0px;
 }
+.moreBox{
+    display: flex;
+}
