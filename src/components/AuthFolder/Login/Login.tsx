@@ -27,19 +27,12 @@ const Login: React.FC = () => {
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     appDispatch(fetchLogin(data));
   };
-  // const authToken = Cookies.get("SESSION");
-  // console.log(authToken);
-  // console.log(document.cookie);
   const { isAuth } = useSelector(selectAuth);
   const navigate = useNavigate();
   React.useEffect(() => {
-    if (isAuth) {
-      navigate("/home");
-    } else {
-      navigate("/");
-    }
+    if (isAuth) navigate("/home");
     window.scrollTo(0, 0);
-  }, []);
+  }, [isAuth]);
   return (
     <div className={style.wrapper}>
       <h1 className={style.title}>Log in to your account</h1>

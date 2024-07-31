@@ -18,11 +18,11 @@ const App: React.FC = () => {
   const appDispatch = useAppDispatch()
   const navigate = useNavigate();
   React.useEffect(() => {
-    appDispatch(fetchGetMe())
     if (isAuth) {
       navigate("/home");
     } else {
       navigate("/");
+      appDispatch(fetchGetMe())
     }
   }, [isAuth]);
   return (

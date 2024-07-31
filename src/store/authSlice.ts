@@ -7,6 +7,7 @@ interface UserTypeState {
   loading: string;
   err: string | unknown | null;
   isAuth: boolean;
+  username: string;
 }
 
 interface Username {
@@ -15,7 +16,9 @@ interface Username {
 interface userRegister extends Username {
   password: string | undefined;
 }
-interface UserRespone extends Username {}
+interface UserRespone extends Username {
+  message?: string;
+}
 
 interface GetMeType {
   authenticated: boolean;
@@ -48,6 +51,19 @@ export const fetchRegister = createAsyncThunk<
   }
 });
 
+export const fetchLogout = createAsyncThunk<
+  undefined,
+  undefined,
+  { rejectValue: string }
+>("login/fetchLogout", async (_, { rejectWithValue }) => {
+  try {
+    const { data } = await axios.post(`/auth/logout`);
+    return data;
+  } catch (error: any) {
+    return rejectWithValue(error.message);
+  }
+});
+
 export const fetchGetMe = createAsyncThunk<
 GetMeType,
 undefined,
@@ -69,6 +85,7 @@ const initialState: UserTypeState = {
   loading: "idle",
   err: null,
   isAuth: false,
+  username: '',
 };
 
 export const authSlice = createSlice({
@@ -88,8 +105,12 @@ export const authSlice = createSlice({
       state.loading = "pending";
       state.err = null;
     });
-    builder.addCase(fetchLogin.fulfilled, (state) => {
+    builder.addCase(fetchLogin.fulfilled, (state, action) => {
       state.loading = "succeeded";
+      if (action.payload.message) {
+        state.isAuth = true
+        state.username = action.payload.message
+      }
     });
     builder.addCase(fetchLogin.rejected, (state) => {
       state.loading = "failed";
@@ -111,12 +132,24 @@ export const authSlice = createSlice({
     });
     builder.addCase(fetchGetMe.fulfilled, (state, action) => {
       state.loading = "succeeded";
-      console.log(action.payload)
-      // if (action.payload) {
-      //   state.isAuth = true;
-      // }
+      if (action.payload) {
+        state.isAuth = action.payload.authenticated;
+        state.username = action.payload.username
+      }
     });
     builder.addCase(fetchGetMe.rejected, (state, action) => {
+      state.err = action.payload;
+      state.loading = "failed";
+    });
+    builder.addCase(fetchLogout.pending, (state) => {
+      state.loading = "pending";
+      state.err = null;
+    });
+    builder.addCase(fetchLogout.fulfilled, (state) => {
+      state.loading = "succeeded";
+      state.isAuth = false;
+    });
+    builder.addCase(fetchLogout.rejected, (state, action) => {
       state.err = action.payload;
       state.loading = "failed";
     });

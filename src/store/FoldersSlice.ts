@@ -10,12 +10,32 @@ import Delete from "../assets/img/dots/TrashCan.png";
 
 interface FoldersTypeState {
   dots: Dots[];
+  loading: string;
+  err: string | unknown | null;
+  totalSize: number;
+  userMemory: number;
 }
 interface Dots {
   name: string;
   image: any;
-  color?: any;
+  color?: string[];
 }
+interface AmountDataType {
+  totalSize: number;
+  userMemory: number;
+}
+export const fetchGetAmountData = createAsyncThunk<
+AmountDataType,
+  string,
+  { rejectValue: string }
+>("login/fetchGetAmountData", async (username, { rejectWithValue }) => {
+  try {
+    const { data } = await axios.get(`/file/memory/${username}`);
+    return data;
+  } catch (error: any) {
+    return rejectWithValue(error.message);
+  }
+});
 
 const initialState: FoldersTypeState = {
   dots: [
@@ -45,12 +65,30 @@ const initialState: FoldersTypeState = {
       image: Delete,
     },
   ],
+  loading: 'idle',
+  err: null,
+  totalSize: 0.00,
+  userMemory: 500,
 };
 
 export const FoldersSlice = createSlice({
   name: "FoldersSlice",
   initialState,
   reducers: {},
+  extraReducers(builder) {
+    builder.addCase(fetchGetAmountData.pending, (state) => {
+      state.loading = "pending";
+    });
+    builder.addCase(fetchGetAmountData.fulfilled, (state, action) => {
+      state.loading = "succeeded";
+      state.totalSize = action.payload.totalSize
+      state.userMemory = action.payload.userMemory
+    });
+    builder.addCase(fetchGetAmountData.rejected, (state, action) => {
+      state.err = action.payload;
+      state.loading = "failed";
+    });
+  },
 });
 
 export const {} = FoldersSlice.actions;

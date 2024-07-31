@@ -45,7 +45,6 @@ const FilesSmall: React.FC = () => {
           callback();
         }
       };
-  
       document.addEventListener('mousedown', handleClickOutside);
       return () => {
         document.removeEventListener('mousedown', handleClickOutside);
@@ -53,7 +52,6 @@ const FilesSmall: React.FC = () => {
     }, [refs, callback]);
   };
   const refs = React.useRef<any>(filesArr.map(() => React.createRef()));
-
   useOutsideClick(refs.current, () => setHideMore(false));
   return (
     <div className={style.wrapper}>
