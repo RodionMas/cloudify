@@ -1,14 +1,16 @@
-import React from 'react';
+import React from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import style from './Login.module.css'
-import { useAppDispatch, useAppSelector } from '../../../store/hooks';
-import { fetchLogin } from '../../../store/authSlice';
-import { selectAuth } from '../../../selectors/selectors';
-import Cookies from 'js-cookie';
+import style from "./Login.module.css";
+import { useAppDispatch, useAppSelector } from "../../../store/hooks";
+import { fetchLogin } from "../../../store/authSlice";
+import { selectAuth } from "../../../selectors/selectors";
+import Cookies from "js-cookie";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const Login: React.FC = () => {
-  const appDispatch = useAppDispatch()
-  const { userRegister } = useAppSelector(selectAuth)
+  const appDispatch = useAppDispatch();
+  const { userRegister } = useAppSelector(selectAuth);
   type Inputs = {
     username: string | undefined;
     password: string;
@@ -19,23 +21,26 @@ const Login: React.FC = () => {
     formState: { errors },
   } = useForm<Inputs>({
     defaultValues: {
-      username: `${userRegister.username || ''}`,
-      password: `${userRegister.password || ''}`,
+      username: `${userRegister.username || ""}`,
+      password: `${userRegister.password || ""}`,
     },
   });
   const onSubmit: SubmitHandler<Inputs> = (data) => {
-    appDispatch(fetchLogin(data))
+    appDispatch(fetchLogin(data));
   };
-    const authToken = Cookies.get('SESSION');
-    console.log(authToken)
-    console.log(document.cookie)
-    // if (authToken) {
-    //     console.log(123)
-    // }
+  // const authToken = Cookies.get("SESSION");
+  // console.log(authToken);
+  // console.log(document.cookie);
+  const { isAuth } = useSelector(selectAuth);
+  const navigate = useNavigate();
   React.useEffect(() => {
-
-    window.scrollTo(0, 0)
-  }, [])
+    if (isAuth) {
+      navigate("/home");
+    } else {
+      navigate("/");
+    }
+    window.scrollTo(0, 0);
+  }, []);
   return (
     <div className={style.wrapper}>
       <h1 className={style.title}>Log in to your account</h1>
@@ -61,12 +66,12 @@ const Login: React.FC = () => {
               error:{" "}
               {errors.username.message
                 ? errors.username.message
-                : 'min length 3, max length 20'}
+                : "min length 3, max length 20"}
             </span>
           )}
           <label htmlFor="password">Password</label>
           <input
-            type='password'
+            type="password"
             className={style.password}
             placeholder="Enter your password..."
             id="password"
@@ -76,7 +81,14 @@ const Login: React.FC = () => {
               maxLength: 20,
             })}
           />
-          {errors.password && <span>error: {errors.password.type === 'minLength' ? 'minLength 3' : 'maxLength 20'}</span>}
+          {errors.password && (
+            <span>
+              error:{" "}
+              {errors.password.type === "minLength"
+                ? "minLength 3"
+                : "maxLength 20"}
+            </span>
+          )}
           <input className={style.create} value={"Log in"} type="submit" />
         </div>
       </form>

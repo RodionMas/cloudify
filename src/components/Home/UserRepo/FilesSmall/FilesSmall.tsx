@@ -36,13 +36,11 @@ const FilesSmall: React.FC = () => {
   ];
   const toggleShow = (index: number) => {
     setShowMore(index)
-    setHideMore(prev => !prev)
+    !hideMore && setHideMore(true)
   }
-
-
   const useOutsideClick = (refs: any, callback: any) => {
     React.useEffect(() => {
-      const handleClickOutside = (event: any) => {
+      const handleClickOutside = (event: { target: any; }) => {
         if (refs.every((ref: { current: { contains: (arg0: any) => any; }; }) => ref.current && !ref.current.contains(event.target))) {
           callback();
         }
