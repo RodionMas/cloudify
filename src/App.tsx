@@ -10,17 +10,21 @@ import { selectAuth } from "./selectors/selectors";
 import Home from "./components/Home/Home";
 import UserRepo from "./components/Home/UserRepo/UserRepo";
 import AllFiles from "./components/Home/AllFiles/AllFiles";
+import { useAppDispatch } from "./store/hooks";
+import { fetchGetMe } from "./store/authSlice";
 
 const App: React.FC = () => {
   const { isAuth } = useSelector(selectAuth);
+  const appDispatch = useAppDispatch()
   const navigate = useNavigate();
   React.useEffect(() => {
+    appDispatch(fetchGetMe())
     if (isAuth) {
       navigate("/home");
     } else {
       navigate("/");
     }
-  }, []);
+  }, [isAuth]);
   return (
     <div className={isAuth ? style.wrapperHome : style.wrapperAuth}>
       <div className={style.container}>

@@ -3,23 +3,28 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 import axios from "../instanceAxios";
 
 interface UserTypeState {
-  user: User;
-  userRegister: User;
+  userRegister: userRegister;
   loading: string;
   err: string | unknown | null;
   isAuth: boolean;
 }
 
-interface User {
+interface Username {
   username: string | undefined;
+}
+interface userRegister extends Username {
   password: string | undefined;
 }
+interface UserRespone extends Username {}
 
-interface UserRespone extends User {}
+interface GetMeType {
+  authenticated: boolean;
+  username: string;
+}
 
 export const fetchLogin = createAsyncThunk<
   UserRespone,
-  User,
+  Username,
   { rejectValue: string }
 >("login/fetchLogin", async (user, { rejectWithValue }) => {
   try {
@@ -32,7 +37,7 @@ export const fetchLogin = createAsyncThunk<
 
 export const fetchRegister = createAsyncThunk<
   UserRespone,
-  User,
+  Username,
   { rejectValue: string }
 >("login/fetchRegister", async (user, { rejectWithValue }) => {
   try {
@@ -43,25 +48,34 @@ export const fetchRegister = createAsyncThunk<
   }
 });
 
+export const fetchGetMe = createAsyncThunk<
+GetMeType,
+undefined,
+  { rejectValue: string }
+>("login/fetchGetMe", async (_, { rejectWithValue }) => {
+  try {
+    const { data } = await axios.get(`/auth/status`);
+    return data;
+  } catch (error: any) {
+    return rejectWithValue(error.message);
+  }
+});
+
 const initialState: UserTypeState = {
-  user: {
-    username: "",
-    password: "",
-  },
   userRegister: {
     username: "",
     password: "",
   },
   loading: "idle",
   err: null,
-  isAuth: true,
+  isAuth: false,
 };
 
 export const authSlice = createSlice({
   name: "authSlice",
   initialState,
   reducers: {
-    changeRegUser: (state, action: PayloadAction<User>) => {
+    changeRegUser: (state, action: PayloadAction<userRegister>) => {
       state.userRegister = {
         ...state.userRegister,
         username: action.payload.username,
@@ -74,9 +88,8 @@ export const authSlice = createSlice({
       state.loading = "pending";
       state.err = null;
     });
-    builder.addCase(fetchLogin.fulfilled, (state, action) => {
+    builder.addCase(fetchLogin.fulfilled, (state) => {
       state.loading = "succeeded";
-      state.user = action.payload;
     });
     builder.addCase(fetchLogin.rejected, (state) => {
       state.loading = "failed";
@@ -85,10 +98,25 @@ export const authSlice = createSlice({
       state.loading = "pending";
       state.err = null;
     });
-    builder.addCase(fetchRegister.fulfilled, (state, action) => {
+    builder.addCase(fetchRegister.fulfilled, (state) => {
       state.loading = "succeeded";
     });
     builder.addCase(fetchRegister.rejected, (state, action) => {
+      state.err = action.payload;
+      state.loading = "failed";
+    });
+    builder.addCase(fetchGetMe.pending, (state) => {
+      state.loading = "pending";
+      state.err = null;
+    });
+    builder.addCase(fetchGetMe.fulfilled, (state, action) => {
+      state.loading = "succeeded";
+      console.log(action.payload)
+      // if (action.payload) {
+      //   state.isAuth = true;
+      // }
+    });
+    builder.addCase(fetchGetMe.rejected, (state, action) => {
       state.err = action.payload;
       state.loading = "failed";
     });

@@ -4,7 +4,6 @@ import style from "./Login.module.css";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import { fetchLogin } from "../../../store/authSlice";
 import { selectAuth } from "../../../selectors/selectors";
-import Cookies from "js-cookie";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
