@@ -6,11 +6,9 @@ import { Link } from "react-router-dom";
 import showAll from "../../../../assets/img/all.png";
 import more from "../../../../assets/img/More.png";
 import MoreFileSmall from "./MoreFileSmall/MoreFileSmall";
-import { useClickOutside } from "../../../../tools/tools";
 
 const FilesSmall: React.FC = () => {
   const sortBy = ["Name", "File Size", "Last Changes"];
-  const hideRef = React.useRef(null)
   const [sortArrow, setSortArrow] = React.useState(0);
   const [showMore, setShowMore] = React.useState(0)
   const [hideMore, setHideMore] = React.useState(false)
@@ -42,22 +40,23 @@ const FilesSmall: React.FC = () => {
   }
 
 
-
-
-  const useClickOutside = (ref: React.MutableRefObject<HTMLDivElement | null>, callback: { (): void; (): void; }) => {
-    const handleClick = (event: any) => {
-      if (ref.current && !ref.current.contains(event.target)) {
-        callback()
-      }
-    }
+  const useOutsideClick = (refs: any, callback: any) => {
     React.useEffect(() => {
-      document.addEventListener("mousedown", handleClick)
+      const handleClickOutside = (event: any) => {
+        if (refs.every((ref: { current: { contains: (arg0: any) => any; }; }) => ref.current && !ref.current.contains(event.target))) {
+          callback();
+        }
+      };
+  
+      document.addEventListener('mousedown', handleClickOutside);
       return () => {
-        document.addEventListener("mousedown", handleClick)
-      }
-    }, [])
-  }
-  useClickOutside(hideRef, () => setHideMore(false))
+        document.removeEventListener('mousedown', handleClickOutside);
+      };
+    }, [refs, callback]);
+  };
+  const refs = React.useRef<any>(filesArr.map(() => React.createRef()));
+
+  useOutsideClick(refs.current, () => setHideMore(false));
   return (
     <div className={style.wrapper}>
       <div className={style.box}>
@@ -104,7 +103,9 @@ const FilesSmall: React.FC = () => {
               </div>
               <div  className={style.fileRow}>
                 <span>{item.changes}</span>
-                <button ref={hideRef} onClick={() => toggleShow(i)} className={style.moreBtn}>
+                <button
+                 ref={refs.current[i]}
+                 onClick={() => toggleShow(i)} className={style.moreBtn}>
                   <img src={more} alt="show more" />
                 </button>
               </div>
