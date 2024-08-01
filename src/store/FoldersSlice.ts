@@ -14,6 +14,7 @@ interface FoldersTypeState {
   err: string | unknown | null;
   totalSize: number;
   userMemory: number;
+  logout: boolean;
 }
 interface Dots {
   name: string;
@@ -69,12 +70,17 @@ const initialState: FoldersTypeState = {
   err: null,
   totalSize: 0.00,
   userMemory: 500,
+  logout: false,
 };
 
 export const FoldersSlice = createSlice({
   name: "FoldersSlice",
   initialState,
-  reducers: {},
+  reducers: {
+    changeLogout: (state) => {
+      state.logout = !state.logout
+    },
+  },
   extraReducers(builder) {
     builder.addCase(fetchGetAmountData.pending, (state) => {
       state.loading = "pending";
@@ -91,6 +97,6 @@ export const FoldersSlice = createSlice({
   },
 });
 
-export const {} = FoldersSlice.actions;
+export const {changeLogout} = FoldersSlice.actions;
 
 export default FoldersSlice.reducer;

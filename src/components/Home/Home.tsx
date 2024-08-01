@@ -4,6 +4,7 @@ import FolderOnActions from './FolderOnActions/FolderOnActions';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { selectAuth } from '../../selectors/selectors';
+import Logout from './Logout/Logout';
 
 const Home: React.FC = () => {
     const { isAuth } = useSelector(selectAuth);
@@ -19,6 +20,7 @@ const Home: React.FC = () => {
         <div className={style.wrapper}>
             <FolderOnActions />
             <Outlet />
+            <Logout />
         </div>
     );
 };
