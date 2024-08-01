@@ -5,6 +5,7 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { selectAuth } from '../../selectors/selectors';
 import Logout from './Logout/Logout';
+import DragAndDrop from './DragAndDrop/DragAndDrop';
 
 const Home: React.FC = () => {
     const { isAuth } = useSelector(selectAuth);
@@ -21,6 +22,7 @@ const Home: React.FC = () => {
             <FolderOnActions />
             <Outlet />
             <Logout />
+            <DragAndDrop />
         </div>
     );
 };

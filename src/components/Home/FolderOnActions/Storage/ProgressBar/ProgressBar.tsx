@@ -14,7 +14,7 @@ const ProgressBar: React.FC = () => {
     const dispatch = useAppDispatch()
     React.useEffect(() => {
         dispatch(fetchGetAmountData(username))
-    }, [])
+    }, [totalSize, userMemory])
     return (
         <div className={style.wrapper}>
             <div className={style.progressBar}>

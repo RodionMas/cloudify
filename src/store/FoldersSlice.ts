@@ -25,13 +25,33 @@ interface AmountDataType {
   totalSize: number;
   userMemory: number;
 }
+
+
 export const fetchGetAmountData = createAsyncThunk<
-AmountDataType,
+  AmountDataType,
   string,
   { rejectValue: string }
 >("login/fetchGetAmountData", async (username, { rejectWithValue }) => {
   try {
     const { data } = await axios.get(`/file/memory/${username}`);
+    return data;
+  } catch (error: any) {
+    return rejectWithValue(error.message);
+  }
+});
+
+export const fetchDrop = createAsyncThunk<
+  string,
+  any,
+  { rejectValue: string }
+>("login/fetchDrop", async (file, { rejectWithValue }) => {
+  try {
+    const { data } = await axios.post(`/file/upload`, file, {
+      headers: {
+          'Content-Type': 'multipart/form-data'
+      }
+  });
+    console.log(data)
     return data;
   } catch (error: any) {
     return rejectWithValue(error.message);
@@ -55,7 +75,7 @@ const initialState: FoldersTypeState = {
     {
       name: "Label",
       image: Label,
-      color: ['#FFB800', '#0094FF', '#D23434', '#39AA26',]
+      color: ["#FFB800", "#0094FF", "#D23434", "#39AA26"],
     },
     {
       name: "Rename",
@@ -66,9 +86,9 @@ const initialState: FoldersTypeState = {
       image: Delete,
     },
   ],
-  loading: 'idle',
+  loading: "idle",
   err: null,
-  totalSize: 0.00,
+  totalSize: 0.0,
   userMemory: 500,
   logout: false,
 };
@@ -78,7 +98,7 @@ export const FoldersSlice = createSlice({
   initialState,
   reducers: {
     changeLogout: (state) => {
-      state.logout = !state.logout
+      state.logout = !state.logout;
     },
   },
   extraReducers(builder) {
@@ -87,16 +107,26 @@ export const FoldersSlice = createSlice({
     });
     builder.addCase(fetchGetAmountData.fulfilled, (state, action) => {
       state.loading = "succeeded";
-      state.totalSize = action.payload.totalSize
-      state.userMemory = action.payload.userMemory
+      state.totalSize = action.payload.totalSize;
+      state.userMemory = action.payload.userMemory;
     });
     builder.addCase(fetchGetAmountData.rejected, (state, action) => {
+      state.err = action.payload;
+      state.loading = "failed";
+    });
+    builder.addCase(fetchDrop.pending, (state) => {
+      state.loading = "pending";
+    });
+    builder.addCase(fetchDrop.fulfilled, (state) => {
+      state.loading = "succeeded";
+    });
+    builder.addCase(fetchDrop.rejected, (state, action) => {
       state.err = action.payload;
       state.loading = "failed";
     });
   },
 });
 
-export const {changeLogout} = FoldersSlice.actions;
+export const { changeLogout } = FoldersSlice.actions;
 
 export default FoldersSlice.reducer;
