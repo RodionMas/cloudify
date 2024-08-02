@@ -12,7 +12,6 @@ const Home: React.FC = () => {
   const navigate = useNavigate();
   const { dragAndDrop } = useSelector(selectFolders);
   const { logout } = useSelector(selectFolders);
-  console.log(logout)
   React.useEffect(() => {
     if (isAuth) {
       navigate("/home");
