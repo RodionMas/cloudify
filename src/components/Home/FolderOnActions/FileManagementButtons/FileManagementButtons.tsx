@@ -2,11 +2,14 @@ import React from "react";
 import style from "./FileManagementButtons.module.css";
 import upload from "../../../../assets/img/upload.png";
 import folder from "../../../../assets/img/Folder.png";
+import { useDispatch } from "react-redux";
+import { changeDragDrop } from "../../../../store/FoldersSlice";
 
 const FileManagementButtons: React.FC = () => {
+  const dispatch = useDispatch()
   return (
     <div className={style.wrapper}>
-      <button className={style.upload}>
+      <button  onClick={() => dispatch(changeDragDrop())} className={style.upload}>
         {" "}
         <img src={upload} alt="upload" />
         <span className={style.textBtn}>Upload File</span>

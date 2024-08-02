@@ -84,7 +84,7 @@ const initialState: UserTypeState = {
   },
   loading: "idle",
   err: null,
-  isAuth: false,
+  isAuth: true,
   username: '',
 };
 

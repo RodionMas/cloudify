@@ -15,6 +15,7 @@ interface FoldersTypeState {
   totalSize: number;
   userMemory: number;
   logout: boolean;
+  dragAndDrop: boolean;
 }
 interface Dots {
   name: string;
@@ -91,6 +92,7 @@ const initialState: FoldersTypeState = {
   totalSize: 0.0,
   userMemory: 500,
   logout: false,
+  dragAndDrop: false,
 };
 
 export const FoldersSlice = createSlice({
@@ -100,6 +102,9 @@ export const FoldersSlice = createSlice({
     changeLogout: (state) => {
       state.logout = !state.logout;
     },
+    changeDragDrop: (state) => {
+      state.dragAndDrop = !state.dragAndDrop;
+    }
   },
   extraReducers(builder) {
     builder.addCase(fetchGetAmountData.pending, (state) => {
@@ -127,6 +132,6 @@ export const FoldersSlice = createSlice({
   },
 });
 
-export const { changeLogout } = FoldersSlice.actions;
+export const { changeLogout, changeDragDrop } = FoldersSlice.actions;
 
 export default FoldersSlice.reducer;

@@ -1,7 +1,11 @@
 import React from "react";
 import style from "./DragAndDrop.module.css";
 import { useAppDispatch } from "../../../store/hooks";
-import { fetchDrop, fetchGetAmountData } from "../../../store/FoldersSlice";
+import {
+  changeDragDrop,
+  fetchDrop,
+  fetchGetAmountData,
+} from "../../../store/FoldersSlice";
 import { useSelector } from "react-redux";
 import { selectAuth } from "../../../selectors/selectors";
 
@@ -34,7 +38,8 @@ const DragAndDrop: React.FC = () => {
   function handleSelectClick(): void {
     if (formData) {
       appDispatch(fetchDrop(formData));
-      appDispatch(fetchGetAmountData(username))
+      appDispatch(fetchGetAmountData(username));
+      appDispatch(changeDragDrop());
     } else {
       console.error("No file selected.");
     }
@@ -65,8 +70,15 @@ const DragAndDrop: React.FC = () => {
         </div>
       )}
       <div className={style.btnBox}>
-        <button onClick={handleSelectClick} className={style.select}>Select</button>
-        <button className={style.cancel}>Cancel</button>
+        <button onClick={handleSelectClick} className={style.select}>
+          Select
+        </button>
+        <button
+          onClick={() => appDispatch(changeDragDrop())}
+          className={style.cancel}
+        >
+          Cancel
+        </button>
       </div>
     </div>
   );
