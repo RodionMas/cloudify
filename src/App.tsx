@@ -1,7 +1,7 @@
 import React from "react";
 import style from "./App.module.css";
 import AuthFolder from "./components/AuthFolder/AuthFolder";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes, Navigate } from "react-router-dom";
 import NonAuth from "./components/AuthFolder/NonAuth/NonAuth";
 import Register from "./components/AuthFolder/Register/Register";
 import Login from "./components/AuthFolder/Login/Login";
@@ -15,29 +15,26 @@ import { fetchGetMe } from "./store/authSlice";
 
 const App: React.FC = () => {
   const { isAuth } = useSelector(selectAuth);
-  const appDispatch = useAppDispatch()
-  const navigate = useNavigate();
+  const appDispatch = useAppDispatch();
+
   React.useEffect(() => {
-    if (isAuth) {
-      navigate("/home");
-    } else {
-      navigate("/");
-      appDispatch(fetchGetMe())
-    }
-  }, [isAuth]);
+    appDispatch(fetchGetMe());
+  }, [appDispatch]);
   return (
     <div className={isAuth ? style.wrapperHome : style.wrapperAuth}>
       <div className={style.container}>
         <Routes>
           <Route path="/" element={<AuthFolder />}>
-            <Route path="/" element={<NonAuth />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/login" element={<Login />} />
+            <Route index element={<NonAuth />} />
+            <Route path="register" element={<Register />} />
+            <Route path="login" element={<Login />} />
+            <Route path="*" element={<Navigate to="/" />} />
           </Route>
           <Route path="/home" element={<Home />}>
-            <Route path="/home" element={<UserRepo />} />
-            <Route path="/home/Allfiles" element={<AllFiles />} />
+            <Route index element={<UserRepo />} />
+            <Route path="/home/files" element={<AllFiles />} />
           </Route>
+          <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </div>
     </div>

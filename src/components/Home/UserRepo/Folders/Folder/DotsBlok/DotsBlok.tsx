@@ -1,19 +1,20 @@
-import React from "react";
+import { forwardRef } from "react";
 import style from "./DotsBlok.module.css";
 import { useSelector } from "react-redux";
 import { selectFolders } from "../../../../../../selectors/selectors";
 import Forward from "../../../../../../assets/img/dots/Forward.png";
 import Colors from "./Colors/Colors";
 
-
-const DotsBlok: React.FC = () => {
+interface DotsBlokProps {}
+const DotsBlok = forwardRef<HTMLDivElement, DotsBlokProps>((props, ref) => {
   const { dots } = useSelector(selectFolders);
   return (
     <div
+    ref={ref}
       className={style.wrapper}>
       {dots.map((item, i) => {
         return (
-          <button key={i} className={style.btn}>
+          <button onClick={e => console.log(e)} key={i} className={style.btn}>
             {" "}
             <img className={style.img} src={item.image} alt="category" />{" "}
             <span className={style.name}>{item.name}</span>
@@ -28,6 +29,6 @@ const DotsBlok: React.FC = () => {
       })}
     </div>
   );
-};
+});
 
 export default DotsBlok;

@@ -7,14 +7,14 @@ import {
   fetchGetAmountData,
 } from "../../../store/FoldersSlice";
 import { useSelector } from "react-redux";
-import { selectAuth } from "../../../selectors/selectors";
+import { selectAuth, selectFolders } from "../../../selectors/selectors";
 
 const DragAndDrop: React.FC = () => {
   const appDispatch = useAppDispatch();
   const { username } = useSelector(selectAuth);
   const [drag, setDrag] = React.useState(false);
   const [formData, setFormData] = React.useState<FormData | null>(null);
-
+  const { totalSize } = useSelector(selectFolders);
   function dragStartHandler(e: React.DragEvent<HTMLDivElement>): void {
     e.preventDefault();
     setDrag(true);
@@ -29,7 +29,10 @@ const DragAndDrop: React.FC = () => {
     e.preventDefault();
     let files: File[] = [...e.dataTransfer.files];
     const newFormData = new FormData();
-    newFormData.append("file", files[0]);
+    files.forEach((files) => {
+      newFormData.append(`files`, files);
+    })
+    
     newFormData.append("user", username);
     setFormData(newFormData); // Сохраняем FormData в состоянии
     setDrag(false);
@@ -44,7 +47,7 @@ const DragAndDrop: React.FC = () => {
       console.error("No file selected.");
     }
   }
-
+  React.useEffect(() => {}, [totalSize]);
   return (
     <div className={style.wrapper}>
       {drag ? (

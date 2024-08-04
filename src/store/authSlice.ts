@@ -44,7 +44,7 @@ export const fetchRegister = createAsyncThunk<
   { rejectValue: string }
 >("login/fetchRegister", async (user, { rejectWithValue }) => {
   try {
-    const { data } = await axios.post(`/auth/register`, user);
+    const { data } = await axios.post(`/users/register`, user);
     return data;
   } catch (error: any) {
     return rejectWithValue(error.message);
@@ -70,7 +70,7 @@ undefined,
   { rejectValue: string }
 >("login/fetchGetMe", async (_, { rejectWithValue }) => {
   try {
-    const { data } = await axios.get(`/auth/status`);
+    const { data } = await axios.get(`/auth/me`);
     return data;
   } catch (error: any) {
     return rejectWithValue(error.message);

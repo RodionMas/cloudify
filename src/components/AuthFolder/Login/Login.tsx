@@ -24,7 +24,7 @@ const Login: React.FC = () => {
       password: `${userRegister.password || ""}`,
     },
   });
-  const onSubmit: SubmitHandler<Inputs> = (data) => {
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
     appDispatch(fetchLogin(data));
   };
   const { isAuth } = useSelector(selectAuth);
@@ -32,7 +32,7 @@ const Login: React.FC = () => {
   React.useEffect(() => {
     if (isAuth) navigate("/home");
     window.scrollTo(0, 0);
-  }, [isAuth]);
+  }, [isAuth, navigate]);
   return (
     <div className={style.wrapper}>
       <h1 className={style.title}>Log in to your account</h1>

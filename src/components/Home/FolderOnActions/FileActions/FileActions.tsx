@@ -33,7 +33,7 @@ const FileActions: React.FC = () => {
             key={i}
             className={style.linkCategory}
             to={`/home/${
-              category.name === "All Files" ? "Allfiles" : category.name
+              category.name === "All Files" ? "files" : category.name.toLowerCase()
             }`}
           >
             {" "}

@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import type { PayloadAction } from "@reduxjs/toolkit";
+// import type { PayloadAction } from "@reduxjs/toolkit";
 import axios from "../instanceAxios";
 import download from "../assets/img/dots/Download.png";
 import createLink from "../assets/img/dots/CloudLink.png";
@@ -16,6 +16,7 @@ interface FoldersTypeState {
   userMemory: number;
   logout: boolean;
   dragAndDrop: boolean;
+  allFiles: FetchFilesUserRes[];
 }
 interface Dots {
   name: string;
@@ -26,38 +27,57 @@ interface AmountDataType {
   totalSize: number;
   userMemory: number;
 }
-
-
+interface FetchFilesUserRes {
+  filename: string;
+  filePath: string;
+  size: string;
+  lastModified: DateType;
+}
+interface DateType {
+  day: string;
+  time: string;
+}
 export const fetchGetAmountData = createAsyncThunk<
   AmountDataType,
   string,
   { rejectValue: string }
 >("login/fetchGetAmountData", async (username, { rejectWithValue }) => {
   try {
-    const { data } = await axios.get(`/file/memory/${username}`);
+    const { data } = await axios.get(`/files/memory/${username}`);
     return data;
   } catch (error: any) {
     return rejectWithValue(error.message);
   }
 });
 
-export const fetchDrop = createAsyncThunk<
+export const fetchGetAllFiles = createAsyncThunk<
+  FetchFilesUserRes[],
   string,
-  any,
   { rejectValue: string }
->("login/fetchDrop", async (file, { rejectWithValue }) => {
+>("login/fetchGetAllFiles", async (username, { rejectWithValue }) => {
   try {
-    const { data } = await axios.post(`/file/upload`, file, {
-      headers: {
-          'Content-Type': 'multipart/form-data'
-      }
-  });
-    console.log(data)
+    const { data } = await axios.get(`/files?username=${username}`);
     return data;
   } catch (error: any) {
     return rejectWithValue(error.message);
   }
 });
+
+export const fetchDrop = createAsyncThunk<string, any, { rejectValue: string }>(
+  "login/fetchDrop",
+  async (files, { rejectWithValue }) => {
+    try {
+      const { data } = await axios.post(`/files/upload`, files, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      return data;
+    } catch (error: any) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
 
 const initialState: FoldersTypeState = {
   dots: [
@@ -93,6 +113,7 @@ const initialState: FoldersTypeState = {
   userMemory: 500,
   logout: false,
   dragAndDrop: false,
+  allFiles: [],
 };
 
 export const FoldersSlice = createSlice({
@@ -104,7 +125,7 @@ export const FoldersSlice = createSlice({
     },
     changeDragDrop: (state) => {
       state.dragAndDrop = !state.dragAndDrop;
-    }
+    },
   },
   extraReducers(builder) {
     builder.addCase(fetchGetAmountData.pending, (state) => {
@@ -126,6 +147,17 @@ export const FoldersSlice = createSlice({
       state.loading = "succeeded";
     });
     builder.addCase(fetchDrop.rejected, (state, action) => {
+      state.err = action.payload;
+      state.loading = "failed";
+    });
+    builder.addCase(fetchGetAllFiles.pending, (state) => {
+      state.loading = "pending";
+    });
+    builder.addCase(fetchGetAllFiles.fulfilled, (state, action) => {
+      state.loading = "succeeded";
+      state.allFiles = [...action.payload];
+    });
+    builder.addCase(fetchGetAllFiles.rejected, (state, action) => {
       state.err = action.payload;
       state.loading = "failed";
     });
