@@ -4,13 +4,14 @@ import MoreFileSmall from "../UserRepo/FilesSmall/MoreFileSmall/MoreFileSmall";
 import more from "../../../assets/img/More.png";
 import fileImg from "../../../assets/img/File.png";
 import { useClickOutside } from "../../../tools/UseClickOutside";
+import { useLocation } from "react-router-dom";
 
 const OneFile: React.FC<any> = ({ filename, size, lastModified }) => {
   const hideRef = React.useRef<HTMLButtonElement | null>(null);
   const moreFileRef = React.useRef<HTMLDivElement | null>(null);
   const [hideContent, setHideContent] = React.useState(false);
   const [menuPosition, setMenuPosition] = React.useState({ top: 0, left: 0 });
-  
+  const location = useLocation()
   const hideContentFn = () => {
     setHideContent(!hideContent);
   };
@@ -47,6 +48,14 @@ const OneFile: React.FC<any> = ({ filename, size, lastModified }) => {
         </button>
       </div>
       {hideContent && (
+        location.pathname === "/home/deleted" ? 
+        <MoreFileSmall
+        filename={filename}
+          hideContentFn={hideContentFn}
+          ref={moreFileRef}
+          style={{ position: 'absolute', top: menuPosition.top - 50, left: menuPosition.left + 50 }}
+        />
+        :
         <MoreFileSmall
         filename={filename}
           hideContentFn={hideContentFn}

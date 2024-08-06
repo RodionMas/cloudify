@@ -3,7 +3,7 @@ import style from "./FileManagementButtons.module.css";
 import upload from "../../../../assets/img/upload.png";
 import folder from "../../../../assets/img/Folder.png";
 import { useDispatch } from "react-redux";
-import { changeDragDrop } from "../../../../store/FoldersSlice";
+import { changeDragDrop, changeFolderModal } from "../../../../store/FoldersSlice";
 
 const FileManagementButtons: React.FC = () => {
   const dispatch = useDispatch()
@@ -14,7 +14,7 @@ const FileManagementButtons: React.FC = () => {
         <img src={upload} alt="upload" />
         <span className={style.textBtn}>Upload File</span>
       </button>
-      <button className={style.folder}>
+      <button onClick={() => dispatch(changeFolderModal())} className={style.folder}>
         {" "}
         <img src={folder} alt="create-folder" />
         <span className={style.textBtn}>Create Folder</span>

@@ -18,6 +18,7 @@ interface FoldersTypeState {
   dragAndDrop: boolean;
   allFiles: FetchFilesUserRes[];
   deletedFiles: FetchDeletedFiles[];
+  createFolderModal: boolean;
 }
 interface Dots {
   name: string;
@@ -42,7 +43,8 @@ interface DateType {
 
 interface FetchDelFiles {
   username: string;
-  deletedFiles: DeleteFiles[];
+  deletedFiles?: DeleteFiles[];
+  delFile?: DeleteFiles[];
 }
 
 interface DeleteFiles {
@@ -126,6 +128,27 @@ export const fetchDeleteFiles = createAsyncThunk<
   }
 );
 
+export const fetchDeleteFile = createAsyncThunk<
+  string,
+  FetchDelFiles,
+  { rejectValue: string }
+>(
+  "folder/fetchDeleteFile",
+  async ({ username, delFile }, { rejectWithValue }) => {
+    try {
+      const response = await axios.delete<string>(
+        `files?username=${username}`,
+        {
+          data: delFile,
+        }
+      );
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 export const fetchMoveToDeleted = createAsyncThunk<
   string,
   any,
@@ -135,8 +158,7 @@ export const fetchMoveToDeleted = createAsyncThunk<
   async (deletedObjForFetch, { rejectWithValue }) => {
     try {
       const { data } = await axios.post(
-        // ${deletedObjForFetch.username}
-        `/files/move?username=RodionMas`,
+        `/files/move?username=${deletedObjForFetch.username}`,
         deletedObjForFetch.forFetch
       );
       return data;
@@ -145,6 +167,21 @@ export const fetchMoveToDeleted = createAsyncThunk<
     }
   }
 );
+
+export const fetchCreateFolder = createAsyncThunk<
+  string,
+  any,
+  { rejectValue: string }
+>("folder/fetchCreateFolder", async (create, { rejectWithValue }) => {
+  try {
+    const { data } = await axios.post(`/folders/create`, {
+      data: create,
+    });
+    return data;
+  } catch (error: any) {
+    return rejectWithValue(error.message);
+  }
+});
 
 const initialState: FoldersTypeState = {
   dots: [
@@ -182,7 +219,7 @@ const initialState: FoldersTypeState = {
   dragAndDrop: false,
   allFiles: [],
   deletedFiles: [],
- 
+  createFolderModal: false,
 };
 
 export const FoldersSlice = createSlice({
@@ -194,6 +231,9 @@ export const FoldersSlice = createSlice({
     },
     changeDragDrop: (state) => {
       state.dragAndDrop = !state.dragAndDrop;
+    },
+    changeFolderModal: (state) => {
+      state.createFolderModal = !state.createFolderModal;
     },
   },
   extraReducers(builder) {
@@ -262,11 +302,21 @@ export const FoldersSlice = createSlice({
       state.err = action.payload;
       state.loading = "failed";
     });
+    builder.addCase(fetchCreateFolder.pending, (state) => {
+      state.loading = "pending";
+    });
+    builder.addCase(fetchCreateFolder.fulfilled, (state, action) => {
+      state.loading = "succeeded";
+      console.log(action.payload)
+    });
+    builder.addCase(fetchCreateFolder.rejected, (state, action) => {
+      state.err = action.payload;
+      state.loading = "failed";
+    });
   },
 });
 
-export const { changeLogout, changeDragDrop,
-  } =
+export const { changeLogout, changeDragDrop, changeFolderModal } =
   FoldersSlice.actions;
 
 export default FoldersSlice.reducer;
