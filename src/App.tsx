@@ -12,6 +12,7 @@ import UserRepo from "./components/Home/UserRepo/UserRepo";
 import AllFiles from "./components/Home/AllFiles/AllFiles";
 import { useAppDispatch } from "./store/hooks";
 import { fetchGetMe } from "./store/authSlice";
+import DeletedPage from "./components/Home/DeletedPage/DeletedPage";
 
 const App: React.FC = () => {
   const { isAuth } = useSelector(selectAuth);
@@ -33,6 +34,7 @@ const App: React.FC = () => {
           <Route path="/home" element={<Home />}>
             <Route index element={<UserRepo />} />
             <Route path="/home/files" element={<AllFiles />} />
+            <Route path="/home/deleted" element={<DeletedPage />} />
           </Route>
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>

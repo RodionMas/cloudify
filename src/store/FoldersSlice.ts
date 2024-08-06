@@ -17,6 +17,7 @@ interface FoldersTypeState {
   logout: boolean;
   dragAndDrop: boolean;
   allFiles: FetchFilesUserRes[];
+  deletedFiles: FetchDeletedFiles[];
 }
 interface Dots {
   name: string;
@@ -33,15 +34,27 @@ interface FetchFilesUserRes {
   size: string;
   lastModified: DateType;
 }
+interface FetchDeletedFiles extends FetchFilesUserRes {}
 interface DateType {
   day: string;
   time: string;
 }
+
+interface FetchDelFiles {
+  username: string;
+  deletedFiles: DeleteFiles[];
+}
+
+interface DeleteFiles {
+  filename: string;
+  filePath: string;
+}
+
 export const fetchGetAmountData = createAsyncThunk<
   AmountDataType,
   string,
   { rejectValue: string }
->("login/fetchGetAmountData", async (username, { rejectWithValue }) => {
+>("folder/fetchGetAmountData", async (username, { rejectWithValue }) => {
   try {
     const { data } = await axios.get(`/files/memory/${username}`);
     return data;
@@ -54,9 +67,22 @@ export const fetchGetAllFiles = createAsyncThunk<
   FetchFilesUserRes[],
   string,
   { rejectValue: string }
->("login/fetchGetAllFiles", async (username, { rejectWithValue }) => {
+>("folder/fetchGetAllFiles", async (username, { rejectWithValue }) => {
   try {
-    const { data } = await axios.get(`/files?username=${username}`);
+    const { data } = await axios.get(`/files/all?username=${username}`);
+    return data;
+  } catch (error: any) {
+    return rejectWithValue(error.message);
+  }
+});
+
+export const fetchGetDeletedFiles = createAsyncThunk<
+  FetchDeletedFiles[],
+  string,
+  { rejectValue: string }
+>("folder/fetchGetDeletedFiles", async (username, { rejectWithValue }) => {
+  try {
+    const { data } = await axios.get(`/files/deleted?username=${username}`);
     return data;
   } catch (error: any) {
     return rejectWithValue(error.message);
@@ -64,7 +90,7 @@ export const fetchGetAllFiles = createAsyncThunk<
 });
 
 export const fetchDrop = createAsyncThunk<string, any, { rejectValue: string }>(
-  "login/fetchDrop",
+  "folder/fetchDrop",
   async (files, { rejectWithValue }) => {
     try {
       const { data } = await axios.post(`/files/upload`, files, {
@@ -72,6 +98,47 @@ export const fetchDrop = createAsyncThunk<string, any, { rejectValue: string }>(
           "Content-Type": "multipart/form-data",
         },
       });
+      return data;
+    } catch (error: any) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const fetchDeleteFiles = createAsyncThunk<
+  string,
+  FetchDelFiles,
+  { rejectValue: string }
+>(
+  "folder/fetchDeleteFiles",
+  async ({ username, deletedFiles }, { rejectWithValue }) => {
+    try {
+      const response = await axios.delete<string>(
+        `files?username=${username}`,
+        {
+          data: deletedFiles,
+        }
+      );
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const fetchMoveToDeleted = createAsyncThunk<
+  string,
+  any,
+  { rejectValue: string }
+>(
+  "folder/fetchMoveToDeleted",
+  async (deletedObjForFetch, { rejectWithValue }) => {
+    try {
+      const { data } = await axios.post(
+        // ${deletedObjForFetch.username}
+        `/files/move?username=RodionMas`,
+        deletedObjForFetch.forFetch
+      );
       return data;
     } catch (error: any) {
       return rejectWithValue(error.message);
@@ -114,6 +181,8 @@ const initialState: FoldersTypeState = {
   logout: false,
   dragAndDrop: false,
   allFiles: [],
+  deletedFiles: [],
+ 
 };
 
 export const FoldersSlice = createSlice({
@@ -161,9 +230,43 @@ export const FoldersSlice = createSlice({
       state.err = action.payload;
       state.loading = "failed";
     });
+    builder.addCase(fetchGetDeletedFiles.pending, (state) => {
+      state.loading = "pending";
+    });
+    builder.addCase(fetchGetDeletedFiles.fulfilled, (state, action) => {
+      state.loading = "succeeded";
+      state.deletedFiles = [...action.payload];
+    });
+    builder.addCase(fetchGetDeletedFiles.rejected, (state, action) => {
+      state.err = action.payload;
+      state.loading = "failed";
+    });
+    builder.addCase(fetchDeleteFiles.pending, (state) => {
+      state.loading = "pending";
+    });
+    builder.addCase(fetchDeleteFiles.fulfilled, (state) => {
+      state.loading = "succeeded";
+      state.deletedFiles = [];
+    });
+    builder.addCase(fetchDeleteFiles.rejected, (state, action) => {
+      state.err = action.payload;
+      state.loading = "failed";
+    });
+    builder.addCase(fetchMoveToDeleted.pending, (state) => {
+      state.loading = "pending";
+    });
+    builder.addCase(fetchMoveToDeleted.fulfilled, (state) => {
+      state.loading = "succeeded";
+    });
+    builder.addCase(fetchMoveToDeleted.rejected, (state, action) => {
+      state.err = action.payload;
+      state.loading = "failed";
+    });
   },
 });
 
-export const { changeLogout, changeDragDrop } = FoldersSlice.actions;
+export const { changeLogout, changeDragDrop,
+  } =
+  FoldersSlice.actions;
 
 export default FoldersSlice.reducer;

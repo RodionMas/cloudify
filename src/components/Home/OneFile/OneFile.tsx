@@ -26,7 +26,6 @@ const OneFile: React.FC<any> = ({ filename, size, lastModified }) => {
     setMenuPosition({ top: rect.bottom + window.scrollY, left: rect.left + window.scrollX });
     hideContentFn();
   };
-console.log(menuPosition.left)
   return (
     <div className={style.files}>
       <div className={style.fileRow}>
@@ -49,6 +48,7 @@ console.log(menuPosition.left)
       </div>
       {hideContent && (
         <MoreFileSmall
+        filename={filename}
           hideContentFn={hideContentFn}
           ref={moreFileRef}
           style={{ position: 'absolute', top: menuPosition.top - 300, left: menuPosition.left + 50 }}

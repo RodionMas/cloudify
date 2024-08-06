@@ -4,6 +4,7 @@ import { useAppDispatch } from "../../../store/hooks";
 import {
   changeDragDrop,
   fetchDrop,
+  fetchGetAllFiles,
   fetchGetAmountData,
 } from "../../../store/FoldersSlice";
 import { useSelector } from "react-redux";
@@ -32,22 +33,22 @@ const DragAndDrop: React.FC = () => {
     files.forEach((files) => {
       newFormData.append(`files`, files);
     })
-    
+
     newFormData.append("user", username);
     setFormData(newFormData); // Сохраняем FormData в состоянии
     setDrag(false);
   }
-
+  // .then(() =>  appDispatch(fetchGetAllFiles(username)))
   function handleSelectClick(): void {
     if (formData) {
-      appDispatch(fetchDrop(formData));
-      appDispatch(fetchGetAmountData(username));
+      appDispatch(fetchDrop(formData)).then(() => appDispatch(fetchGetAllFiles(username))).then(() => appDispatch(fetchGetAmountData(username)));
+
       appDispatch(changeDragDrop());
     } else {
       console.error("No file selected.");
     }
   }
-  React.useEffect(() => {}, [totalSize]);
+  React.useEffect(() => { }, [totalSize]);
   return (
     <div className={style.wrapper}>
       {drag ? (

@@ -14,6 +14,7 @@ const ProgressBar: React.FC = () => {
     dispatch(fetchGetAmountData(username));
   }, [username, dispatch]);
   return (
+    // .then(() =>  appDispatch(fetchGetAllFiles(username)))
     <div className={style.wrapper}>
       <div className={style.progressBar}>
         <div
