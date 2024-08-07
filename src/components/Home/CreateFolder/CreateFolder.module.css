@@ -41,6 +41,7 @@
   background: transparent;
   border: none;
 }
+
 .btnBox {
   display: flex;
   justify-content: space-between;

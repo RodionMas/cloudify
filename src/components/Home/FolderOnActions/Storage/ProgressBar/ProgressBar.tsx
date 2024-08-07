@@ -11,7 +11,7 @@ const ProgressBar: React.FC = () => {
   const { username } = useSelector(selectAuth);
   const dispatch = useAppDispatch();
   React.useEffect(() => {
-    dispatch(fetchGetAmountData(username));
+    dispatch(fetchGetAmountData());
   }, [username, dispatch]);
   return (
     // .then(() =>  appDispatch(fetchGetAllFiles(username)))

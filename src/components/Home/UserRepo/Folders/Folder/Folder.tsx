@@ -4,8 +4,9 @@ import folderImg from "../../../../../assets/img/OpenedFolder.png";
 import more from "../../../../../assets/img/More.png";
 import DotsBlok from "./DotsBlok/DotsBlok";
 import { useClickOutside } from "../../../../../tools/UseClickOutside";
+import { FolderType } from "../../../../../store/FoldersSlice";
 
-const Folder: React.FC = () => {
+const Folder: React.FC<FolderType> = ({ name, color, size, filesNumber }) => {
   const [hiddenDotsMenu, setHiddenDotsMenu] = React.useState(false);
   const dotsRef = React.useRef<HTMLDivElement | null>(null);
   const moreFileRef = React.useRef<HTMLDivElement | null>(null);
@@ -15,11 +16,11 @@ const Folder: React.FC = () => {
     }})
   return (
     <div className={style.wrapper}>
-      <div className={style.color}></div>
+      <div style={{background: color}} className={style.color}></div>
       <div className={style.folder}>
         <div className={style.folderBox}>
           <img src={folderImg} alt="folder" />
-          <span className={style.nameFolder}>Photos</span>
+          <span className={style.nameFolder}>{name}</span>
         </div>
         <div className={style.dotsBlock} ref={dotsRef}>
           <button
@@ -32,8 +33,8 @@ const Folder: React.FC = () => {
         {hiddenDotsMenu && <DotsBlok ref={moreFileRef} />}
       </div>
       <div className={style.aboutFile}>
-        <span className={style.files}>1786 Files</span>
-        <span className={style.memory}>2.78 Gb</span>
+        <span className={style.files}>{filesNumber} Files</span>
+        <span className={style.memory}>{size}</span>
       </div>
     </div>
   );

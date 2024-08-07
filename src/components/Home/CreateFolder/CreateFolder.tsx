@@ -1,15 +1,20 @@
 import React from "react";
 import style from "./CreateFolder.module.css";
 import { useSelector } from "react-redux";
-import { selectAuth } from "../../../selectors/selectors";
+import { selectAuth, selectFolders } from "../../../selectors/selectors";
 import { useAppDispatch } from "../../../store/hooks";
-import { fetchCreateFolder } from "../../../store/FoldersSlice";
+import {
+  changeFolderModal,
+  createModalColor,
+  createModalName,
+  fetchCreateFolder,
+  fetchGetFolder,
+} from "../../../store/FoldersSlice";
 
 const CreateFolder: React.FC = () => {
-    const { username } = useSelector(selectAuth)
-    const [createFolder, setCreateFolder] = React.useState<any>({name: '', color: '', username: username})
-    const [nameFolder, setNameFolder] = React.useState<string>('')
-    const appDispatch = useAppDispatch()
+  const [selectedColor, setSelectedColor] = React.useState(0);
+  const { createFolder } = useSelector(selectFolders);
+  const appDispatch = useAppDispatch();
   const colorArr = [
     "#FFB800",
     "#FF7B31",
@@ -26,12 +31,9 @@ const CreateFolder: React.FC = () => {
     <div className={style.wrapper}>
       <h1 className={style.title}>Create a folder</h1>
       <input
-      onChange={(e) => {
-        // setNameFolder()
-        
-            setCreateFolder(createFolder.name = e.target.value)
-            console.log(createFolder)
-      }}
+        onChange={(e) => {
+          appDispatch(createModalName(e.target.value));
+        }}
         className={style.inp}
         type="text"
         placeholder="Enter a folder name and choose a color"
@@ -39,16 +41,32 @@ const CreateFolder: React.FC = () => {
       <div className={style.colorBlock}>
         {colorArr.map((color, i) => (
           <button
-          onClick={() => setCreateFolder(createFolder.color = color)}
+            onClick={() => {
+              appDispatch(createModalColor(color))
+              setSelectedColor(i)
+            }}
             key={i}
-            style={{ background: color }}
+            style={{ background: color, boxShadow: selectedColor === i ? `0px 2px 16px 0px ${color}` : `` }}
             className={style.color}
           ></button>
         ))}
       </div>
       <div className={style.btnBox}>
-        <button onClick={() => appDispatch(fetchCreateFolder(createFolder))} className={style.create}>Create</button>
-        <button className={style.cancel}>Cancel</button>
+        <button
+          onClick={() => {
+            appDispatch(fetchCreateFolder(createFolder)).then(() => appDispatch(fetchGetFolder()));
+            appDispatch(changeFolderModal());
+          }}
+          className={style.create}
+        >
+          Create
+        </button>
+        <button
+          onClick={() => appDispatch(changeFolderModal())}
+          className={style.cancel}
+        >
+          Cancel
+        </button>
       </div>
     </div>
   );

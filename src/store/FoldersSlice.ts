@@ -1,5 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-// import type { PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "../instanceAxios";
 import download from "../assets/img/dots/Download.png";
 import createLink from "../assets/img/dots/CloudLink.png";
@@ -19,6 +18,8 @@ interface FoldersTypeState {
   allFiles: FetchFilesUserRes[];
   deletedFiles: FetchDeletedFiles[];
   createFolderModal: boolean;
+  createFolder: CreateFolder;
+  folders: FolderType[];
 }
 interface Dots {
   name: string;
@@ -51,14 +52,25 @@ interface DeleteFiles {
   filename: string;
   filePath: string;
 }
+interface CreateFolder {
+  name: string;
+  color: string;
+}
+
+export interface FolderType {
+  name: string;
+  color: string;
+  size: string;
+  filesNumber: string;
+}
 
 export const fetchGetAmountData = createAsyncThunk<
   AmountDataType,
-  string,
+  void,
   { rejectValue: string }
->("folder/fetchGetAmountData", async (username, { rejectWithValue }) => {
+>("folder/fetchGetAmountData", async (_, { rejectWithValue }) => {
   try {
-    const { data } = await axios.get(`/files/memory/${username}`);
+    const { data } = await axios.get(`/files/memory`);
     return data;
   } catch (error: any) {
     return rejectWithValue(error.message);
@@ -174,14 +186,26 @@ export const fetchCreateFolder = createAsyncThunk<
   { rejectValue: string }
 >("folder/fetchCreateFolder", async (create, { rejectWithValue }) => {
   try {
-    const { data } = await axios.post(`/folders/create`, {
-      data: create,
-    });
+    const { data } = await axios.post(`/folders/create`, create);
     return data;
   } catch (error: any) {
     return rejectWithValue(error.message);
   }
 });
+
+export const fetchGetFolder = createAsyncThunk<
+FolderType[],
+  void,
+  { rejectValue: string }
+>("folder/fetchGetFolder", async (_, { rejectWithValue }) => {
+  try {
+    const { data } = await axios.get(`/folders`);
+    return data;
+  } catch (error: any) {
+    return rejectWithValue(error.message);
+  }
+});
+
 
 const initialState: FoldersTypeState = {
   dots: [
@@ -220,6 +244,11 @@ const initialState: FoldersTypeState = {
   allFiles: [],
   deletedFiles: [],
   createFolderModal: false,
+  createFolder: {
+    name: "",
+    color: "",
+  },
+  folders: [],
 };
 
 export const FoldersSlice = createSlice({
@@ -234,6 +263,12 @@ export const FoldersSlice = createSlice({
     },
     changeFolderModal: (state) => {
       state.createFolderModal = !state.createFolderModal;
+    },
+    createModalName: (state, action: PayloadAction<string>) => {
+      state.createFolder.name = action.payload;
+    },
+    createModalColor: (state, action: PayloadAction<string>) => {
+      state.createFolder.color = action.payload;
     },
   },
   extraReducers(builder) {
@@ -307,16 +342,32 @@ export const FoldersSlice = createSlice({
     });
     builder.addCase(fetchCreateFolder.fulfilled, (state, action) => {
       state.loading = "succeeded";
-      console.log(action.payload)
     });
     builder.addCase(fetchCreateFolder.rejected, (state, action) => {
+      state.err = action.payload;
+      state.loading = "failed";
+    });
+    builder.addCase(fetchGetFolder.pending, (state) => {
+      state.loading = "pending";
+    });
+    builder.addCase(fetchGetFolder.fulfilled, (state, action) => {
+      state.loading = "succeeded";
+      state.folders = [...action.payload]
+      console.log(state.folders)
+    });
+    builder.addCase(fetchGetFolder.rejected, (state, action) => {
       state.err = action.payload;
       state.loading = "failed";
     });
   },
 });
 
-export const { changeLogout, changeDragDrop, changeFolderModal } =
-  FoldersSlice.actions;
+export const {
+  changeLogout,
+  changeDragDrop,
+  changeFolderModal,
+  createModalName,
+  createModalColor,
+} = FoldersSlice.actions;
 
 export default FoldersSlice.reducer;

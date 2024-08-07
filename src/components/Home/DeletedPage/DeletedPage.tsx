@@ -30,7 +30,7 @@ const DeletedPage = () => {
         <button
           onClick={() =>
             appDispatch(fetchDeleteFiles({ username, deletedFiles })).then(() =>
-              appDispatch(fetchGetAmountData(username))
+              appDispatch(fetchGetAmountData())
             )
           }
           className={style.delAll}

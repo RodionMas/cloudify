@@ -10,7 +10,7 @@ const NonAuth: React.FC = () => {
   const { isAuth } = useSelector(selectAuth);
   const navigate = useNavigate();
   React.useEffect(() => {
-    if (isAuth && logout) {
+    if (isAuth ) {
       navigate("/home");
     }
   }, [isAuth, navigate, logout]);
