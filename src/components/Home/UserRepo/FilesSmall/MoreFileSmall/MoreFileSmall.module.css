@@ -9,24 +9,3 @@
   background: rgb(244, 244, 244);
   z-index: 1050; /* Высокий z-index для отображения поверх других элементов */
 }
-.moreBox {
-  display: flex;
-}
-.moreBox {
-  padding-top: 9px;
-  padding-bottom: 9px;
-  padding-left: 30px;
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  width: 100%;
-}
-.moreBox:hover {
-  background-color: #C9C9C9;
-  border-radius: 15px;
-}
-.name {
-  font-size: 20px;
-  color: #000;
-  margin-left: 15px;
-}

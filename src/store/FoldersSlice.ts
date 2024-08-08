@@ -20,6 +20,7 @@ interface FoldersTypeState {
   createFolderModal: boolean;
   createFolder: CreateFolder;
   folders: FolderType[];
+  foldersShowMore: FoldersShowMoreType[];
 }
 interface Dots {
   name: string;
@@ -58,6 +59,13 @@ interface CreateFolder {
 }
 
 export interface FolderType {
+  name: string;
+  color: string;
+  size: string;
+  filesNumber: string;
+}
+
+export interface FoldersShowMoreType {
   name: string;
   color: string;
   size: string;
@@ -206,6 +214,19 @@ FolderType[],
   }
 });
 
+export const fetchGetMoverShowMore = createAsyncThunk<
+FolderType[],
+  void,
+  { rejectValue: string }
+>("folder/fetchGetMoverShowMore", async (_, { rejectWithValue }) => {
+  try {
+    const { data } = await axios.get(`/folders/moved`);
+    return data;
+  } catch (error: any) {
+    return rejectWithValue(error.message);
+  }
+});
+
 
 const initialState: FoldersTypeState = {
   dots: [
@@ -249,6 +270,7 @@ const initialState: FoldersTypeState = {
     color: "",
   },
   folders: [],
+  foldersShowMore: [],
 };
 
 export const FoldersSlice = createSlice({
@@ -353,9 +375,19 @@ export const FoldersSlice = createSlice({
     builder.addCase(fetchGetFolder.fulfilled, (state, action) => {
       state.loading = "succeeded";
       state.folders = [...action.payload]
-      console.log(state.folders)
     });
     builder.addCase(fetchGetFolder.rejected, (state, action) => {
+      state.err = action.payload;
+      state.loading = "failed";
+    });
+    builder.addCase(fetchGetMoverShowMore.pending, (state) => {
+      state.loading = "pending";
+    });
+    builder.addCase(fetchGetMoverShowMore.fulfilled, (state, action) => {
+      state.loading = "succeeded";
+      state.foldersShowMore = [...action.payload]
+    });
+    builder.addCase(fetchGetMoverShowMore.rejected, (state, action) => {
       state.err = action.payload;
       state.loading = "failed";
     });

@@ -6,7 +6,7 @@ import fileImg from "../../../assets/img/File.png";
 import { useClickOutside } from "../../../tools/UseClickOutside";
 import { useLocation } from "react-router-dom";
 
-const OneFile: React.FC<any> = ({ filename, size, lastModified }) => {
+const OneFile: React.FC<any> = React.memo(({ filename, size, lastModified }) => {
   const hideRef = React.useRef<HTMLButtonElement | null>(null);
   const moreFileRef = React.useRef<HTMLDivElement | null>(null);
   const [hideContent, setHideContent] = React.useState(false);
@@ -65,6 +65,6 @@ const OneFile: React.FC<any> = ({ filename, size, lastModified }) => {
       )}
     </div>
   );
-};
+});
 
 export default OneFile;

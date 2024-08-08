@@ -12,17 +12,18 @@ import recet from "../../../../../assets/img/showMoreSmall/Reset.png";
 import { useAppDispatch } from "../../../../../store/hooks";
 import {
   fetchDeleteFile,
-  fetchDeleteFiles,
   fetchGetAllFiles,
-  fetchGetAmountData,
   fetchGetDeletedFiles,
   fetchMoveToDeleted,
 } from "../../../../../store/FoldersSlice";
 import { useSelector } from "react-redux";
 import { selectAuth, selectFolders } from "../../../../../selectors/selectors";
 import { useLocation } from "react-router-dom";
+import BtnShowMore from "./BtnShowMore/BtnShowMore";
+import { v4 as uuidv4 } from 'uuid';
 
 const MoreFileSmall = forwardRef<HTMLDivElement, any>((props, ref) => {
+  const uniqueId = uuidv4();
   const showMoreArr = [
     { name: "Download", image: download },
     { name: "Create Link", image: link },
@@ -59,14 +60,13 @@ const MoreFileSmall = forwardRef<HTMLDivElement, any>((props, ref) => {
         .then(() => {
           appDispatch(fetchGetAllFiles(username));
         })
-        .catch((e) => console.warn(e));
     }
   }
   const location = useLocation();
   const menu = (
     <div ref={ref} className={style.wrapper} style={props.style}>
       {location.pathname === "/home/deleted"
-        ? showMoreDeleted.map((item, i) => (
+        ? showMoreDeleted.map((item) => (
             <button
               onClick={() => {
                 if (item.name === 'Delete') {
@@ -77,26 +77,22 @@ const MoreFileSmall = forwardRef<HTMLDivElement, any>((props, ref) => {
                 }
                 props.hideContentFn();
               }}
-              key={i}
+              key={uniqueId}
               className={style.moreBox}
             >
               <img src={item.image} alt="item" />
               <span className={style.name}>{item.name}</span>
             </button>
           ))
-        : showMoreArr.map((item, i) => (
-            <button
-              onClick={() => {
-                deleteMove(item.name);
-                props.hideContentFn();
-              }}
-              key={i}
-              className={style.moreBox}
-            >
-              <img src={item.image} alt="item" />
-              <span className={style.name}>{item.name}</span>
-            </button>
-          ))}
+        : 
+        showMoreArr.map(item => (
+          <>
+            <BtnShowMore props={props} deleteMove={deleteMove} key={uniqueId}
+             {...item}
+              />
+            </>
+          ))
+          }
     </div>
   );
 

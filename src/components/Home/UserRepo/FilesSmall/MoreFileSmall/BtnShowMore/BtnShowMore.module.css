@@ -1,0 +1,22 @@
+.name {
+    font-size: 20px;
+    color: #000;
+    margin-left: 15px;
+  }
+  .moreBox {
+    display: flex;
+  }
+  .moreBox {
+    padding-top: 9px;
+    padding-bottom: 9px;
+    padding-left: 30px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    width: 100%;
+  }
+  .moreBox:hover {
+    background-color: #C9C9C9;
+    border-radius: 15px;
+  }
+  
