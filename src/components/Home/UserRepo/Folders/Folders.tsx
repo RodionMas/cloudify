@@ -5,6 +5,7 @@ import { useAppDispatch } from "../../../../store/hooks";
 import { fetchGetFolder } from "../../../../store/FoldersSlice";
 import { useSelector } from "react-redux";
 import { selectFolders } from "../../../../selectors/selectors";
+import NoFolders from "./NoFolders/NoFolders";
 
 const Folders: React.FC = () => {
   const appDispatch = useAppDispatch()
@@ -16,7 +17,7 @@ const Folders: React.FC = () => {
     <div className={style.wrapper}>
       <h1 className={style.title}>Folders</h1>
       <div className={style.grid}>
-        {folders.map((folder, i) => {
+        {folders.length === 0 ? <NoFolders /> : folders.map((folder, i) => {
           return <Folder key={i} {...folder} />
         })}
       </div>

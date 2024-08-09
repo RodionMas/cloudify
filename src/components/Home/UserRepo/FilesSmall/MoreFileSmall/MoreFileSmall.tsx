@@ -20,10 +20,8 @@ import { useSelector } from "react-redux";
 import { selectAuth, selectFolders } from "../../../../../selectors/selectors";
 import { useLocation } from "react-router-dom";
 import BtnShowMore from "./BtnShowMore/BtnShowMore";
-import { v4 as uuidv4 } from 'uuid';
 
 const MoreFileSmall = forwardRef<HTMLDivElement, any>((props, ref) => {
-  const uniqueId = uuidv4();
   const showMoreArr = [
     { name: "Download", image: download },
     { name: "Create Link", image: link },
@@ -47,7 +45,8 @@ const MoreFileSmall = forwardRef<HTMLDivElement, any>((props, ref) => {
     },
   });
   const appDispatch = useAppDispatch();
-  const {deletedFiles} = useSelector(selectFolders)
+  const { deletedFiles } = useSelector(selectFolders);
+
   function deleteMove(item: string) {
     if (item === "Delete") {
       setDeletedObjForFetch(
@@ -56,43 +55,44 @@ const MoreFileSmall = forwardRef<HTMLDivElement, any>((props, ref) => {
           props.filename,
         ])
       );
-      appDispatch(fetchMoveToDeleted(deletedObjForFetch))
-        .then(() => {
-          appDispatch(fetchGetAllFiles(username));
-        })
+      appDispatch(fetchMoveToDeleted(deletedObjForFetch)).then(() => {
+        appDispatch(fetchGetAllFiles(username));
+      });
     }
   }
   const location = useLocation();
+
   const menu = (
     <div ref={ref} className={style.wrapper} style={props.style}>
       {location.pathname === "/home/deleted"
         ? showMoreDeleted.map((item) => (
             <button
               onClick={() => {
-                if (item.name === 'Delete') {
-                  const delFile = deletedFiles.filter(deleteItem => deleteItem.filename === props.filename)
+                if (item.name === "Delete") {
+                  const delFile = deletedFiles.filter(
+                    (deleteItem) => deleteItem.filename === props.filename
+                  );
                   appDispatch(fetchDeleteFile({ username, delFile })).then(() =>
                     appDispatch(fetchGetDeletedFiles(username))
-                  )
+                  );
                 }
                 props.hideContentFn();
               }}
-              key={uniqueId}
+              key={item.name} // Используем имя как ключ
               className={style.moreBox}
             >
-              <img src={item.image} alt="item" />
+              <img src={item.image} alt={item.name} />
               <span className={style.name}>{item.name}</span>
             </button>
           ))
-        : 
-        showMoreArr.map(item => (
-          <>
-            <BtnShowMore props={props} deleteMove={deleteMove} key={uniqueId}
-             {...item}
-              />
-            </>
-          ))
-          }
+        : showMoreArr.map((item) => (
+            <BtnShowMore
+              props={props}
+              deleteMove={deleteMove}
+              key={item.name} // Используем имя как ключ
+              {...item}
+            />
+          ))}
     </div>
   );
 

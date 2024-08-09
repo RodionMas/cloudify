@@ -17,21 +17,32 @@
 }
 .sortBy {
   display: flex;
-  justify-content: space-between;
+  /* justify-content: space-between; */
   border-bottom: 1px solid #d9d9d9;
   padding-bottom: 20px;
 }
+
 .sortText {
   color: #909090;
   font-size: 20px;
-  margin-left: 15px;
   display: flex;
   cursor: pointer;
   align-items: center;
   padding: 0;
   background: transparent;
   border: none;
-  width: 300px;
+}
+.sortText:nth-child(1){
+margin-left: 15px;
+}
+.sortText:nth-child(2){
+  margin-left: 192px;
+}
+.sortText:nth-child(3){
+  margin-left: 100px;
+}
+.sortText:nth-child(4){
+  margin-left: 100px;
 }
 .sortDown {
   width: 16px;

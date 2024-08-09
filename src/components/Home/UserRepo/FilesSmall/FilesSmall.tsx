@@ -10,7 +10,7 @@ import { fetchGetAllFiles } from "../../../../store/FoldersSlice";
 import OneFile from "../../OneFile/OneFile";
 
 const FilesSmall: React.FC = () => {
-  const sortBy = ["Name", "File Size", "Last Changes"];
+  const sortBy = ["Name", "Folder", "File Size", "Last Changes"];
   const [sortArrow, setSortArrow] = React.useState(0);
   const { username } = useSelector(selectAuth)
   const appDispatch = useAppDispatch()

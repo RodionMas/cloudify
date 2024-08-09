@@ -1,9 +1,11 @@
 import React from 'react';
 import style from './BtnShowMore.module.css'
-import ChooseFolder from '../../../../ChooseFolder/ChooseFolder';
+
+import forward from '../../../../../../assets/img/dots/Forward.png'
+import ChooseFolder from './ChooseFolder/ChooseFolder';
 
 const BtnShowMore: React.FC<any> = React.memo(({ name, image, deleteMove, props }) => {
-    return (
+  return (
         <>
         <button
               onClick={() => {
@@ -13,9 +15,10 @@ const BtnShowMore: React.FC<any> = React.memo(({ name, image, deleteMove, props 
               className={style.moreBox}
             >
               <img src={image} alt="item" />
-              <span className={style.name}>{name}</span>
+              <span className={style.name}>{name} {name === 'Move' && <img className={style.img} src={forward} alt='forward' />} </span>
+              {name === 'Move' && <ChooseFolder />}
             </button>
-            <ChooseFolder />
+           
         </>
     );
 });

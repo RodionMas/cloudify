@@ -1,0 +1,16 @@
+.wrapper {
+}
+.btn {
+  width: 350px;
+  height: 200px;
+  border-radius: 30px;
+  background: rgb(217, 217, 217);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  border: none;
+}
+.btn:hover {
+  background: #909090;
+}

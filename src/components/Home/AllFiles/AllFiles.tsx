@@ -11,10 +11,11 @@ import { selectAuth, selectFolders } from "../../../selectors/selectors";
 import OneFile from "../OneFile/OneFile";
 
 const AllFiles: React.FC = () => {
-  const sortBy = ["Name", "File Size", "Last Changes"];
+  const sortBy = ["Name", "Folder", "File Size", "Last Changes"];
   const [sortArrow, setSortArrow] = React.useState(0);
   const { username } = useSelector(selectAuth)
   const { allFiles } = useSelector(selectFolders)
+  allFiles.map(el => console.log(el))
   const appDispatch = useAppDispatch()
   React.useEffect(() => {
     appDispatch(fetchGetAllFiles(username))
