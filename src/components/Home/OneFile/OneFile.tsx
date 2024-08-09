@@ -23,7 +23,7 @@ const OneFile: React.FC<any> = React.memo(
         setHideContent(false);
       }
     });
-
+    const {pathname} = useLocation()
     const handleButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
       const rect = event.currentTarget.getBoundingClientRect();
       setMenuPosition({
@@ -40,16 +40,16 @@ const OneFile: React.FC<any> = React.memo(
             {filename}
           </span>
         </div>
-        <div className={style.fileRow}>
+       {pathname !== '/home/deleted' && <div className={style.fileRow}>
           <div style={{background: !customFolderName ? `#D9D9D9` : color}} className={style.folderName}>
             <img src={folderImg} alt="folder-name" />
             <span className={style.folderNameText}>{customFolderName ? customFolderName : 'All Files'}</span>
           </div>
-        </div>
-        <div className={style.fileRow}>
+        </div>}
+        <div className={pathname !== '/home/deleted' ? style.fileRow : style.fileRowDeleted}>
           <span className={style.size}>{size}</span>
         </div>
-        <div className={style.fileRow}>
+        <div className={pathname !== '/home/deleted' ? style.fileRow : style.fileRowDeleted}>
           <span>{lastModified.day}</span>
           <button
             ref={hideRef}

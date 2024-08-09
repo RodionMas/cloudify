@@ -16,7 +16,7 @@ const BtnShowMore: React.FC<any> = React.memo(({ name, image, deleteMove, props 
             >
               <img src={image} alt="item" />
               <span className={style.name}>{name} {name === 'Move' && <img className={style.img} src={forward} alt='forward' />} </span>
-              {name === 'Move' && <ChooseFolder />}
+              {name === 'Move' && <ChooseFolder filePath={props.filePath} filename={props.filename} />}
             </button>
            
         </>

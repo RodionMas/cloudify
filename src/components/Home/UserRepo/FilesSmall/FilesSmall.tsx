@@ -17,7 +17,7 @@ const FilesSmall: React.FC = () => {
   const { allFiles } = useSelector(selectFolders);
  
   React.useEffect(() => {
-    appDispatch(fetchGetAllFiles(username))
+    appDispatch(fetchGetAllFiles())
   }, [username, appDispatch])
   return (
     <div className={style.wrapper}>

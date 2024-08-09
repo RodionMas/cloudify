@@ -41,7 +41,7 @@ const DragAndDrop: React.FC = () => {
   // .then(() =>  appDispatch(fetchGetAllFiles(username)))
   function handleSelectClick(): void {
     if (formData) {
-      appDispatch(fetchDrop(formData)).then(() => appDispatch(fetchGetAllFiles(username))).then(() => appDispatch(fetchGetAmountData()));
+      appDispatch(fetchDrop(formData)).then(() => appDispatch(fetchGetAllFiles())).then(() => appDispatch(fetchGetAmountData()));
 
       appDispatch(changeDragDrop());
     } else {

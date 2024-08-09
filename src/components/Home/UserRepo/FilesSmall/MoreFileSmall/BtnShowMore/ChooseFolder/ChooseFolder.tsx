@@ -1,13 +1,22 @@
 import React from "react";
 import style from "../BtnShowMore.module.css";
 import { useAppDispatch } from "../../../../../../../store/hooks";
-import { fetchGetMoverShowMore } from "../../../../../../../store/FoldersSlice";
+import { fetchGetAllFiles, fetchGetFolder, fetchGetMoverShowMore, fetchMove } from "../../../../../../../store/FoldersSlice";
 import { useSelector } from "react-redux";
 import { selectFolders } from "../../../../../../../selectors/selectors";
-
-const ChooseFolder: React.FC = React.memo(() => {
+import packageImg from "../../../../../../../assets/img/contur.png";
+interface FileNameType {
+  filename: string;
+  filePath: string;
+}
+const ChooseFolder: React.FC<FileNameType> = ({ filename, filePath }) => {
   const dispatch = useAppDispatch();
   const { foldersShowMore } = useSelector(selectFolders);
+  const [movedObjForFetch, setMovedObjForFetch] = React.useState<any>({
+    source: "",
+    target: "",
+    files: [],
+  });
   React.useEffect(() => {
     dispatch(fetchGetMoverShowMore());
   }, []);
@@ -18,10 +27,28 @@ const ChooseFolder: React.FC = React.memo(() => {
         {foldersShowMore.map((folder, i) => {
           return (
             <div
-              onClick={() => console.log(folder)}
+              onClick={() => {
+                setMovedObjForFetch(
+                  ((movedObjForFetch.source = filePath),
+                  (movedObjForFetch.target = folder.name),
+                  (movedObjForFetch.files = [
+                    ...movedObjForFetch.files,
+                    filename,
+                  ]))
+                );
+                dispatch(fetchMove(movedObjForFetch)).then(() => {
+                  dispatch(fetchGetAllFiles()).then(() => dispatch(fetchGetFolder()));
+                });
+              }}
               className={style.btnFolder}
               key={i}
             >
+              <img
+                style={{ background: folder.color }}
+                className={style.packageImg}
+                src={packageImg}
+                alt="package"
+              />
               <span>{folder.name}</span>
             </div>
           );
@@ -29,6 +56,6 @@ const ChooseFolder: React.FC = React.memo(() => {
       </div>
     </div>
   );
-});
+};
 
 export default ChooseFolder;

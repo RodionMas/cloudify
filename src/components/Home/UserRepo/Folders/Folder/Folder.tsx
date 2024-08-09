@@ -5,6 +5,7 @@ import more from "../../../../../assets/img/More.png";
 import DotsBlok from "./DotsBlok/DotsBlok";
 import { useClickOutside } from "../../../../../tools/UseClickOutside";
 import { FolderType } from "../../../../../store/FoldersSlice";
+import { Link } from "react-router-dom";
 
 const Folder: React.FC<FolderType> = ({ name, color, size, filesNumber }) => {
   const [hiddenDotsMenu, setHiddenDotsMenu] = React.useState(false);
@@ -18,10 +19,10 @@ const Folder: React.FC<FolderType> = ({ name, color, size, filesNumber }) => {
     <div className={style.wrapper}>
       <div style={{background: color}} className={style.color}></div>
       <div className={style.folder}>
-        <div className={style.folderBox}>
+        <Link to={`/home/userfolder/${name}`} className={style.folderBox}>
           <img src={folderImg} alt="folder" />
           <span className={style.nameFolder}>{name}</span>
-        </div>
+        </Link>
         <div className={style.dotsBlock} ref={dotsRef}>
           <button
             onClick={() => setHiddenDotsMenu(!hiddenDotsMenu)}

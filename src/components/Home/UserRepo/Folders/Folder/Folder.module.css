@@ -19,20 +19,24 @@
 .folderBox {
   display: flex;
   align-items: center;
+  font-size: 20px;
+  font-weight: 400;
+  color: #000;
+  text-decoration: none;
 }
-.nameFolder{
-    margin-left: 15px;
+.nameFolder {
+  margin-left: 15px;
 }
-.dotsBtn{
-    border: none;
-    background: transparent;
-    cursor: pointer;
+.dotsBtn {
+  border: none;
+  background: transparent;
+  cursor: pointer;
 }
-.aboutFile{
-    display: flex;
-    justify-content: space-between;
-    color: #909090;
-    font-size: 20px;
-    padding: 0px 30px 0px 30px;
-    margin-top: 54px;
+.aboutFile {
+  display: flex;
+  justify-content: space-between;
+  color: #909090;
+  font-size: 20px;
+  padding: 0px 30px 0px 30px;
+  margin-top: 54px;
 }

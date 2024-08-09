@@ -21,6 +21,8 @@ interface FoldersTypeState {
   createFolder: CreateFolder;
   folders: FolderType[];
   foldersShowMore: FoldersShowMoreType[];
+  folderName: string;
+  recoverItem: RecoverItemType[];
 }
 interface Dots {
   name: string;
@@ -72,6 +74,14 @@ export interface FoldersShowMoreType {
   filesNumber: string;
 }
 
+interface RecoverType {
+  filename: string;
+  filePath: string;
+}
+interface RecoverItemType {
+  filename: string;
+  filePath: string;
+}
 export const fetchGetAmountData = createAsyncThunk<
   AmountDataType,
   void,
@@ -87,11 +97,11 @@ export const fetchGetAmountData = createAsyncThunk<
 
 export const fetchGetAllFiles = createAsyncThunk<
   FetchFilesUserRes[],
-  string,
+  void,
   { rejectValue: string }
->("folder/fetchGetAllFiles", async (username, { rejectWithValue }) => {
+>("folder/fetchGetAllFiles", async (_, { rejectWithValue }) => {
   try {
-    const { data } = await axios.get(`/files/all?username=${username}`);
+    const { data } = await axios.get(`/files/all`);
     return data;
   } catch (error: any) {
     return rejectWithValue(error.message);
@@ -100,11 +110,11 @@ export const fetchGetAllFiles = createAsyncThunk<
 
 export const fetchGetDeletedFiles = createAsyncThunk<
   FetchDeletedFiles[],
-  string,
+  void,
   { rejectValue: string }
->("folder/fetchGetDeletedFiles", async (username, { rejectWithValue }) => {
+>("folder/fetchGetDeletedFiles", async (_, { rejectWithValue }) => {
   try {
-    const { data } = await axios.get(`/files/deleted?username=${username}`);
+    const { data } = await axios.get(`/files/deleted`);
     return data;
   } catch (error: any) {
     return rejectWithValue(error.message);
@@ -169,18 +179,11 @@ export const fetchDeleteFile = createAsyncThunk<
   }
 );
 
-export const fetchMoveToDeleted = createAsyncThunk<
-  string,
-  any,
-  { rejectValue: string }
->(
-  "folder/fetchMoveToDeleted",
-  async (deletedObjForFetch, { rejectWithValue }) => {
+export const fetchMove = createAsyncThunk<string, any, { rejectValue: string }>(
+  "folder/fetchMove",
+  async (movedObjForFetch, { rejectWithValue }) => {
     try {
-      const { data } = await axios.post(
-        `/files/move?username=${deletedObjForFetch.username}`,
-        deletedObjForFetch.forFetch
-      );
+      const { data } = await axios.post(`/files/move`, movedObjForFetch);
       return data;
     } catch (error: any) {
       return rejectWithValue(error.message);
@@ -202,7 +205,7 @@ export const fetchCreateFolder = createAsyncThunk<
 });
 
 export const fetchGetFolder = createAsyncThunk<
-FolderType[],
+  FolderType[],
   void,
   { rejectValue: string }
 >("folder/fetchGetFolder", async (_, { rejectWithValue }) => {
@@ -215,7 +218,7 @@ FolderType[],
 });
 
 export const fetchGetMoverShowMore = createAsyncThunk<
-FolderType[],
+  FolderType[],
   void,
   { rejectValue: string }
 >("folder/fetchGetMoverShowMore", async (_, { rejectWithValue }) => {
@@ -227,6 +230,18 @@ FolderType[],
   }
 });
 
+export const fetchRecover = createAsyncThunk<
+  string,
+  RecoverType[],
+  { rejectValue: string }
+>("folder/fetchRecover", async (recover, { rejectWithValue }) => {
+  try {
+    const { data } = await axios.post(`/files/recover`, recover);
+    return data;
+  } catch (error: any) {
+    return rejectWithValue(error.message);
+  }
+});
 
 const initialState: FoldersTypeState = {
   dots: [
@@ -271,6 +286,8 @@ const initialState: FoldersTypeState = {
   },
   folders: [],
   foldersShowMore: [],
+  folderName: "",
+  recoverItem: [],
 };
 
 export const FoldersSlice = createSlice({
@@ -291,6 +308,9 @@ export const FoldersSlice = createSlice({
     },
     createModalColor: (state, action: PayloadAction<string>) => {
       state.createFolder.color = action.payload;
+    },
+    recoverItemReducer: (state, action) => {
+      state.recoverItem = [...state.recoverItem, action.payload];
     },
   },
   extraReducers(builder) {
@@ -349,13 +369,13 @@ export const FoldersSlice = createSlice({
       state.err = action.payload;
       state.loading = "failed";
     });
-    builder.addCase(fetchMoveToDeleted.pending, (state) => {
+    builder.addCase(fetchMove.pending, (state) => {
       state.loading = "pending";
     });
-    builder.addCase(fetchMoveToDeleted.fulfilled, (state) => {
+    builder.addCase(fetchMove.fulfilled, (state) => {
       state.loading = "succeeded";
     });
-    builder.addCase(fetchMoveToDeleted.rejected, (state, action) => {
+    builder.addCase(fetchMove.rejected, (state, action) => {
       state.err = action.payload;
       state.loading = "failed";
     });
@@ -374,7 +394,7 @@ export const FoldersSlice = createSlice({
     });
     builder.addCase(fetchGetFolder.fulfilled, (state, action) => {
       state.loading = "succeeded";
-      state.folders = [...action.payload]
+      state.folders = [...action.payload];
     });
     builder.addCase(fetchGetFolder.rejected, (state, action) => {
       state.err = action.payload;
@@ -385,9 +405,19 @@ export const FoldersSlice = createSlice({
     });
     builder.addCase(fetchGetMoverShowMore.fulfilled, (state, action) => {
       state.loading = "succeeded";
-      state.foldersShowMore = [...action.payload]
+      state.foldersShowMore = [...action.payload];
     });
     builder.addCase(fetchGetMoverShowMore.rejected, (state, action) => {
+      state.err = action.payload;
+      state.loading = "failed";
+    });
+    builder.addCase(fetchRecover.pending, (state) => {
+      state.loading = "pending";
+    });
+    builder.addCase(fetchRecover.fulfilled, (state, action) => {
+      state.loading = "succeeded";
+    });
+    builder.addCase(fetchRecover.rejected, (state, action) => {
       state.err = action.payload;
       state.loading = "failed";
     });
@@ -400,6 +430,7 @@ export const {
   changeFolderModal,
   createModalName,
   createModalColor,
+  recoverItemReducer,
 } = FoldersSlice.actions;
 
 export default FoldersSlice.reducer;

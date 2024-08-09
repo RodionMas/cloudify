@@ -3,7 +3,6 @@ import style from "./FileActions.module.css";
 import { Link } from "react-router-dom";
 import Deleted from "../../../../assets/img/deleted.png";
 import All from "../../../../assets/img/allFiles.png";
-import Favorite from "../../../../assets/img/favorite.png";
 import home from "../../../../assets/img/Home Page.png";
 
 const FileActions: React.FC = () => {
@@ -16,11 +15,6 @@ const FileActions: React.FC = () => {
       name: "All Files",
       image: All,
     },
-    {
-      name: "Favorite",
-      image: Favorite,
-    },
-
     {
       name: "Deleted",
       image: Deleted,

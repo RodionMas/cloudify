@@ -7,19 +7,17 @@ import arrow from "../../../assets/img/Chevron Down.png";
 import { useAppDispatch } from "../../../store/hooks";
 import { fetchGetAllFiles } from "../../../store/FoldersSlice";
 import { useSelector } from "react-redux";
-import { selectAuth, selectFolders } from "../../../selectors/selectors";
+import { selectFolders } from "../../../selectors/selectors";
 import OneFile from "../OneFile/OneFile";
 
 const AllFiles: React.FC = () => {
   const sortBy = ["Name", "Folder", "File Size", "Last Changes"];
   const [sortArrow, setSortArrow] = React.useState(0);
-  const { username } = useSelector(selectAuth)
   const { allFiles } = useSelector(selectFolders)
-  allFiles.map(el => console.log(el))
   const appDispatch = useAppDispatch()
   React.useEffect(() => {
-    appDispatch(fetchGetAllFiles(username))
-  }, [username, appDispatch])
+    appDispatch(fetchGetAllFiles())
+  }, [appDispatch])
   return (
     <section className={style.wrapper}>
       <Search />

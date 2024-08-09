@@ -9,12 +9,15 @@ import info from "../../../../../assets/img/showMoreSmall/Info.png";
 import edit from "../../../../../assets/img/showMoreSmall/Edit File.png";
 import cash from "../../../../../assets/img/showMoreSmall/Trash Can.png";
 import recet from "../../../../../assets/img/showMoreSmall/Reset.png";
-import { useAppDispatch } from "../../../../../store/hooks";
+import { useAppDispatch, useAppSelector } from "../../../../../store/hooks";
 import {
   fetchDeleteFile,
   fetchGetAllFiles,
   fetchGetDeletedFiles,
-  fetchMoveToDeleted,
+  fetchGetFolder,
+  fetchMove,
+  fetchRecover,
+  recoverItemReducer,
 } from "../../../../../store/FoldersSlice";
 import { useSelector } from "react-redux";
 import { selectAuth, selectFolders } from "../../../../../selectors/selectors";
@@ -31,32 +34,30 @@ const MoreFileSmall = forwardRef<HTMLDivElement, any>((props, ref) => {
     { name: "Rename", image: edit },
     { name: "Delete", image: cash },
   ];
+  // fetchRecover
+  const { recoverItem } = useAppSelector(selectFolders);
   const showMoreDeleted = [
     { name: "Recover", image: recet },
     { name: "Delete", image: cash },
   ];
   const { username } = useSelector(selectAuth);
-  const [deletedObjForFetch, setDeletedObjForFetch] = useState<any>({
-    username: username,
-    forFetch: {
-      source: "",
-      target: "deleted",
-      files: [],
-    },
+  const [movedObjForFetch, setMovedObjForFetch] = useState<any>({
+    source: props.filePath,
+    target: `deleted/${props.filePath}`,
+    files: [],
   });
   const appDispatch = useAppDispatch();
   const { deletedFiles } = useSelector(selectFolders);
 
   function deleteMove(item: string) {
     if (item === "Delete") {
-      setDeletedObjForFetch(
-        (deletedObjForFetch.forFetch.files = [
-          ...deletedObjForFetch.forFetch.files,
-          props.filename,
-        ])
+      setMovedObjForFetch(
+        (movedObjForFetch.files = [...movedObjForFetch.files, props.filename])
       );
-      appDispatch(fetchMoveToDeleted(deletedObjForFetch)).then(() => {
-        appDispatch(fetchGetAllFiles(username));
+      appDispatch(fetchMove(movedObjForFetch)).then(() => {
+        appDispatch(fetchGetAllFiles()).then(() =>
+          appDispatch(fetchGetFolder())
+        );
       });
     }
   }
@@ -73,8 +74,16 @@ const MoreFileSmall = forwardRef<HTMLDivElement, any>((props, ref) => {
                     (deleteItem) => deleteItem.filename === props.filename
                   );
                   appDispatch(fetchDeleteFile({ username, delFile })).then(() =>
-                    appDispatch(fetchGetDeletedFiles(username))
+                    appDispatch(fetchGetDeletedFiles())
                   );
+                } else if (item.name === "Recover") {
+                  const recover = [
+                    {
+                      filePath: props.filePath,
+                      filename: props.filename ? props.filename : "",
+                    },
+                  ];
+                  appDispatch(fetchRecover(recover)).then(() => appDispatch(fetchGetDeletedFiles()));
                 }
                 props.hideContentFn();
               }}

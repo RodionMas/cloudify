@@ -20,7 +20,7 @@ const DeletedPage = () => {
   const { deletedFiles } = useSelector(selectFolders);
   const appDispatch = useAppDispatch();
   React.useEffect(() => {
-    appDispatch(fetchGetDeletedFiles(username));
+    appDispatch(fetchGetDeletedFiles());
   }, [username, appDispatch]);
   return (
     <section className={style.wrapper}>
