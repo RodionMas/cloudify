@@ -23,6 +23,9 @@ interface FoldersTypeState {
   foldersShowMore: FoldersShowMoreType[];
   folderName: string;
   recoverItem: RecoverItemType[];
+  renameModal: boolean;
+  renameObj: RenameObjType;
+  colorForFolder: string;
 }
 interface Dots {
   name: string;
@@ -82,6 +85,12 @@ interface RecoverItemType {
   filename: string;
   filePath: string;
 }
+interface RenameObjType {
+  oldFileName?: string;
+  filepath?: string;
+  newFileName: string;
+}
+
 export const fetchGetAmountData = createAsyncThunk<
   AmountDataType,
   void,
@@ -243,6 +252,23 @@ export const fetchRecover = createAsyncThunk<
   }
 });
 
+export const fetchRenameFile = createAsyncThunk<
+  string,
+  RenameObjType,
+  { rejectValue: string }
+>("folder/fetchRenameFile", async (renameInp, { rejectWithValue }) => {
+  try {
+    const objForFetch = {
+      filepath: renameInp.filepath,
+      newFileName: renameInp.newFileName
+    }
+    const { data } = await axios.patch(`/file/${renameInp.oldFileName}`, objForFetch);
+    return data;
+  } catch (error: any) {
+    return rejectWithValue(error.message);
+  }
+});
+
 const initialState: FoldersTypeState = {
   dots: [
     {
@@ -288,6 +314,13 @@ const initialState: FoldersTypeState = {
   foldersShowMore: [],
   folderName: "",
   recoverItem: [],
+  renameModal: false,
+  renameObj: {
+    oldFileName: "",
+    filepath: "",
+    newFileName: ""
+  },
+  colorForFolder: '',
 };
 
 export const FoldersSlice = createSlice({
@@ -311,6 +344,26 @@ export const FoldersSlice = createSlice({
     },
     recoverItemReducer: (state, action) => {
       state.recoverItem = [...state.recoverItem, action.payload];
+    },
+    changeRenameModal: (state) => {
+      state.renameModal = !state.renameModal;
+    },
+    renameFile: (state, action) => {
+      if (action.payload.oldFileName) {
+        state.renameObj = {
+          ...state.renameObj,
+          ...action.payload,
+        };
+      }
+      if (action.payload.filepath) {
+        state.renameObj = {
+          ...state.renameObj,
+          ...action.payload,
+        };
+      }
+    },
+    checkColor: (state, action) => {
+      state.colorForFolder = action.payload;
     },
   },
   extraReducers(builder) {
@@ -421,6 +474,17 @@ export const FoldersSlice = createSlice({
       state.err = action.payload;
       state.loading = "failed";
     });
+    builder.addCase(fetchRenameFile.pending, (state) => {
+      state.loading = "pending";
+    });
+    builder.addCase(fetchRenameFile.fulfilled, (state, action) => {
+      state.loading = "succeeded";
+      console.log(action.payload)
+    });
+    builder.addCase(fetchRenameFile.rejected, (state, action) => {
+      state.err = action.payload;
+      state.loading = "failed";
+    });
   },
 });
 
@@ -431,6 +495,9 @@ export const {
   createModalName,
   createModalColor,
   recoverItemReducer,
+  changeRenameModal,
+  renameFile,
+  checkColor,
 } = FoldersSlice.actions;
 
 export default FoldersSlice.reducer;

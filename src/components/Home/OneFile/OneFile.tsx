@@ -6,14 +6,19 @@ import fileImg from "../../../assets/img/File.png";
 import folderImg from "../../../assets/img/Folder.png";
 import { useClickOutside } from "../../../tools/UseClickOutside";
 import { useLocation } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../../store/hooks";
+import { checkColor } from "../../../store/FoldersSlice";
+import { selectFolders } from "../../../selectors/selectors";
 
 const OneFile: React.FC<any> = React.memo(
   ({ filename, size, lastModified, customFolderName, filePath, color }) => {
     const hideRef = React.useRef<HTMLButtonElement | null>(null);
     const moreFileRef = React.useRef<HTMLDivElement | null>(null);
     const [hideContent, setHideContent] = React.useState(false);
+    const dispatch = useAppDispatch()
     const [menuPosition, setMenuPosition] = React.useState({ top: 0, left: 0 });
     const location = useLocation();
+    const {colorForFolder} = useAppSelector(selectFolders)
     const hideContentFn = () => {
       setHideContent(!hideContent);
     };
@@ -32,6 +37,12 @@ const OneFile: React.FC<any> = React.memo(
       });
       hideContentFn();
     };
+    
+ React.useEffect(() => {
+  if (!colorForFolder) {
+    dispatch(checkColor(color))
+  }
+ })
     return (
       <div className={style.files}>
         <div className={style.fileRow}>

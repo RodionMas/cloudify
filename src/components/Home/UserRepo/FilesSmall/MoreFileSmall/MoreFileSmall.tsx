@@ -9,7 +9,7 @@ import info from "../../../../../assets/img/showMoreSmall/Info.png";
 import edit from "../../../../../assets/img/showMoreSmall/Edit File.png";
 import cash from "../../../../../assets/img/showMoreSmall/Trash Can.png";
 import recet from "../../../../../assets/img/showMoreSmall/Reset.png";
-import { useAppDispatch, useAppSelector } from "../../../../../store/hooks";
+import { useAppDispatch } from "../../../../../store/hooks";
 import {
   fetchDeleteFile,
   fetchGetAllFiles,
@@ -17,7 +17,6 @@ import {
   fetchGetFolder,
   fetchMove,
   fetchRecover,
-  recoverItemReducer,
 } from "../../../../../store/FoldersSlice";
 import { useSelector } from "react-redux";
 import { selectAuth, selectFolders } from "../../../../../selectors/selectors";
@@ -34,8 +33,6 @@ const MoreFileSmall = forwardRef<HTMLDivElement, any>((props, ref) => {
     { name: "Rename", image: edit },
     { name: "Delete", image: cash },
   ];
-  // fetchRecover
-  const { recoverItem } = useAppSelector(selectFolders);
   const showMoreDeleted = [
     { name: "Recover", image: recet },
     { name: "Delete", image: cash },

@@ -1,7 +1,7 @@
 import React from "react";
 import style from "./CreateFolder.module.css";
 import { useSelector } from "react-redux";
-import { selectAuth, selectFolders } from "../../../selectors/selectors";
+import { selectFolders } from "../../../selectors/selectors";
 import { useAppDispatch } from "../../../store/hooks";
 import {
   changeFolderModal,

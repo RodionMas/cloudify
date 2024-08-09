@@ -3,17 +3,19 @@ import style from "./NonAuth.module.css";
 import { Link, useNavigate } from "react-router-dom";
 import ForwardArrow from "../../../assets/img/ForwardArrow.png";
 import { useSelector } from "react-redux";
-import { selectAuth, selectFolders } from "../../../selectors/selectors";
+import { selectAuth,
+  //  selectFolders 
+  } from "../../../selectors/selectors";
 
 const NonAuth: React.FC = () => {
-  const { logout } = useSelector(selectFolders);
+  // const { logout } = useSelector(selectFolders);
   const { isAuth } = useSelector(selectAuth);
   const navigate = useNavigate();
   React.useEffect(() => {
-    if (isAuth ) {
+    if (isAuth) {
       navigate("/home");
     }
-  }, [isAuth, navigate, logout]);
+  }, [ navigate,]);
   return (
     <div className={style.wrapper}>
       <h1 className={style.title}>Your personal cloud storage</h1>

@@ -35,7 +35,7 @@ const App: React.FC = () => {
           <Route path="/home" element={<Home />}>
             <Route index element={<UserRepo />} />
             <Route path="/home/files" element={<AllFiles />} />
-            <Route path="/home/userfolder/:subfolder" element={<FolderFiles />} />
+            <Route path="/home/userfolder/:foldername/" element={<FolderFiles />} />
             <Route path="/home/deleted" element={<DeletedPage />} />
           </Route>
           <Route path="*" element={<Navigate to="/" />} />

@@ -36,6 +36,7 @@
   border-radius: 30px;
   overflow-y: scroll;
   overflow-x: hidden; /*для горизонтального*/
+  position: relative;
 }
 /* Scroll.module.css */
 /* Полоса прокрутки */
@@ -147,4 +148,11 @@
   background: transparent;
   border: none;
   cursor: pointer;
+}
+.color{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 30px;
+  height: 100%;
 }

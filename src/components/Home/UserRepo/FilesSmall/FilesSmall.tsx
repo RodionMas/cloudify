@@ -1,8 +1,6 @@
 import React from "react";
 import style from "./FilesSmall.module.css";
 import arrow from "../../../../assets/img/Chevron Down.png";
-import { Link } from "react-router-dom";
-import showAll from "../../../../assets/img/all.png";
 import { useSelector } from "react-redux";
 import { selectAuth, selectFolders } from "../../../../selectors/selectors";
 import { useAppDispatch } from "../../../../store/hooks";
@@ -23,9 +21,6 @@ const FilesSmall: React.FC = () => {
     <div className={style.wrapper}>
       <div className={style.box}>
         <h1 className={style.title}>Files</h1>
-        <Link className={style.linkAll} to={"/photos/all"}>
-          Show All <img className={style.linkImg} src={showAll} alt="all" />
-        </Link>
       </div>
       <div className={style.fileContainer}>
         <div className={style.sortBy}>
