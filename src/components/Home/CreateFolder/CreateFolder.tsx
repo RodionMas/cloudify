@@ -27,6 +27,16 @@ const CreateFolder: React.FC = () => {
     "#39AA26",
     "#A76E2B",
   ];
+  const handleCreateFolder = async () => {
+    try {
+      await appDispatch(fetchCreateFolder(createFolder));
+      await appDispatch(fetchGetFolder());
+    } catch (error) {
+      console.error('Error creating folder:', error);
+    } finally {
+      appDispatch(changeFolderModal());
+    }
+  };
   return (
     <div className={style.wrapper}>
       <h1 className={style.title}>Create a folder</h1>
@@ -53,10 +63,7 @@ const CreateFolder: React.FC = () => {
       </div>
       <div className={style.btnBox}>
         <button
-          onClick={() => {
-            appDispatch(fetchCreateFolder(createFolder)).then(() => appDispatch(fetchGetFolder()));
-            appDispatch(changeFolderModal());
-          }}
+          onClick={() => handleCreateFolder()}
           className={style.create}
         >
           Create

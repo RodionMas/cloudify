@@ -1,0 +1,51 @@
+.wrapper {
+    position: absolute;
+    width: 632px;
+    height: 252px;
+    box-sizing: border-box;
+    border: 1px solid rgba(144, 144, 144, 0.2);
+    border-radius: 30px;
+    box-shadow: 0px 4px 7px 6px rgba(83, 0, 141, 0.2),
+      0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+    background: rgba(244, 244, 244, 0.98);
+    top: 50%;
+    left: 50%;
+    transform: translate(-15%, -50%);
+    padding: 24px 33px;
+  }
+  .title {
+    font-size: 24px;
+    font-weight: 800;
+  }
+  .inp {
+    width: 473px;
+    border-radius: 30px;
+    background: rgb(217, 217, 217);
+    padding: 17px 21px 15px 72px;
+    border: none;
+    margin-top: 20px;
+    background-image: url("../../../assets/img/Add\ Folder.png");
+    background-repeat: no-repeat;
+    background-position: 27px 12px;
+  }
+  .btnBox {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 31px;
+  }
+  .btnBox button {
+    padding: 10px 100px;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+    line-height: 29px;
+    border-radius: 30px;
+  }
+  .create {
+    background: rgb(83, 0, 141);
+    color: #fff;
+  }
+  .cancel {
+    background: rgb(217, 217, 217);
+  }
+  

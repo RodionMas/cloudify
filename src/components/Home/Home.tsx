@@ -8,17 +8,20 @@ import DragAndDrop from "./DragAndDrop/DragAndDrop";
 import CreateFolder from "./CreateFolder/CreateFolder";
 import { useAppSelector } from "../../store/hooks";
 import Rename from "./Rename/Rename";
+import CreateSubfolder from "./CreateSubfolder/CreateSubfolder";
 
 const Home: React.FC = () => {
   const { dragAndDrop } = useAppSelector(selectFolders);
   const { logout } = useAppSelector(selectFolders);
-  const { renameModal } = useAppSelector(selectFolders)
-  const {createFolderModal} = useAppSelector(selectFolders);
+  const { renameModal } = useAppSelector(selectFolders);
+  const { createFolderModal } = useAppSelector(selectFolders);
+  const { createSubfolderModal } = useAppSelector(selectFolders);
   return (
     <div className={style.wrapper}>
       <FolderOnActions />
       <Outlet />
       <Logout />
+      {createSubfolderModal && <CreateSubfolder />}
       {renameModal && <Rename />}
       {dragAndDrop && !logout && <DragAndDrop />}
       {createFolderModal && !logout && <CreateFolder />}

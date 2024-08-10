@@ -46,6 +46,7 @@ const OneFile: React.FC<any> = React.memo(
     return (
       <div className={style.files}>
         <div className={style.fileRow}>
+          <input className={style.checkbox} type="checkbox" />
           <span className={style.fileName}>
             <img className={style.fileImg} src={fileImg} alt="file" />{" "}
             {filename}

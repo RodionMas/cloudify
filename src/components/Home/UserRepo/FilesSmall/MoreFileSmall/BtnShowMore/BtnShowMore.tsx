@@ -3,9 +3,8 @@ import style from './BtnShowMore.module.css'
 
 import forward from '../../../../../../assets/img/dots/Forward.png'
 import ChooseFolder from './ChooseFolder/ChooseFolder';
-import { useAppDispatch, useAppSelector } from '../../../../../../store/hooks';
-import { changeRenameModal, fetchRenameFile, renameFile } from '../../../../../../store/FoldersSlice';
-import { selectFolders } from '../../../../../../selectors/selectors';
+import { useAppDispatch, } from '../../../../../../store/hooks';
+import { changeRenameModal, renameFile } from '../../../../../../store/FoldersSlice';
 
 const BtnShowMore: React.FC<any> = React.memo(({ name, image, deleteMove, props }) => {
   const dispatch = useAppDispatch()
@@ -13,13 +12,10 @@ const BtnShowMore: React.FC<any> = React.memo(({ name, image, deleteMove, props 
     const renameObjFn = {
       oldFileName: props.filename,
       filepath: props.filePath,
-      // newFileName: ""
     }
     if (name === "Rename") {
       dispatch(changeRenameModal())
       dispatch(renameFile(renameObjFn))
-      // renameObj
-      // dispatch(fetchRenameFile())
     }
   }
   return (

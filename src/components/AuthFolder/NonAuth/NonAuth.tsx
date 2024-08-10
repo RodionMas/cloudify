@@ -15,7 +15,7 @@ const NonAuth: React.FC = () => {
     if (isAuth) {
       navigate("/home");
     }
-  }, [ navigate,]);
+  }, [ navigate, isAuth]);
   return (
     <div className={style.wrapper}>
       <h1 className={style.title}>Your personal cloud storage</h1>

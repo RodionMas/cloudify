@@ -26,6 +26,8 @@ interface FoldersTypeState {
   renameModal: boolean;
   renameObj: RenameObjType;
   colorForFolder: string;
+  createSubfolderModal: boolean;
+  createSubfolder: CreateSubfolderType;
 }
 interface Dots {
   name: string;
@@ -90,7 +92,10 @@ interface RenameObjType {
   filepath?: string;
   newFileName: string;
 }
-
+interface CreateSubfolderType {
+    folderPath: string,
+    name: string;
+}
 export const fetchGetAmountData = createAsyncThunk<
   AmountDataType,
   void,
@@ -269,6 +274,20 @@ export const fetchRenameFile = createAsyncThunk<
   }
 });
 
+export const fetchCreateSubfolder = createAsyncThunk<
+  string,
+  CreateSubfolderType,
+  { rejectValue: string }
+>("folder/fetchCreateSubfolder", async (createSubfolder, { rejectWithValue }) => {
+  try {
+
+    const { data } = await axios.post(`/subfolders`, createSubfolder);
+    return data;
+  } catch (error: any) {
+    return rejectWithValue(error.message);
+  }
+});
+
 const initialState: FoldersTypeState = {
   dots: [
     {
@@ -321,6 +340,11 @@ const initialState: FoldersTypeState = {
     newFileName: ""
   },
   colorForFolder: '',
+  createSubfolderModal: false,
+  createSubfolder: {
+    folderPath: "",
+    name: ""
+  },
 };
 
 export const FoldersSlice = createSlice({
@@ -364,6 +388,15 @@ export const FoldersSlice = createSlice({
     },
     checkColor: (state, action) => {
       state.colorForFolder = action.payload;
+    },
+    SubfolderModal: (state) => {
+      state.createSubfolderModal = !state.createSubfolderModal
+    },
+    createSubfolderReducer: (state, action) => {
+      state.createSubfolder = {
+        ...state.createSubfolder,
+        ...action.payload,
+      };
     },
   },
   extraReducers(builder) {
@@ -448,6 +481,7 @@ export const FoldersSlice = createSlice({
     builder.addCase(fetchGetFolder.fulfilled, (state, action) => {
       state.loading = "succeeded";
       state.folders = [...action.payload];
+      console.log(state.folders)
     });
     builder.addCase(fetchGetFolder.rejected, (state, action) => {
       state.err = action.payload;
@@ -479,9 +513,19 @@ export const FoldersSlice = createSlice({
     });
     builder.addCase(fetchRenameFile.fulfilled, (state, action) => {
       state.loading = "succeeded";
-      console.log(action.payload)
     });
     builder.addCase(fetchRenameFile.rejected, (state, action) => {
+      state.err = action.payload;
+      state.loading = "failed";
+    });
+    builder.addCase(fetchCreateSubfolder.pending, (state) => {
+      state.loading = "pending";
+    });
+    builder.addCase(fetchCreateSubfolder.fulfilled, (state, action) => {
+      state.loading = "succeeded";
+      console.log(action.payload)
+    });
+    builder.addCase(fetchCreateSubfolder.rejected, (state, action) => {
       state.err = action.payload;
       state.loading = "failed";
     });
@@ -498,6 +542,8 @@ export const {
   changeRenameModal,
   renameFile,
   checkColor,
+  SubfolderModal,
+  createSubfolderReducer,
 } = FoldersSlice.actions;
 
 export default FoldersSlice.reducer;

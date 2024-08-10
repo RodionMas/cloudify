@@ -5,7 +5,7 @@ import { Link, useParams } from "react-router-dom";
 // import openFolder from "../../../assets/img/OpenedFolder.png";
 import arrow from "../../../assets/img/Chevron Down.png";
 import { useAppDispatch } from "../../../store/hooks";
-import { fetchGetAllFiles } from "../../../store/FoldersSlice";
+import { fetchGetAllFiles, SubfolderModal } from "../../../store/FoldersSlice";
 import { useSelector } from "react-redux";
 import { selectFolders } from "../../../selectors/selectors";
 import OneFile from "../OneFile/OneFile";
@@ -17,6 +17,7 @@ const FolderFiles: React.FC = () => {
   const [sortArrow, setSortArrow] = React.useState(0);
   const { allFiles } = useSelector(selectFolders)
   const { colorForFolder } = useSelector(selectFolders)
+  const dispatch = useAppDispatch()
   const appDispatch = useAppDispatch()
   React.useEffect(() => {
     appDispatch(fetchGetAllFiles())
@@ -27,7 +28,7 @@ const FolderFiles: React.FC = () => {
       <div className={style.box}>
         <h1 className={style.title}>{foldername}</h1>
         <div className={style.folderClickBox}>
-        <button>Create folder <img src={createFolderImg} alt="create folder" /></button>
+        <button onClick={() => dispatch(SubfolderModal())} className={style.createFolderBtn}>Create folder <img src={createFolderImg} alt="create folder" /></button>
         <Link className={style.linkAll} to={"/home"}>
           Back
           {/* <img className={style.linkImg} src={openFolder} alt="all" /> */}

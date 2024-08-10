@@ -4,6 +4,9 @@
   border-bottom: 1px solid #d9d9d9;
   position: relative;
 }
+.fileRow {
+  position: relative;
+}
 .fileRow span {
   width: 183px;
   display: flex;
@@ -13,34 +16,32 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.fileRowDeleted{
+.fileRowDeleted {
   display: flex;
 }
-.fileRowDeleted span{
-width: 175px;
-display: flex;
-align-items: center;
-font-size: 20px;
+.fileRowDeleted span {
+  width: 175px;
+  display: flex;
+  align-items: center;
+  font-size: 20px;
 }
-.fileRowDeleted span:nth-child(1){
+.fileRowDeleted span:nth-child(1) {
   margin-left: 103px;
 }
-.fileRowDeleted span:nth-child(2){
+.fileRowDeleted span:nth-child(2) {
   margin-left: 98px;
 }
 
-
-
-.fileRow:nth-child(2){
+.fileRow:nth-child(2) {
   margin-left: 20px;
 }
-.fileRow:nth-child(3){
+.fileRow:nth-child(3) {
   margin-left: 34px;
 }
-.fileRow:nth-child(4){
+.fileRow:nth-child(4) {
   margin-left: -10px;
 }
-.size{
+.size {
   /* margin-left: 30px; */
 }
 .fileImg {
@@ -51,7 +52,7 @@ font-size: 20px;
 .fileRow {
   display: flex;
 }
-.fileRow:last-child{
+.fileRow:last-child {
   padding-left: 6px;
 }
 .moreBtn {
@@ -73,7 +74,7 @@ font-size: 20px;
   height: 16px;
   margin-left: 28px;
 }
-.folderName span{
+.folderName span {
   font-size: 14px;
   white-space: nowrap; /* Запрещаем перенос текста на новую строку */
   overflow: hidden; /* Скрываем текст, который не помещается */
@@ -83,5 +84,13 @@ font-size: 20px;
   font-size: 14px;
   color: #fff;
   font-weight: 400;
- 
+}
+.checkbox {
+  position: absolute;
+  left: -45px;
+  top: 5px;
+  width: 23px;
+  height: 23px;
+  box-sizing: border-box;
+  border: 2px solid rgb(217, 217, 217);
 }
