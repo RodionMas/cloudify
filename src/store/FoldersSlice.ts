@@ -321,6 +321,20 @@ export const fetchGetFoldersFiles = createAsyncThunk<
     return rejectWithValue(error.message);
   }
 });
+// DeleteFiles
+
+export const fetchDelCheckbox = createAsyncThunk<
+  string,
+  DeleteFiles[],
+  { rejectValue: string }
+>("folder/fetchDelCheckbox", async (movedObjForFetch, { rejectWithValue }) => {
+  try {
+    const { data } = await axios.post(`/files/move/deleted`, movedObjForFetch);
+    return data;
+  } catch (error: any) {
+    return rejectWithValue(error.message);
+  }
+});
 
 const initialState: FoldersTypeState = {
   dots: [
@@ -381,11 +395,7 @@ const initialState: FoldersTypeState = {
   },
   foldersForPagckage: [],
   filesForPackage: [],
-  movedObjForFetch: {
-    source: "",
-    target: "",
-    files: [],
-  },
+  movedObjForFetch: [],
 };
 
 export const FoldersSlice = createSlice({
@@ -448,11 +458,11 @@ export const FoldersSlice = createSlice({
       state.movedObjForFetch.target = action.payload.target;
     },
     // Добавление файла в массив files
-    addFile(state, action: PayloadAction<string>) {
-      state.movedObjForFetch = {
-        ...state.movedObjForFetch,
-        files: action.payload
-      }
+    addFile(state, action: PayloadAction<any>) {
+      state.movedObjForFetch = [
+        // ...state.movedObjForFetch,
+        ...action.payload,
+      ];
       // console.log( state.movedObjForFetch.files)
     },
     // Удаление файла из массива files
@@ -531,7 +541,7 @@ export const FoldersSlice = createSlice({
     builder.addCase(fetchCreateFolder.pending, (state) => {
       state.loading = "pending";
     });
-    builder.addCase(fetchCreateFolder.fulfilled, (state, action) => {
+    builder.addCase(fetchCreateFolder.fulfilled, (state,) => {
       state.loading = "succeeded";
     });
     builder.addCase(fetchCreateFolder.rejected, (state, action) => {
@@ -563,7 +573,7 @@ export const FoldersSlice = createSlice({
     builder.addCase(fetchRecover.pending, (state) => {
       state.loading = "pending";
     });
-    builder.addCase(fetchRecover.fulfilled, (state, action) => {
+    builder.addCase(fetchRecover.fulfilled, (state,) => {
       state.loading = "succeeded";
     });
     builder.addCase(fetchRecover.rejected, (state, action) => {
@@ -573,7 +583,7 @@ export const FoldersSlice = createSlice({
     builder.addCase(fetchRenameFile.pending, (state) => {
       state.loading = "pending";
     });
-    builder.addCase(fetchRenameFile.fulfilled, (state, action) => {
+    builder.addCase(fetchRenameFile.fulfilled, (state,) => {
       state.loading = "succeeded";
     });
     builder.addCase(fetchRenameFile.rejected, (state, action) => {
@@ -583,7 +593,7 @@ export const FoldersSlice = createSlice({
     builder.addCase(fetchCreateSubfolder.pending, (state) => {
       state.loading = "pending";
     });
-    builder.addCase(fetchCreateSubfolder.fulfilled, (state, action) => {
+    builder.addCase(fetchCreateSubfolder.fulfilled, (state,) => {
       state.loading = "succeeded";
     });
     builder.addCase(fetchCreateSubfolder.rejected, (state, action) => {
@@ -604,9 +614,19 @@ export const FoldersSlice = createSlice({
       state.err = action.payload;
       state.loading = "failed";
     });
+    builder.addCase(fetchDelCheckbox.pending, (state) => {
+      state.loading = "pending";
+    });
+    builder.addCase(fetchDelCheckbox.fulfilled, (state,) => {
+      state.loading = "succeeded";
+    });
+    builder.addCase(fetchDelCheckbox.rejected, (state, action) => {
+      state.err = action.payload;
+      state.loading = "failed";
+    });
   },
 });
-
+// fetchDelCheckbox
 export const {
   changeLogout,
   changeDragDrop,

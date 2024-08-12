@@ -4,8 +4,11 @@ import Search from "../UserRepo/Search/Search";
 import arrow from "../../../assets/img/Chevron Down.png";
 import moveSelectedImg from "../../../assets/img/showMoreSmall/Move.png";
 import moveDeletedImg from "../../../assets/img/showMoreSmall/Trash Can.png";
-import { useAppDispatch } from "../../../store/hooks";
-import { fetchGetAllFiles } from "../../../store/FoldersSlice";
+import { useAppDispatch, useAppSelector } from "../../../store/hooks";
+import {
+  fetchDelCheckbox,
+  fetchGetAllFiles,
+} from "../../../store/FoldersSlice";
 import { useSelector } from "react-redux";
 import { selectFolders } from "../../../selectors/selectors";
 import OneFile from "../OneFile/OneFile";
@@ -14,9 +17,17 @@ const AllFiles: React.FC = () => {
   const sortBy = ["Name", "Folder", "File Size", "Last Changes"];
   const [sortArrow, setSortArrow] = React.useState(0);
   const { allFiles } = useSelector(selectFolders);
-  const [filesArr, setFilesArr] = React.useState([])
+  const [filesArr, setFilesArr] = React.useState([]);
   const appDispatch = useAppDispatch();
-
+  const { movedObjForFetch } = useAppSelector(selectFolders);
+  async function handleDeleteChebox() {
+    try {
+      await appDispatch(fetchDelCheckbox(movedObjForFetch));
+      await appDispatch(fetchGetAllFiles());
+    } catch (error) {
+      console.warn(error);
+    }
+  }
   React.useEffect(() => {
     appDispatch(fetchGetAllFiles());
   }, [appDispatch]);
@@ -26,13 +37,21 @@ const AllFiles: React.FC = () => {
       <div className={style.box}>
         <h1 className={style.title}>Files</h1>
         <div className={style.btnAllBox}>
-          <button className={style.btnAll}>
+          <button onClick={() => handleDeleteChebox()} className={style.btnAll}>
             Delete selected{" "}
-            <img className={style.linkImg} src={moveDeletedImg} alt="deleted all" />
+            <img
+              className={style.linkImg}
+              src={moveDeletedImg}
+              alt="deleted all"
+            />
           </button>
           <button className={style.btnAll}>
             Move selected{" "}
-            <img className={style.linkImg} src={moveSelectedImg} alt="moved all" />
+            <img
+              className={style.linkImg}
+              src={moveSelectedImg}
+              alt="moved all"
+            />
           </button>
           <button className={style.btnAll}>Cancel</button>
         </div>
@@ -57,7 +76,14 @@ const AllFiles: React.FC = () => {
           ))}
         </div>
         {allFiles.map((item, i) => {
-          return <OneFile filesArr={filesArr} setFilesArr={setFilesArr} key={i} {...item} />;
+          return (
+            <OneFile
+              filesArr={filesArr}
+              setFilesArr={setFilesArr}
+              key={i}
+              {...item}
+            />
+          );
         })}
       </div>
     </section>

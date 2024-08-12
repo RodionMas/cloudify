@@ -1,7 +1,7 @@
 import React from "react";
 import style from "./FolderFiles.module.css";
 import Search from "../UserRepo/Search/Search";
-import { Link, useParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 // import openFolder from "../../../assets/img/OpenedFolder.png";
 import arrow from "../../../assets/img/Chevron Down.png";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
@@ -14,6 +14,9 @@ import OneFolder from "../OneFolder/OneFolder";
 const FolderFiles: React.FC = () => {
   const { foldername } = useParams()
   const sortBy = ["Name", "Folder", "File Size", "Changes"];
+  const {pathname} = useLocation()
+  const lastSlashIndex = pathname.lastIndexOf("/");
+  const newUrl = pathname.substring(0, lastSlashIndex);
   const [sortDownArrow, setSortDownArrow] = React.useState(0);
   const { filesForPackage, foldersForPagckage } = useAppSelector(selectFolders)
   const { colorForFolder } = useAppSelector(selectFolders)
@@ -30,7 +33,7 @@ const FolderFiles: React.FC = () => {
         <h1 className={style.title}>{foldername}</h1>
         <div className={style.folderClickBox}>
         <button onClick={() => dispatch(SubfolderModal())} className={style.createFolderBtn}>Create folder <img src={createFolderImg} alt="create folder" /></button>
-        <Link className={style.linkAll} to={"/home"}>
+        <Link className={style.linkAll} to={newUrl}>
           Back
         </Link>
         </div>

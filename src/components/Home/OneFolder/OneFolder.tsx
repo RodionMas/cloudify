@@ -34,7 +34,6 @@ const OneFolder: React.FC<any> = ({folder}) => {
     return (
         <div className={style.files}>
         <div className={style.fileRow}>
-          <input className={style.checkbox} type="checkbox" />
           <span className={style.fileName}>
             <img className={style.fileImg} src={folderPng} alt="folder" />{" "}
             {name}

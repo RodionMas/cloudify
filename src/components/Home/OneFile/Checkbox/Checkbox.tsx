@@ -1,55 +1,63 @@
 import React from "react";
 import style from "../OneFile.module.css";
-import { useAppDispatch } from "../../../../store/hooks";
-import { addFile, setSourceAndTarget } from "../../../../store/FoldersSlice";
+import { useAppDispatch, useAppSelector } from "../../../../store/hooks";
+import { addFile, fetchDelCheckbox } from "../../../../store/FoldersSlice";
+import { selectFolders } from "../../../../selectors/selectors";
 
-interface FetchFileType {
+// Интерфейс для одного файла
+interface FileType {
   filename: string;
   filePath: string;
 }
 
-const Checkbox: React.FC<any> = React.memo(
+// Интерфейс для пропсов компонента Checkbox
+interface CheckboxProps {
+  filename: string;
+  filePath: string;
+  filesArr: FileType[];
+  setFilesArr: React.Dispatch<React.SetStateAction<FileType[]>>;
+}
+
+const Checkbox: React.FC<CheckboxProps> = 
   ({ filename, filePath, filesArr, setFilesArr }) => {
     const dispatch = useAppDispatch();
     const [isChecked, setIsChecked] = React.useState(false);
-    const [movedObjDel, setMovedObjDel] = React.useState<{
-      source: string;
-      target: string;
-      files: string[];
-    }>({
-      source: filePath,
-      target: `deleted/${filePath}`,
-      files: [],
-    });
+    const { movedObjForFetch } = useAppSelector(selectFolders)
     const handleCheckboxChange = () => {
       const newCheckedState = !isChecked;
       setIsChecked(newCheckedState);
-      if (newCheckedState) {
+      if (!isChecked) {
+        setFilesArr((prev: any) => [
+          ...prev, 
+          {
+            filename: filename, 
+            filePath: filePath,
+            newFilePath: 'deleted'   
+          }
+        ]);
+        dispatch(addFile(filesArr))
       }
+      else if(isChecked) {
+        setFilesArr(prev => (prev.filter(file => file.filename !== filename)))
+        dispatch(addFile(filesArr))
+      }
+
     };
     React.useEffect(() => {
-      console.log(filesArr)
-      console.log(filePath)
-    }, [filesArr])
+      if (filesArr.length !== movedObjForFetch.length) {
+        dispatch(addFile(filesArr))
+      }
+    }, [filesArr, movedObjForFetch, dispatch])
     return (
       <input
         checked={isChecked}
         onChange={() => {
-            handleCheckboxChange()
-            setFilesArr((prev: any) => [
-              ...prev, 
-              {
-                filename: filename,  // просто присваиваем значение filename
-                filePath: filePath   // просто присваиваем значение filePath
-              }
-            ]);
-            dispatch(addFile(filesArr))
+          handleCheckboxChange()
         }}
         className={style.checkbox}
         type="checkbox"
       />
     );
   }
-);
 
 export default Checkbox;

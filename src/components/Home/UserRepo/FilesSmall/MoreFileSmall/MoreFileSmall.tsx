@@ -26,8 +26,8 @@ import BtnShowMore from "./BtnShowMore/BtnShowMore";
 const MoreFileSmall = forwardRef<HTMLDivElement, any>((props, ref) => {
   const showMoreArr = [
     { name: "Download", image: download },
-    { name: "Create Link", image: link },
-    { name: "Favourite", image: bookmark },
+    // { name: "Create Link", image: link },
+    // { name: "Favourite", image: bookmark },
     { name: "Move", image: move },
     { name: "Info", image: info },
     { name: "Rename", image: edit },
