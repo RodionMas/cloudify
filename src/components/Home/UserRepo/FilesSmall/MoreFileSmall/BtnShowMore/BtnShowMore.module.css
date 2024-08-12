@@ -68,6 +68,10 @@ background: rgba(201, 201, 201, 0.7);
   border: none;
   cursor: pointer;
   background: transparent;
+  display: flex;
+}
+.btnFolder+.btnFolder{
+  margin-top: 10px;
 }
 .moreBox:hover .wrapperFolder {
   display: block;
@@ -78,7 +82,11 @@ background: rgba(201, 201, 201, 0.7);
   font-weight: 400;
   margin: 0;
 }
-.packageImg{
+.btnFolder{
   width: 30px;
   height: 30px;
+  align-items: center;
+}
+.btnFolder img{
+  margin-right: 10px;
 }

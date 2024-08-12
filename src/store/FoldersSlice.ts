@@ -28,7 +28,11 @@ interface FoldersTypeState {
   colorForFolder: string;
   createSubfolderModal: boolean;
   createSubfolder: CreateSubfolderType;
+  foldersForPagckage: string[];
+  filesForPackage: FilesForPackageType[];
+  movedObjForFetch: any;
 }
+
 interface Dots {
   name: string;
   image: any;
@@ -44,7 +48,18 @@ interface FetchFilesUserRes {
   size: string;
   lastModified: DateType;
 }
+
+interface FilesForPackageType {
+  lastModified: LastModifyType;
+  name: string;
+  size: string;
+}
+interface LastModifyType {
+  day: string;
+  time: string;
+}
 interface FetchDeletedFiles extends FetchFilesUserRes {}
+
 interface DateType {
   day: string;
   time: string;
@@ -93,8 +108,8 @@ interface RenameObjType {
   newFileName: string;
 }
 interface CreateSubfolderType {
-    folderPath: string,
-    name: string;
+  folderPath: string;
+  name: string;
 }
 export const fetchGetAmountData = createAsyncThunk<
   AmountDataType,
@@ -265,9 +280,12 @@ export const fetchRenameFile = createAsyncThunk<
   try {
     const objForFetch = {
       filepath: renameInp.filepath,
-      newFileName: renameInp.newFileName
-    }
-    const { data } = await axios.patch(`/file/${renameInp.oldFileName}`, objForFetch);
+      newFileName: renameInp.newFileName,
+    };
+    const { data } = await axios.patch(
+      `/file/${renameInp.oldFileName}`,
+      objForFetch
+    );
     return data;
   } catch (error: any) {
     return rejectWithValue(error.message);
@@ -278,10 +296,26 @@ export const fetchCreateSubfolder = createAsyncThunk<
   string,
   CreateSubfolderType,
   { rejectValue: string }
->("folder/fetchCreateSubfolder", async (createSubfolder, { rejectWithValue }) => {
-  try {
+>(
+  "folder/fetchCreateSubfolder",
+  async (createSubfolder, { rejectWithValue }) => {
+    try {
+      const { data } = await axios.post(`/subfolders`, createSubfolder);
+      return data;
+    } catch (error: any) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
 
-    const { data } = await axios.post(`/subfolders`, createSubfolder);
+export const fetchGetFoldersFiles = createAsyncThunk<
+  // FoldersFilesType[]
+  any,
+  any,
+  { rejectValue: string }
+>("folder/fetchGetFoldersFiles", async (foldername, { rejectWithValue }) => {
+  try {
+    const { data } = await axios.get(`/files?path=${foldername}`);
     return data;
   } catch (error: any) {
     return rejectWithValue(error.message);
@@ -337,13 +371,20 @@ const initialState: FoldersTypeState = {
   renameObj: {
     oldFileName: "",
     filepath: "",
-    newFileName: ""
+    newFileName: "",
   },
-  colorForFolder: '',
+  colorForFolder: "",
   createSubfolderModal: false,
   createSubfolder: {
     folderPath: "",
-    name: ""
+    name: "",
+  },
+  foldersForPagckage: [],
+  filesForPackage: [],
+  movedObjForFetch: {
+    source: "",
+    target: "",
+    files: [],
   },
 };
 
@@ -390,13 +431,35 @@ export const FoldersSlice = createSlice({
       state.colorForFolder = action.payload;
     },
     SubfolderModal: (state) => {
-      state.createSubfolderModal = !state.createSubfolderModal
+      state.createSubfolderModal = !state.createSubfolderModal;
     },
     createSubfolderReducer: (state, action) => {
       state.createSubfolder = {
         ...state.createSubfolder,
         ...action.payload,
       };
+    },
+    // Обновление source и target
+    setSourceAndTarget(
+      state,
+      action: PayloadAction<{ source: string; target: string }>
+    ) {
+      state.movedObjForFetch.source = action.payload.source;
+      state.movedObjForFetch.target = action.payload.target;
+    },
+    // Добавление файла в массив files
+    addFile(state, action: PayloadAction<string>) {
+      state.movedObjForFetch = {
+        ...state.movedObjForFetch,
+        files: action.payload
+      }
+      // console.log( state.movedObjForFetch.files)
+    },
+    // Удаление файла из массива files
+    removeFile(state, action: PayloadAction<string>) {
+      state.movedObjForFetch.files = state.movedObjForFetch.files.filter(
+        (file: string) => file !== action.payload
+      );
     },
   },
   extraReducers(builder) {
@@ -481,7 +544,6 @@ export const FoldersSlice = createSlice({
     builder.addCase(fetchGetFolder.fulfilled, (state, action) => {
       state.loading = "succeeded";
       state.folders = [...action.payload];
-      console.log(state.folders)
     });
     builder.addCase(fetchGetFolder.rejected, (state, action) => {
       state.err = action.payload;
@@ -523,9 +585,22 @@ export const FoldersSlice = createSlice({
     });
     builder.addCase(fetchCreateSubfolder.fulfilled, (state, action) => {
       state.loading = "succeeded";
-      console.log(action.payload)
     });
     builder.addCase(fetchCreateSubfolder.rejected, (state, action) => {
+      state.err = action.payload;
+      state.loading = "failed";
+    });
+    builder.addCase(fetchGetFoldersFiles.pending, (state) => {
+      state.loading = "pending";
+    });
+    builder.addCase(fetchGetFoldersFiles.fulfilled, (state, action) => {
+      state.loading = "succeeded";
+      state.foldersForPagckage = [];
+      state.filesForPackage = [];
+      state.foldersForPagckage = [...action.payload.folders];
+      state.filesForPackage = [...action.payload.files];
+    });
+    builder.addCase(fetchGetFoldersFiles.rejected, (state, action) => {
       state.err = action.payload;
       state.loading = "failed";
     });
@@ -544,6 +619,9 @@ export const {
   checkColor,
   SubfolderModal,
   createSubfolderReducer,
+  setSourceAndTarget,
+  addFile,
+  removeFile,
 } = FoldersSlice.actions;
 
 export default FoldersSlice.reducer;

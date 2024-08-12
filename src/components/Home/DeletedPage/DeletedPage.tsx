@@ -19,6 +19,13 @@ const DeletedPage = () => {
   const { username } = useSelector(selectAuth);
   const { deletedFiles } = useSelector(selectFolders);
   const appDispatch = useAppDispatch();
+  const handleDeleteFiles = async () => {
+    try {
+      await appDispatch(fetchDeleteFiles({ username, deletedFiles }));
+      await appDispatch(fetchGetAmountData());
+    } catch (error) {
+      console.error('Error creating folder:', error);
+    }   } 
   React.useEffect(() => {
     appDispatch(fetchGetDeletedFiles());
   }, [username, appDispatch]);
@@ -28,11 +35,7 @@ const DeletedPage = () => {
       <div className={style.box}>
         <h1 className={style.title}>Deleted</h1>
         <button
-          onClick={() =>
-            appDispatch(fetchDeleteFiles({ username, deletedFiles })).then(() =>
-              appDispatch(fetchGetAmountData())
-            )
-          }
+          onClick={() =>  handleDeleteFiles()}
           className={style.delAll}
         >
           Delete All{" "}

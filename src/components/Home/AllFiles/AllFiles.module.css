@@ -10,7 +10,7 @@
   margin-top: 30px;
   margin-bottom: 15px;
 }
-.linkAll {
+.btnAll {
   display: flex;
   text-decoration: none;
   color: #000;
@@ -18,9 +18,18 @@
   padding: 7px 42px;
   border-radius: 30px;
   background-color: #d9d9d9;
+  border: none;
+  cursor: pointer;
 }
-.linkAll:hover {
+.btnAll+.btnAll{
+  margin-left: 15px;
+}
+.btnAllBox{
+  display: flex;
+}
+.btnAll:hover {
   background-color: #ccc;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
 }
 .linkImg {
   width: 24px;

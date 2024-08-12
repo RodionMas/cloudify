@@ -4,23 +4,24 @@ import Search from "../UserRepo/Search/Search";
 import { Link, useParams } from "react-router-dom";
 // import openFolder from "../../../assets/img/OpenedFolder.png";
 import arrow from "../../../assets/img/Chevron Down.png";
-import { useAppDispatch } from "../../../store/hooks";
-import { fetchGetAllFiles, SubfolderModal } from "../../../store/FoldersSlice";
-import { useSelector } from "react-redux";
+import { useAppDispatch, useAppSelector } from "../../../store/hooks";
+import { fetchGetAllFiles, fetchGetFoldersFiles, SubfolderModal } from "../../../store/FoldersSlice";
 import { selectFolders } from "../../../selectors/selectors";
 import OneFile from "../OneFile/OneFile";
 import createFolderImg from '../../../assets/img/Add Folder.png'
+import OneFolder from "../OneFolder/OneFolder";
 
 const FolderFiles: React.FC = () => {
   const { foldername } = useParams()
-  const sortBy = ["Name", "Folder", "File Size", "Last Changes"];
-  const [sortArrow, setSortArrow] = React.useState(0);
-  const { allFiles } = useSelector(selectFolders)
-  const { colorForFolder } = useSelector(selectFolders)
+  const sortBy = ["Name", "Folder", "File Size", "Changes"];
+  const [sortDownArrow, setSortDownArrow] = React.useState(0);
+  const { filesForPackage, foldersForPagckage } = useAppSelector(selectFolders)
+  const { colorForFolder } = useAppSelector(selectFolders)
   const dispatch = useAppDispatch()
   const appDispatch = useAppDispatch()
   React.useEffect(() => {
     appDispatch(fetchGetAllFiles())
+    appDispatch(fetchGetFoldersFiles(foldername))
   }, [appDispatch])
   return (
     <section className={style.wrapper}>
@@ -31,7 +32,6 @@ const FolderFiles: React.FC = () => {
         <button onClick={() => dispatch(SubfolderModal())} className={style.createFolderBtn}>Create folder <img src={createFolderImg} alt="create folder" /></button>
         <Link className={style.linkAll} to={"/home"}>
           Back
-          {/* <img className={style.linkImg} src={openFolder} alt="all" /> */}
         </Link>
         </div>
       </div>
@@ -41,13 +41,13 @@ const FolderFiles: React.FC = () => {
           {sortBy.map((sort, i) => (
             <button
               key={i}
-              onClick={() => setSortArrow(i)}
+              onClick={() => setSortDownArrow(i)}
               className={style.sortText}
             >
               {sort}{" "}
-              {sortArrow === i && (
+              {sortDownArrow === i && (
                 <img
-                  className={style.sortDown}
+                  className={style.sortDownArrow}
                   src={arrow}
                   alt="Chevron Down"
                 />
@@ -55,10 +55,15 @@ const FolderFiles: React.FC = () => {
             </button>
           ))}
         </div>
-        {allFiles.filter(item => item.filePath === foldername).map((item, i) => {
+        {filesForPackage.map((item, i) => {
           return (
             <OneFile key={i} {...item} />
           );
+        })}
+        {foldersForPagckage.map((folder, i) => {
+          return (
+            <OneFolder key={i} folder={folder} />
+          )
         })}
       </div>
     </section>

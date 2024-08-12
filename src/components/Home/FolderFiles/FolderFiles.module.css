@@ -76,23 +76,26 @@
   padding: 0;
   background: transparent;
   border: none;
+  position: relative;
 }
 .sortText:nth-child(1) {
   margin-left: 15px;
 }
 .sortText:nth-child(2) {
-  margin-left: 192px;
+  margin-left: 150px;
 }
 .sortText:nth-child(3) {
-  margin-left: 100px;
+  margin-left: 153px;
 }
 .sortText:nth-child(4) {
   margin-left: 100px;
 }
-.sortDown {
+.sortDownArrow {
+  position: absolute;
   width: 16px;
   height: 16px;
   margin-left: 15px;
+  left: 93px;
 }
 .files {
   display: flex;
@@ -100,6 +103,7 @@
   padding: 13px 15px;
   border-bottom: 1px solid #d9d9d9;
   position: relative;
+  align-items: center;
 }
 .fileRow span {
   display: flex;

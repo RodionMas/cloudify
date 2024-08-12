@@ -16,16 +16,16 @@ const CreateFolder: React.FC = () => {
   const { createFolder } = useSelector(selectFolders);
   const appDispatch = useAppDispatch();
   const colorArr = [
-    "#FFB800",
+    "#FFB800", //yellow
     "#FF7B31",
-    "#D23434",
+    "#D23434", //red
     "#E241B5",
-    "#962EE8",
-    "#0094FF",
-    "#1F4C6D",
-    "#56ABB0",
-    "#39AA26",
-    "#A76E2B",
+    "#962EE8", //violet
+    "#0094FF", //blue
+    "#1F4C6D", 
+    "#56ABB0", 
+    "#39AA26", //green
+    "#A76E2B", //brown
   ];
   const handleCreateFolder = async () => {
     try {

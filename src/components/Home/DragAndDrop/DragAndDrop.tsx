@@ -32,23 +32,26 @@ const DragAndDrop: React.FC = () => {
     const newFormData = new FormData();
     files.forEach((files) => {
       newFormData.append(`files`, files);
-    })
+    });
 
     newFormData.append("user", username);
     setFormData(newFormData); // Сохраняем FormData в состоянии
     setDrag(false);
   }
-  // .then(() =>  appDispatch(fetchGetAllFiles(username)))
-  function handleSelectClick(): void {
-    if (formData) {
-      appDispatch(fetchDrop(formData)).then(() => appDispatch(fetchGetAllFiles())).then(() => appDispatch(fetchGetAmountData()));
-
+  async function handleSelectClick() {
+    try {
+      if (formData) {
+      await appDispatch(fetchDrop(formData));
+      await appDispatch(fetchGetAllFiles());
+      await appDispatch(fetchGetAmountData());
+      }
+    } catch (error) {
+      console.error('Error creating folder:', error);
+    } finally {
       appDispatch(changeDragDrop());
-    } else {
-      console.error("No file selected.");
     }
   }
-  React.useEffect(() => { }, [totalSize]);
+  React.useEffect(() => {}, [totalSize]);
   return (
     <div className={style.wrapper}>
       {drag ? (
