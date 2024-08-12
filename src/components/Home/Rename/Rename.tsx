@@ -35,7 +35,6 @@ console.log(renameInp)
       <div className={style.btnBox}>
         <button
           onClick={() => {
-            // dispatch(renameFile(renameInp));
             dispatch(changeRenameModal());
             dispatch(fetchRenameFile(renameInp)).then(() => dispatch(fetchGetAllFiles()))
           }}

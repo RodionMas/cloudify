@@ -123,7 +123,7 @@ const OneFile: React.FC<any> = React.memo(
               filePath={filePath}
               style={{
                 position: "absolute",
-                top: menuPosition.top - 300,
+                top: menuPosition.top - 190,
                 left: menuPosition.left + 50,
               }}
             />

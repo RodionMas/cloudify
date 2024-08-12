@@ -11,6 +11,7 @@ import OneFile from "../OneFile/OneFile";
 import createFolderImg from '../../../assets/img/Add Folder.png'
 import OneFolder from "../OneFolder/OneFolder";
 
+
 const FolderFiles: React.FC = () => {
   const { foldername } = useParams()
   const sortBy = ["Name", "Folder", "File Size", "Changes"];
@@ -22,9 +23,16 @@ const FolderFiles: React.FC = () => {
   const { colorForFolder } = useAppSelector(selectFolders)
   const dispatch = useAppDispatch()
   const appDispatch = useAppDispatch()
+  async function handleGetFiles() {
+    try {
+     await appDispatch(fetchGetAllFiles())
+     await appDispatch(fetchGetFoldersFiles(foldername))
+    } catch (error) {
+      console.log(error)
+    }
+  }
   React.useEffect(() => {
-    appDispatch(fetchGetAllFiles())
-    appDispatch(fetchGetFoldersFiles(foldername))
+    handleGetFiles()
   }, [appDispatch])
   return (
     <section className={style.wrapper}>
@@ -32,7 +40,7 @@ const FolderFiles: React.FC = () => {
       <div className={style.box}>
         <h1 className={style.title}>{foldername}</h1>
         <div className={style.folderClickBox}>
-        <button onClick={() => dispatch(SubfolderModal())} className={style.createFolderBtn}>Create folder <img src={createFolderImg} alt="create folder" /></button>
+        <button onClick={() => dispatch(SubfolderModal())} className={style.createFolderBtn}>Create Subfolder <img src={createFolderImg} alt="create folder" /></button>
         <Link className={style.linkAll} to={newUrl}>
           Back
         </Link>

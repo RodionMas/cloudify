@@ -459,11 +459,13 @@ export const FoldersSlice = createSlice({
     },
     // Добавление файла в массив files
     addFile(state, action: PayloadAction<any>) {
-      state.movedObjForFetch = [
-        // ...state.movedObjForFetch,
-        ...action.payload,
-      ];
-      // console.log( state.movedObjForFetch.files)
+      state.movedObjForFetch = [...action.payload];
+      const updatedArray = state.movedObjForFetch.map(
+        (file: { newFilePath: string }) => {
+          return { ...file, file, newFilePath: "deleted" };
+        }
+      );
+      state.movedObjForFetch = [...updatedArray];
     },
     // Удаление файла из массива files
     removeFile(state, action: PayloadAction<string>) {
@@ -541,7 +543,7 @@ export const FoldersSlice = createSlice({
     builder.addCase(fetchCreateFolder.pending, (state) => {
       state.loading = "pending";
     });
-    builder.addCase(fetchCreateFolder.fulfilled, (state,) => {
+    builder.addCase(fetchCreateFolder.fulfilled, (state) => {
       state.loading = "succeeded";
     });
     builder.addCase(fetchCreateFolder.rejected, (state, action) => {
@@ -573,7 +575,7 @@ export const FoldersSlice = createSlice({
     builder.addCase(fetchRecover.pending, (state) => {
       state.loading = "pending";
     });
-    builder.addCase(fetchRecover.fulfilled, (state,) => {
+    builder.addCase(fetchRecover.fulfilled, (state) => {
       state.loading = "succeeded";
     });
     builder.addCase(fetchRecover.rejected, (state, action) => {
@@ -583,7 +585,7 @@ export const FoldersSlice = createSlice({
     builder.addCase(fetchRenameFile.pending, (state) => {
       state.loading = "pending";
     });
-    builder.addCase(fetchRenameFile.fulfilled, (state,) => {
+    builder.addCase(fetchRenameFile.fulfilled, (state) => {
       state.loading = "succeeded";
     });
     builder.addCase(fetchRenameFile.rejected, (state, action) => {
@@ -593,7 +595,7 @@ export const FoldersSlice = createSlice({
     builder.addCase(fetchCreateSubfolder.pending, (state) => {
       state.loading = "pending";
     });
-    builder.addCase(fetchCreateSubfolder.fulfilled, (state,) => {
+    builder.addCase(fetchCreateSubfolder.fulfilled, (state) => {
       state.loading = "succeeded";
     });
     builder.addCase(fetchCreateSubfolder.rejected, (state, action) => {
@@ -617,7 +619,7 @@ export const FoldersSlice = createSlice({
     builder.addCase(fetchDelCheckbox.pending, (state) => {
       state.loading = "pending";
     });
-    builder.addCase(fetchDelCheckbox.fulfilled, (state,) => {
+    builder.addCase(fetchDelCheckbox.fulfilled, (state) => {
       state.loading = "succeeded";
     });
     builder.addCase(fetchDelCheckbox.rejected, (state, action) => {

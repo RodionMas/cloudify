@@ -24,6 +24,7 @@ const AllFiles: React.FC = () => {
     try {
       await appDispatch(fetchDelCheckbox(movedObjForFetch));
       await appDispatch(fetchGetAllFiles());
+      setFilesArr([])
     } catch (error) {
       console.warn(error);
     }
@@ -80,7 +81,7 @@ const AllFiles: React.FC = () => {
             <OneFile
               filesArr={filesArr}
               setFilesArr={setFilesArr}
-              key={i}
+              key={item.filename}
               {...item}
             />
           );

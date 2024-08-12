@@ -57,18 +57,18 @@ const ChooseFolder: React.FC<FileNameType> = ({ filename, filePath }) => {
               className={style.btnFolder}
               key={i}
             >
-              {folder.color.toLowerCase() === "#ffb800" ? (
+              {folder.color === "#ffb800" ? (
                 <img className={style.packageImg} src={yellow} alt="package" />
               ) : (
-                folder.color.toLowerCase() === "#D23434" ? 
+                folder.color === "#D23434" ? 
                 <img className={style.packageImg} src={red} alt="package" /> :
-                folder.color.toLowerCase() === "#962EE8" ? 
+                folder.color === "#D23434" ? 
                 <img className={style.packageImg} src={violet} alt="package" /> :
-                folder.color.toLowerCase() === "#0094FF" ? 
+                folder.color === "#0094FF" ? 
                 <img className={style.packageImg} src={blue} alt="package" /> :
-                folder.color.toLowerCase() === "#39AA26" ? 
+                folder.color === "#39AA26" ? 
                 <img className={style.packageImg} src={green} alt="package" /> :
-                folder.color.toLowerCase() === "#A76E2B" ? 
+                folder.color === "#A76E2B" ? 
                 <img className={style.packageImg} src={brown} alt="package" /> :
                 <img className={style.packageImg} src={black} alt="package" /> 
               )}

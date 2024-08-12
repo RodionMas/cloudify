@@ -32,7 +32,7 @@ const Checkbox: React.FC<CheckboxProps> =
           {
             filename: filename, 
             filePath: filePath,
-            newFilePath: 'deleted'   
+            newFilePath: ''   
           }
         ]);
         dispatch(addFile(filesArr))
@@ -41,7 +41,6 @@ const Checkbox: React.FC<CheckboxProps> =
         setFilesArr(prev => (prev.filter(file => file.filename !== filename)))
         dispatch(addFile(filesArr))
       }
-
     };
     React.useEffect(() => {
       if (filesArr.length !== movedObjForFetch.length) {
