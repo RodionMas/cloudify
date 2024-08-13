@@ -1,17 +1,13 @@
 .wrapper {
-  height: 300px;
   width: 250px;
   border-radius: 30px;
   box-sizing: border-box;
   border: 1px solid rgba(144, 144, 144, 0.2);
   box-shadow: 0px 4px 7px 6px rgba(0, 0, 0, 0.1);
   background: rgb(244, 244, 244);
-  position: absolute;
-  top: 54px;
-  left: 284px;
   display: flex;
   flex-direction: column;
-  /* padding: 15px 0 15px 30px; */
+  padding-bottom: 10px;
 }
 .btn {
   display: flex;

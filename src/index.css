@@ -59,37 +59,12 @@ select {
     scroll-behavior: auto !important;
   }
 }
+.mySwiper{
+  width: 885px;
+}
 .swiper{
-  max-width: 1074px;
-  /* 1074 */
-  /* position: relative; */
-  /* margin: 0; */
+  margin-left: 0;
 }
-.swiper-slide {
-  width: 300px; /* Задайте нужную ширину */
-}
-.swiper .swiper-button-prev,
-.swiper .swiper-button-next {
-  color: #000;
-  background-color: #D9D9D9;
-  padding: 10px;
-  border-radius: 50%;
-  cursor: pointer;
-  width: 36px;
-  height: 36px;
-}
-.swiper .swiper-button-disabled{
+.mySwiper .swiper-button-disabled{
   display: none;
-}
-.swiper .swiper-button-prev{
-
-}
-.swiper .swiper-button-next{
-  background-image: url('./assets/img/Chevron Right.png');
-  background-repeat: no-repeat;
-  background-position: 9px 7px;
-}
-.swiper-button-prev:hover,
-.swiper-button-next:hover {
-  background-color: #ddd;
 }

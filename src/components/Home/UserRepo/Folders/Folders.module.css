@@ -6,9 +6,38 @@
   font-weight: 400;
 }
 .grid {
+  position: relative;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: 1fr;
   grid-column-gap: 10px;
   grid-row-gap: 10px;
+}
+/* Folders.module.css */
+.swiperButtonNext, .swiperButtonPrev{
+  position: absolute;
+  color: #000;
+  background-color: #D9D9D9;
+  padding: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+  width: 45px;
+  height: 45px;
+}
+
+.swiperButtonNext {
+  background-image: url('../../../../assets/img/Chevron Right.png');
+  background-repeat: no-repeat;
+  background-position: 14px 12px;
+  right: 0px; /* Смещение вправо от контейнера */
+  top: 8%;
+}
+
+.swiperButtonPrev{
+  background-image: url('../../../../assets/img/Chevron Right.png');
+  background-repeat: no-repeat;
+  background-position: 14px 12px;
+  right: 0px; /* Смещение вправо от контейнера */
+  bottom: 8%;
+  rotate: 180deg;
 }

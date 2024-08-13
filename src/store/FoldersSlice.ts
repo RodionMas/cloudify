@@ -343,14 +343,6 @@ const initialState: FoldersTypeState = {
       image: download,
     },
     {
-      name: "Create Link",
-      image: createLink,
-    },
-    {
-      name: "Favourite",
-      image: Favourite,
-    },
-    {
       name: "Label",
       image: Label,
       color: ["#FFB800", "#0094FF", "#D23434", "#39AA26"],

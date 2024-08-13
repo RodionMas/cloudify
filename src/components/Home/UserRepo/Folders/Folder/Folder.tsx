@@ -10,31 +10,43 @@ import { useAppDispatch } from "../../../../../store/hooks";
 
 const Folder: React.FC<FolderType> = ({ name, color, size, filesNumber }) => {
   const [hiddenDotsMenu, setHiddenDotsMenu] = React.useState(false);
+  const [menuPosition, setMenuPosition] = React.useState({ top: 0, left: 0 });
+
   const dotsRef = React.useRef<HTMLDivElement | null>(null);
   const moreFileRef = React.useRef<HTMLDivElement | null>(null);
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
+
   useClickOutside([dotsRef, moreFileRef], () => {
     if (hiddenDotsMenu) {
       setHiddenDotsMenu(false);
-      
-    }})
+    }
+  });
+
+  const handleDotsClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setHiddenDotsMenu(!hiddenDotsMenu);
+    const rect = event.currentTarget.getBoundingClientRect();
+    setMenuPosition({
+      top: rect.bottom + window.scrollY, // учитываем прокрутку
+      left: rect.left + window.scrollX,  // учитываем прокрутку
+    });
+  };
+
   return (
     <div className={style.wrapper}>
-      <div style={{background: color}} className={style.color}></div>
+      <div style={{ background: color }} className={style.color}></div>
       <div className={style.folder}>
         <Link onClick={() => dispatch(checkColor(color))} to={`/home/userfolder/${name}`} className={style.folderBox}>
           <img src={folderImg} alt="folder" />
           <span className={style.nameFolder}>{name}</span>
         </Link>
         <div className={style.dotsBlock} ref={dotsRef}>
-          <button
-            onClick={() => setHiddenDotsMenu(!hiddenDotsMenu)}
-            className={style.dotsBtn}
-          >
+          <button onClick={handleDotsClick} className={style.dotsBtn}>
             <img src={more} alt="show-more" />
           </button>
         </div>
-        {hiddenDotsMenu && <DotsBlok ref={moreFileRef} />}
+        {hiddenDotsMenu && (
+          <DotsBlok ref={moreFileRef} position={menuPosition} />
+        )}
       </div>
       <div className={style.aboutFile}>
         <span className={style.files}>{filesNumber} Files</span>
