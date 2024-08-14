@@ -6,6 +6,8 @@ import All from "../../../../assets/img/allFiles.png";
 import home from "../../../../assets/img/Home Page.png";
 
 const FileActions: React.FC = () => {
+  
+  const [activeLink, setActiveLink] = React.useState(0)
   const categoryArr = [
     {
       name: "Home",
@@ -26,7 +28,8 @@ const FileActions: React.FC = () => {
         return (
           <Link
             key={i}
-            className={style.linkCategory}
+            className={activeLink === i ? style.activeLink : style.linkCategory}
+            onClick={() => setActiveLink(i)}
             to={`/home/${
               category.name === "All Files"
                 ? "files"

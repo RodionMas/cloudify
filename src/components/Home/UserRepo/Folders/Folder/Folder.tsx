@@ -4,9 +4,10 @@ import folderImg from "../../../../../assets/img/OpenedFolder.png";
 import more from "../../../../../assets/img/More.png";
 import DotsBlok from "./DotsBlok/DotsBlok";
 import { useClickOutside } from "../../../../../tools/UseClickOutside";
-import { checkColor, FolderType } from "../../../../../store/FoldersSlice";
+import { checkColor } from "../../../../../store/FoldersSlice";
 import { Link } from "react-router-dom";
 import { useAppDispatch } from "../../../../../store/hooks";
+import { FolderType } from "../../../../../types/folderTypes";
 
 const Folder: React.FC<FolderType> = ({ name, color, size, filesNumber }) => {
   const [hiddenDotsMenu, setHiddenDotsMenu] = React.useState(false);

@@ -4,124 +4,21 @@ import download from "../assets/img/dots/Download.png";
 import Label from "../assets/img/dots/PriceTag.png";
 import Rename from "../assets/img/dots/EditFile.png";
 import Delete from "../assets/img/dots/TrashCan.png";
+import {
+  AmountDataType,
+  ColorFolderType,
+  CreateSubfolderType,
+  DeleteFiles,
+  FetchDeletedFiles,
+  FetchDelFiles,
+  FetchFilesUserRes,
+  FoldersTypeState,
+  FolderType,
+  RecoverType,
+  RenameFolder,
+  RenameObjType,
+} from "../types/folderTypes";
 
-interface FoldersTypeState {
-  dots: Dots[];
-  loading: string;
-  err: string | unknown | null;
-  totalSize: number;
-  userMemory: number;
-  logout: boolean;
-  dragAndDrop: boolean;
-  allFiles: FetchFilesUserRes[];
-  deletedFiles: FetchDeletedFiles[];
-  createFolderModal: boolean;
-  createFolder: CreateFolder;
-  folders: FolderType[];
-  foldersShowMore: FoldersShowMoreType[];
-  folderName: string;
-  recoverItem: RecoverItemType[];
-  renameModal: boolean;
-  renameObj: RenameObjType;
-  colorForFolder: string;
-  createSubfolderModal: boolean;
-  createSubfolder: CreateSubfolderType;
-  foldersForPagckage: string[];
-  filesForPackage: FilesForPackageType[];
-  movedObjForFetch: any;
-  renameFolderModal: boolean;
-  renameFolder: RenameFolder;
-  colorFolder: ColorFolderType;
-}
-
-interface ColorFolderType {
-  name: string;
-  newColor: string;
-}
-
-interface RenameFolder {
-  oldName: string;
-  newName: string
-}
-
-interface Dots {
-  name: string;
-  image: any;
-  color?: string[];
-}
-interface AmountDataType {
-  totalSize: number;
-  userMemory: number;
-}
-interface FetchFilesUserRes {
-  filename: string;
-  filePath: string;
-  size: string;
-  lastModified: DateType;
-}
-
-interface FilesForPackageType {
-  lastModified: LastModifyType;
-  name: string;
-  size: string;
-}
-interface LastModifyType {
-  day: string;
-  time: string;
-}
-interface FetchDeletedFiles extends FetchFilesUserRes {}
-
-interface DateType {
-  day: string;
-  time: string;
-}
-
-interface FetchDelFiles {
-  username?: string;
-  deletedFiles?: DeleteFiles[];
-  delFile?: DeleteFiles[];
-}
-
-interface DeleteFiles {
-  filename: string;
-  filePath: string;
-}
-interface CreateFolder {
-  name: string;
-  color: string;
-}
-
-export interface FolderType {
-  name: string;
-  color: string;
-  size: string;
-  filesNumber: string;
-}
-
-export interface FoldersShowMoreType {
-  name: string;
-  color: string;
-  size: string;
-  filesNumber: string;
-}
-
-interface RecoverType {
-  filename: string;
-  filePath: string;
-}
-interface RecoverItemType {
-  filename: string;
-  filePath: string;
-}
-interface RenameObjType {
-  oldFileName?: string;
-  filepath?: string;
-  newFileName: string;
-}
-interface CreateSubfolderType {
-  folderPath: string;
-  name: string;
-}
 export const fetchGetAmountData = createAsyncThunk<
   AmountDataType,
   void,
@@ -181,43 +78,31 @@ export const fetchDeleteFiles = createAsyncThunk<
   string,
   FetchDelFiles,
   { rejectValue: string }
->(
-  "folder/fetchDeleteFiles",
-  async ({ deletedFiles }, { rejectWithValue }) => {
-    try {
-      const response = await axios.delete<string>(
-        `files`,
-        {
-          data: deletedFiles,
-        }
-      );
-      return response.data;
-    } catch (error: any) {
-      return rejectWithValue(error.message);
-    }
+>("folder/fetchDeleteFiles", async ({ deletedFiles }, { rejectWithValue }) => {
+  try {
+    const response = await axios.delete<string>(`files`, {
+      data: deletedFiles,
+    });
+    return response.data;
+  } catch (error: any) {
+    return rejectWithValue(error.message);
   }
-);
+});
 
 export const fetchDeleteFile = createAsyncThunk<
   string,
   FetchDelFiles,
   { rejectValue: string }
->(
-  "folder/fetchDeleteFile",
-  async ({ delFile }, { rejectWithValue }) => {
-    try {
-      const response = await axios.delete<string>(
-        `files`,
-        {
-          data: delFile,
-        }
-      );
-      return response.data;
-    } catch (error: any) {
-      return rejectWithValue(error.message);
-    }
+>("folder/fetchDeleteFile", async ({ delFile }, { rejectWithValue }) => {
+  try {
+    const response = await axios.delete<string>(`files`, {
+      data: delFile,
+    });
+    return response.data;
+  } catch (error: any) {
+    return rejectWithValue(error.message);
   }
-);
+});
 
 export const fetchMove = createAsyncThunk<string, any, { rejectValue: string }>(
   "folder/fetchMove",
@@ -353,7 +238,10 @@ export const fetchRenameFodler = createAsyncThunk<
   { rejectValue: string }
 >("folder/fetchRenameFodler", async (renameFolder, { rejectWithValue }) => {
   try {
-    const { data } = await axios.patch(`/folders/${renameFolder.oldName}`, renameFolder.newName);
+    const { data } = await axios.patch(
+      `/folders/${renameFolder.oldName}`,
+      renameFolder.newName
+    );
     return data;
   } catch (error: any) {
     return rejectWithValue(error.message);
@@ -366,7 +254,10 @@ export const fetchColorFolder = createAsyncThunk<
   { rejectValue: string }
 >("folder/fetchColorFolder", async (colorFolder, { rejectWithValue }) => {
   try {
-    const { data } = await axios.patch(`/folders/color/${colorFolder.name}`, colorFolder.newColor);
+    const { data } = await axios.patch(
+      `/folders/color/${colorFolder.name}`,
+      colorFolder.newColor
+    );
     return data;
   } catch (error: any) {
     return rejectWithValue(error.message);
@@ -426,8 +317,8 @@ const initialState: FoldersTypeState = {
   renameModal: false,
   renameFolderModal: false,
   renameFolder: {
-    newName: '',
-    oldName: '',
+    newName: "",
+    oldName: "",
   },
   renameObj: {
     oldFileName: "",
@@ -444,8 +335,8 @@ const initialState: FoldersTypeState = {
   filesForPackage: [],
   movedObjForFetch: [],
   colorFolder: {
-    name: '',
-    newColor: '',
+    name: "",
+    newColor: "",
   },
 };
 
@@ -475,13 +366,13 @@ export const FoldersSlice = createSlice({
       state.renameModal = !state.renameModal;
     },
     changeRenameFolderModal: (state) => {
-      state.renameFolderModal = !state.renameFolderModal
+      state.renameFolderModal = !state.renameFolderModal;
     },
     renameNewNameFolder: (state, action) => {
-      state.renameFolder.newName = action.payload
+      state.renameFolder.newName = action.payload;
     },
     renameLastNameFolder: (state, action) => {
-      state.renameFolder.oldName = action.payload
+      state.renameFolder.oldName = action.payload;
     },
     renameFile: (state, action) => {
       if (action.payload.oldFileName) {
@@ -505,10 +396,10 @@ export const FoldersSlice = createSlice({
     },
     changeColorFolder: (state, action) => {
       state.colorFolder = {
-        ...state.colorFolder,  
-        newColor: action.payload
+        ...state.colorFolder,
+        newColor: action.payload,
       };
-      console.log(state.colorFolder.newColor)
+      console.log(state.colorFolder.newColor);
     },
     SubfolderModal: (state) => {
       state.createSubfolderModal = !state.createSubfolderModal;
