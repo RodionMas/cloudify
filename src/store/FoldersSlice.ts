@@ -205,9 +205,8 @@ export const fetchCreateSubfolder = createAsyncThunk<
 );
 
 export const fetchGetFoldersFiles = createAsyncThunk<
-  // FoldersFilesType[]
-  any,
-  any,
+  string,
+  string | undefined,
   { rejectValue: string }
 >("folder/fetchGetFoldersFiles", async (foldername, { rejectWithValue }) => {
   try {
@@ -276,6 +275,20 @@ export const fetchDeleteFolder = createAsyncThunk<
     return rejectWithValue(error.message);
   }
 });
+
+const handlePending = (state: FoldersTypeState) => {
+  state.loading = "pending";
+};
+
+const handleFulfilled = (state: FoldersTypeState, action: PayloadAction<any>) => {
+  state.loading = "succeeded";
+  return action.payload;
+};
+
+const handleRejected = (state: FoldersTypeState, action: PayloadAction<string | undefined>) => {
+  state.err = action.payload ?? "Something went wrong";
+  state.loading = "failed";
+};
 
 const initialState: FoldersTypeState = {
   dots: [
@@ -435,188 +448,69 @@ export const FoldersSlice = createSlice({
       );
     },
   },
-  extraReducers(builder) {
-    builder.addCase(fetchGetAmountData.pending, (state) => {
-      state.loading = "pending";
-    });
-    builder.addCase(fetchGetAmountData.fulfilled, (state, action) => {
-      state.loading = "succeeded";
+  extraReducers: (builder) => {
+    const addAsyncThunkCases = (
+      thunk: any,
+      onFulfilled: (state: FoldersTypeState, action: PayloadAction<any>) => void
+    ) => {
+      builder
+        .addCase(thunk.pending, handlePending)
+        .addCase(thunk.fulfilled, (state, action) => {
+          handleFulfilled(state, action);
+          onFulfilled(state, action);
+        })
+        .addCase(thunk.rejected, handleRejected);
+    };
+
+    addAsyncThunkCases(fetchGetAmountData, (state, action) => {
       state.totalSize = action.payload.totalSize;
       state.userMemory = action.payload.userMemory;
     });
-    builder.addCase(fetchGetAmountData.rejected, (state, action) => {
-      state.err = action.payload;
-      state.loading = "failed";
-    });
-    builder.addCase(fetchDrop.pending, (state) => {
-      state.loading = "pending";
-    });
-    builder.addCase(fetchDrop.fulfilled, (state) => {
-      state.loading = "succeeded";
-    });
-    builder.addCase(fetchDrop.rejected, (state, action) => {
-      state.err = action.payload;
-      state.loading = "failed";
-    });
-    builder.addCase(fetchGetAllFiles.pending, (state) => {
-      state.loading = "pending";
-    });
-    builder.addCase(fetchGetAllFiles.fulfilled, (state, action) => {
-      state.loading = "succeeded";
+
+    addAsyncThunkCases(fetchDrop, () => {});
+
+    addAsyncThunkCases(fetchGetAllFiles, (state, action) => {
       state.allFiles = [...action.payload];
     });
-    builder.addCase(fetchGetAllFiles.rejected, (state, action) => {
-      state.err = action.payload;
-      state.loading = "failed";
-    });
-    builder.addCase(fetchGetDeletedFiles.pending, (state) => {
-      state.loading = "pending";
-    });
-    builder.addCase(fetchGetDeletedFiles.fulfilled, (state, action) => {
-      state.loading = "succeeded";
+
+    addAsyncThunkCases(fetchGetDeletedFiles, (state, action) => {
       state.deletedFiles = [...action.payload];
     });
-    builder.addCase(fetchGetDeletedFiles.rejected, (state, action) => {
-      state.err = action.payload;
-      state.loading = "failed";
-    });
-    builder.addCase(fetchDeleteFiles.pending, (state) => {
-      state.loading = "pending";
-    });
-    builder.addCase(fetchDeleteFiles.fulfilled, (state) => {
-      state.loading = "succeeded";
+
+    addAsyncThunkCases(fetchDeleteFiles, (state) => {
       state.deletedFiles = [];
     });
-    builder.addCase(fetchDeleteFiles.rejected, (state, action) => {
-      state.err = action.payload;
-      state.loading = "failed";
-    });
-    builder.addCase(fetchMove.pending, (state) => {
-      state.loading = "pending";
-    });
-    builder.addCase(fetchMove.fulfilled, (state) => {
-      state.loading = "succeeded";
-    });
-    builder.addCase(fetchMove.rejected, (state, action) => {
-      state.err = action.payload;
-      state.loading = "failed";
-    });
-    builder.addCase(fetchCreateFolder.pending, (state) => {
-      state.loading = "pending";
-    });
-    builder.addCase(fetchCreateFolder.fulfilled, (state) => {
-      state.loading = "succeeded";
-    });
-    builder.addCase(fetchCreateFolder.rejected, (state, action) => {
-      state.err = action.payload;
-      state.loading = "failed";
-    });
-    builder.addCase(fetchGetFolder.pending, (state) => {
-      state.loading = "pending";
-    });
-    builder.addCase(fetchGetFolder.fulfilled, (state, action) => {
-      state.loading = "succeeded";
+
+    addAsyncThunkCases(fetchMove, () => {});
+
+    addAsyncThunkCases(fetchCreateFolder, () => {});
+
+    addAsyncThunkCases(fetchGetFolder, (state, action) => {
       state.folders = [...action.payload];
     });
-    builder.addCase(fetchGetFolder.rejected, (state, action) => {
-      state.err = action.payload;
-      state.loading = "failed";
-    });
-    builder.addCase(fetchGetMoverShowMore.pending, (state) => {
-      state.loading = "pending";
-    });
-    builder.addCase(fetchGetMoverShowMore.fulfilled, (state, action) => {
-      state.loading = "succeeded";
+
+    addAsyncThunkCases(fetchGetMoverShowMore, (state, action) => {
       state.foldersShowMore = [...action.payload];
     });
-    builder.addCase(fetchGetMoverShowMore.rejected, (state, action) => {
-      state.err = action.payload;
-      state.loading = "failed";
-    });
-    builder.addCase(fetchRecover.pending, (state) => {
-      state.loading = "pending";
-    });
-    builder.addCase(fetchRecover.fulfilled, (state) => {
-      state.loading = "succeeded";
-    });
-    builder.addCase(fetchRecover.rejected, (state, action) => {
-      state.err = action.payload;
-      state.loading = "failed";
-    });
-    builder.addCase(fetchRenameFile.pending, (state) => {
-      state.loading = "pending";
-    });
-    builder.addCase(fetchRenameFile.fulfilled, (state) => {
-      state.loading = "succeeded";
-    });
-    builder.addCase(fetchRenameFile.rejected, (state, action) => {
-      state.err = action.payload;
-      state.loading = "failed";
-    });
-    builder.addCase(fetchCreateSubfolder.pending, (state) => {
-      state.loading = "pending";
-    });
-    builder.addCase(fetchCreateSubfolder.fulfilled, (state) => {
-      state.loading = "succeeded";
-    });
-    builder.addCase(fetchCreateSubfolder.rejected, (state, action) => {
-      state.err = action.payload;
-      state.loading = "failed";
-    });
-    builder.addCase(fetchGetFoldersFiles.pending, (state) => {
-      state.loading = "pending";
-    });
-    builder.addCase(fetchGetFoldersFiles.fulfilled, (state, action) => {
-      state.loading = "succeeded";
-      state.foldersForPagckage = [];
-      state.filesForPackage = [];
+
+    addAsyncThunkCases(fetchRecover, () => {});
+
+    addAsyncThunkCases(fetchRenameFile, () => {});
+
+    addAsyncThunkCases(fetchCreateSubfolder, () => {});
+
+    addAsyncThunkCases(fetchGetFoldersFiles, (state, action) => {
       state.foldersForPagckage = [...action.payload.folders];
       state.filesForPackage = [...action.payload.files];
     });
-    builder.addCase(fetchGetFoldersFiles.rejected, (state, action) => {
-      state.err = action.payload;
-      state.loading = "failed";
-    });
-    builder.addCase(fetchDelCheckbox.pending, (state) => {
-      state.loading = "pending";
-    });
-    builder.addCase(fetchDelCheckbox.fulfilled, (state) => {
-      state.loading = "succeeded";
-    });
-    builder.addCase(fetchDelCheckbox.rejected, (state, action) => {
-      state.err = action.payload;
-      state.loading = "failed";
-    });
-    builder.addCase(fetchRenameFodler.pending, (state) => {
-      state.loading = "pending";
-    });
-    builder.addCase(fetchRenameFodler.fulfilled, (state) => {
-      state.loading = "succeeded";
-    });
-    builder.addCase(fetchRenameFodler.rejected, (state, action) => {
-      state.err = action.payload;
-      state.loading = "failed";
-    });
-    builder.addCase(fetchColorFolder.pending, (state) => {
-      state.loading = "pending";
-    });
-    builder.addCase(fetchColorFolder.fulfilled, (state) => {
-      state.loading = "succeeded";
-    });
-    builder.addCase(fetchColorFolder.rejected, (state, action) => {
-      state.err = action.payload;
-      state.loading = "failed";
-    });
-    builder.addCase(fetchDeleteFolder.pending, (state) => {
-      state.loading = "pending";
-    });
-    builder.addCase(fetchDeleteFolder.fulfilled, (state) => {
-      state.loading = "succeeded";
-    });
-    builder.addCase(fetchDeleteFolder.rejected, (state, action) => {
-      state.err = action.payload;
-      state.loading = "failed";
-    });
+
+    addAsyncThunkCases(fetchDelCheckbox, () => {});
+
+    addAsyncThunkCases(fetchRenameFodler, () => {});
+
+    addAsyncThunkCases(fetchColorFolder, () => {});
+
+    addAsyncThunkCases(fetchDeleteFolder, () => {});
   },
 });
 // fetchDeleteFolder
