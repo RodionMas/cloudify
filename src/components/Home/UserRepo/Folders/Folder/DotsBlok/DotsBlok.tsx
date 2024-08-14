@@ -6,7 +6,7 @@ import { selectFolders } from "../../../../../../selectors/selectors";
 import Forward from "../../../../../../assets/img/dots/Forward.png";
 import Colors from "./Colors/Colors";
 import { useAppDispatch } from "../../../../../../store/hooks";
-import { changeColorFolderName, changeRenameFolderModal, renameLastNameFolder } from "../../../../../../store/FoldersSlice";
+import { changeRenameFolderModal, fetchDeleteFolder, fetchGetFolder, renameLastNameFolder } from "../../../../../../store/FoldersSlice";
 
 interface DotsBlokProps {
   position: { top: number; left: number };
@@ -15,6 +15,14 @@ interface DotsBlokProps {
 const DotsBlok = forwardRef<HTMLDivElement, DotsBlokProps & any>(({setHiddenDotsMenu, position, name }, ref) => {
   const { dots } = useSelector(selectFolders);
   const dispatch = useAppDispatch()
+  const handleDeleteFolder = async () => {
+    try {
+      await dispatch(fetchDeleteFolder(name))
+      await dispatch(fetchGetFolder());
+    } catch (error) {
+      
+    }
+  }
   // Рендерим в портал
   return ReactDOM.createPortal(
     <div
@@ -32,7 +40,10 @@ const DotsBlok = forwardRef<HTMLDivElement, DotsBlokProps & any>(({setHiddenDots
           if (item.name === "Rename") {
             dispatch(renameLastNameFolder(name))
             dispatch(changeRenameFolderModal())
+          } else if(item.name === "Delete"){
+            handleDeleteFolder()
           }
+          
         }} key={i} className={style.btn}>
           <img className={style.img} src={item.image} alt="category" />
           <span className={style.name}>{item.name}</span>

@@ -12,12 +12,13 @@ import {
   fetchGetAllFiles,
   fetchGetDeletedFiles,
   fetchGetFolder,
+  fetchGetFoldersFiles,
   fetchMove,
   fetchRecover,
 } from "../../../../../store/FoldersSlice";
 import { useSelector } from "react-redux";
 import { selectFolders } from "../../../../../selectors/selectors";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import BtnShowMore from "./BtnShowMore/BtnShowMore";
 
 const MoreFileSmall = forwardRef<HTMLDivElement, any>((props, ref) => {
@@ -38,17 +39,20 @@ const MoreFileSmall = forwardRef<HTMLDivElement, any>((props, ref) => {
   });
   const appDispatch = useAppDispatch();
   const { deletedFiles } = useSelector(selectFolders);
-
-  function deleteMove(item: string) {
+  const { foldername } = useParams();
+  async function deleteMove(item: string) {
     if (item === "Delete") {
       setMovedObjForFetch(
         (movedObjForFetch.files = [...movedObjForFetch.files, props.filename])
       );
-      appDispatch(fetchMove(movedObjForFetch)).then(() => {
-        appDispatch(fetchGetAllFiles()).then(() =>
-          appDispatch(fetchGetFolder())
-        );
-      });
+      try {
+        await appDispatch(fetchMove(movedObjForFetch));
+        await appDispatch(fetchGetAllFiles());
+        await appDispatch(fetchGetFolder());
+        await appDispatch(fetchGetFoldersFiles(foldername));
+      } catch (error) {
+        console.warn(error);
+      }
     }
   }
   const location = useLocation();
@@ -73,7 +77,9 @@ const MoreFileSmall = forwardRef<HTMLDivElement, any>((props, ref) => {
                       filename: props.filename ? props.filename : "",
                     },
                   ];
-                  appDispatch(fetchRecover(recover)).then(() => appDispatch(fetchGetDeletedFiles()));
+                  appDispatch(fetchRecover(recover)).then(() =>
+                    appDispatch(fetchGetDeletedFiles())
+                  );
                 }
                 props.hideContentFn();
               }}

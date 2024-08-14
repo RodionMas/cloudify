@@ -373,6 +373,19 @@ export const fetchColorFolder = createAsyncThunk<
   }
 });
 
+export const fetchDeleteFolder = createAsyncThunk<
+  string,
+  string,
+  { rejectValue: string }
+>("folder/fetchDeleteFolder", async (folderName, { rejectWithValue }) => {
+  try {
+    const { data } = await axios.delete(`/folders/${folderName}`);
+    return data;
+  } catch (error: any) {
+    return rejectWithValue(error.message);
+  }
+});
+
 const initialState: FoldersTypeState = {
   dots: [
     {
@@ -703,9 +716,19 @@ export const FoldersSlice = createSlice({
       state.err = action.payload;
       state.loading = "failed";
     });
+    builder.addCase(fetchDeleteFolder.pending, (state) => {
+      state.loading = "pending";
+    });
+    builder.addCase(fetchDeleteFolder.fulfilled, (state) => {
+      state.loading = "succeeded";
+    });
+    builder.addCase(fetchDeleteFolder.rejected, (state, action) => {
+      state.err = action.payload;
+      state.loading = "failed";
+    });
   },
 });
-// fetchColorFolder
+// fetchDeleteFolder
 export const {
   changeLogout,
   changeDragDrop,

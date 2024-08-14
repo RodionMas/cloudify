@@ -54,7 +54,7 @@ const OneFile: React.FC<any> = React.memo(
     return (
       <div className={style.files}>
         <div className={style.fileRow}>
-          {pathname === "/home/files" && (
+          {pathname === "/home/files"  && (
             <Checkbox filesArr={filesArr} setFilesArr={setFilesArr} filename={filename} filePath={filePath} />
           )}
           <span className={style.fileName}>

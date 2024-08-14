@@ -33,7 +33,7 @@ const FolderFiles: React.FC = () => {
   }
   React.useEffect(() => {
     handleGetFiles()
-  }, [handleGetFiles])
+  }, [])
   return (
     <section className={style.wrapper}>
       <Search />
