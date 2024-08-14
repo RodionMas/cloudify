@@ -2,7 +2,7 @@ import React from "react";
 import style from "./FilesSmall.module.css";
 import arrow from "../../../../assets/img/Chevron Down.png";
 import { useSelector } from "react-redux";
-import { selectAuth, selectFolders } from "../../../../selectors/selectors";
+import { selectFolders } from "../../../../selectors/selectors";
 import { useAppDispatch } from "../../../../store/hooks";
 import { fetchGetAllFiles } from "../../../../store/FoldersSlice";
 import OneFile from "../../OneFile/OneFile";
@@ -10,13 +10,12 @@ import OneFile from "../../OneFile/OneFile";
 const FilesSmall: React.FC = () => {
   const sortBy = ["Name", "Folder", "File Size", "Last Changes"];
   const [sortArrow, setSortArrow] = React.useState(0);
-  const { username } = useSelector(selectAuth)
   const appDispatch = useAppDispatch()
   const { allFiles } = useSelector(selectFolders);
  
   React.useEffect(() => {
     appDispatch(fetchGetAllFiles())
-  }, [username, appDispatch])
+  }, [])
   return (
     <div className={style.wrapper}>
       <div className={style.box}>

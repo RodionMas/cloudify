@@ -8,7 +8,6 @@ import {
   fetchMove,
 } from "../../../../../../../store/FoldersSlice";
 import { selectFolders } from "../../../../../../../selectors/selectors";
-import packageImg from "../../../../../../../assets/img/contur.png";
 import black from "../../../../../../../assets/img/foldersColor/black.png";
 import blue from "../../../../../../../assets/img/foldersColor/blue.png";
 import brown from "../../../../../../../assets/img/foldersColor/brown.png";

@@ -23,7 +23,8 @@ const Folder: React.FC<FolderType> = ({ name, color, size, filesNumber }) => {
   });
 
   const handleDotsClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setHiddenDotsMenu(!hiddenDotsMenu);
+    setHiddenDotsMenu((prevHiddenDotsMenu) => !prevHiddenDotsMenu);
+  //Для позиционирования выпадающего списка
     const rect = event.currentTarget.getBoundingClientRect();
     setMenuPosition({
       top: rect.bottom + window.scrollY, // учитываем прокрутку
@@ -35,7 +36,11 @@ const Folder: React.FC<FolderType> = ({ name, color, size, filesNumber }) => {
     <div className={style.wrapper}>
       <div style={{ background: color }} className={style.color}></div>
       <div className={style.folder}>
-        <Link onClick={() => dispatch(checkColor(color))} to={`/home/userfolder/${name}`} className={style.folderBox}>
+        <Link
+          onClick={() => dispatch(checkColor(color))}
+          to={`/home/userfolder/${name}`}
+          className={style.folderBox}
+        >
           <img src={folderImg} alt="folder" />
           <span className={style.nameFolder}>{name}</span>
         </Link>
@@ -45,7 +50,12 @@ const Folder: React.FC<FolderType> = ({ name, color, size, filesNumber }) => {
           </button>
         </div>
         {hiddenDotsMenu && (
-          <DotsBlok ref={moreFileRef} position={menuPosition} />
+          <DotsBlok
+            ref={(el) => { moreFileRef.current = el; }}
+            position={menuPosition}
+            setHiddenDotsMenu={setHiddenDotsMenu}
+            name={name}
+          />
         )}
       </div>
       <div className={style.aboutFile}>

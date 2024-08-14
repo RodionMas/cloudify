@@ -5,14 +5,16 @@ import { useSelector } from "react-redux";
 import { selectFolders } from "../../../../../../selectors/selectors";
 import Forward from "../../../../../../assets/img/dots/Forward.png";
 import Colors from "./Colors/Colors";
+import { useAppDispatch } from "../../../../../../store/hooks";
+import { changeColorFolderName, changeRenameFolderModal, renameLastNameFolder } from "../../../../../../store/FoldersSlice";
 
 interface DotsBlokProps {
   position: { top: number; left: number };
 }
 
-const DotsBlok = forwardRef<HTMLDivElement, DotsBlokProps>(({ position }, ref) => {
+const DotsBlok = forwardRef<HTMLDivElement, DotsBlokProps & any>(({setHiddenDotsMenu, position, name }, ref) => {
   const { dots } = useSelector(selectFolders);
-
+  const dispatch = useAppDispatch()
   // Рендерим в портал
   return ReactDOM.createPortal(
     <div
@@ -26,13 +28,18 @@ const DotsBlok = forwardRef<HTMLDivElement, DotsBlokProps>(({ position }, ref) =
       }}
     >
       {dots.map((item, i) => (
-        <button onClick={(e) => console.log(e)} key={i} className={style.btn}>
+        <button onClick={() => {
+          if (item.name === "Rename") {
+            dispatch(renameLastNameFolder(name))
+            dispatch(changeRenameFolderModal())
+          }
+        }} key={i} className={style.btn}>
           <img className={style.img} src={item.image} alt="category" />
           <span className={style.name}>{item.name}</span>
           {item.color && (
             <>
               <img className={style.forward} src={Forward} alt="Forward" />
-              <Colors colors={item.color} />
+              <Colors name={name} colors={item.color} />
             </>
           )}
         </button>

@@ -16,7 +16,7 @@ import {
   fetchRecover,
 } from "../../../../../store/FoldersSlice";
 import { useSelector } from "react-redux";
-import { selectAuth, selectFolders } from "../../../../../selectors/selectors";
+import { selectFolders } from "../../../../../selectors/selectors";
 import { useLocation } from "react-router-dom";
 import BtnShowMore from "./BtnShowMore/BtnShowMore";
 
@@ -31,7 +31,6 @@ const MoreFileSmall = forwardRef<HTMLDivElement, any>((props, ref) => {
     { name: "Recover", image: recet },
     { name: "Delete", image: cash },
   ];
-  const { username } = useSelector(selectAuth);
   const [movedObjForFetch, setMovedObjForFetch] = useState<any>({
     source: props.filePath,
     target: `deleted/${props.filePath}`,
@@ -64,7 +63,7 @@ const MoreFileSmall = forwardRef<HTMLDivElement, any>((props, ref) => {
                   const delFile = deletedFiles.filter(
                     (deleteItem) => deleteItem.filename === props.filename
                   );
-                  appDispatch(fetchDeleteFile({ username, delFile })).then(() =>
+                  appDispatch(fetchDeleteFile({ delFile })).then(() =>
                     appDispatch(fetchGetDeletedFiles())
                   );
                 } else if (item.name === "Recover") {

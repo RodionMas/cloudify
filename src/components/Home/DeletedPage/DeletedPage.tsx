@@ -16,28 +16,25 @@ import {
 const DeletedPage = () => {
   const sortBy = ["Name", "File Size", "Last Changes"];
   const [sortArrow, setSortArrow] = React.useState(0);
-  const { username } = useSelector(selectAuth);
   const { deletedFiles } = useSelector(selectFolders);
   const appDispatch = useAppDispatch();
   const handleDeleteFiles = async () => {
     try {
-      await appDispatch(fetchDeleteFiles({ username, deletedFiles }));
+      await appDispatch(fetchDeleteFiles({ deletedFiles }));
       await appDispatch(fetchGetAmountData());
     } catch (error) {
-      console.error('Error creating folder:', error);
-    }   } 
+      console.error("Error creating folder:", error);
+    }
+  };
   React.useEffect(() => {
     appDispatch(fetchGetDeletedFiles());
-  }, [username, appDispatch]);
+  }, [appDispatch]);
   return (
     <section className={style.wrapper}>
       <Search />
       <div className={style.box}>
         <h1 className={style.title}>Deleted</h1>
-        <button
-          onClick={() =>  handleDeleteFiles()}
-          className={style.delAll}
-        >
+        <button onClick={() => handleDeleteFiles()} className={style.delAll}>
           Delete All{" "}
           <img className={style.linkImg} src={deleteFolder} alt="all" />
         </button>

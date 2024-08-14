@@ -11,7 +11,6 @@ const Rename: React.FC = () => {
   const dispatch = useAppDispatch();
   const { renameObj } = useAppSelector(selectFolders);
   const [renameInp, setRenameInp] = React.useState<newFileNameType>(renameObj);
-console.log(renameInp)
   React.useEffect(() => {
 
   }, [renameObj])
@@ -30,7 +29,7 @@ console.log(renameInp)
         }}
         className={style.inp}
         type="text"
-        placeholder="Enter a folder name and choose a color"
+        placeholder="Enter a file name and choose a color"
       />
       <div className={style.btnBox}>
         <button

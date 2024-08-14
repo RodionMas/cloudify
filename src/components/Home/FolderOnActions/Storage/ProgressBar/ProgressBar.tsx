@@ -3,18 +3,16 @@ import style from "./ProgressBar.module.css";
 import { useAppDispatch } from "../../../../../store/hooks";
 import { fetchGetAmountData } from "../../../../../store/FoldersSlice";
 import { useSelector } from "react-redux";
-import { selectAuth, selectFolders } from "../../../../../selectors/selectors";
+import { selectFolders } from "../../../../../selectors/selectors";
 
 const ProgressBar: React.FC = () => {
   const { userMemory, totalSize } = useSelector(selectFolders);
   const percent = (totalSize / userMemory) * 100;
-  const { username } = useSelector(selectAuth);
   const dispatch = useAppDispatch();
   React.useEffect(() => {
     dispatch(fetchGetAmountData());
-  }, [username, dispatch]);
+  }, []);
   return (
-    // .then(() =>  appDispatch(fetchGetAllFiles(username)))
     <div className={style.wrapper}>
       <div className={style.progressBar}>
         <div

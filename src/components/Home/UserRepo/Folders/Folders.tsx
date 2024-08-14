@@ -1,24 +1,36 @@
 import React from "react";
 import style from "./Folders.module.css";
 import Folder from "./Folder/Folder";
-import { useAppDispatch } from "../../../../store/hooks";
-import { fetchGetFolder } from "../../../../store/FoldersSlice";
-import { useSelector } from "react-redux";
+import { useAppDispatch, useAppSelector } from "../../../../store/hooks";
+import { fetchColorFolder, fetchGetFolder } from "../../../../store/FoldersSlice";
 import { selectFolders } from "../../../../selectors/selectors";
 import NoFolders from "./NoFolders/NoFolders";
 import { Navigation } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 
 const Folders: React.FC = () => {
-  const appDispatch = useAppDispatch();
-  const { folders } = useSelector(selectFolders);
-  const myRef = React.useRef(null)
+  const dispatch = useAppDispatch();
+  const { folders } = useAppSelector(selectFolders);
+  const { colorFolder } = useAppSelector(selectFolders);
+  const handleColorFolder = async () => {
+    try {
+      await dispatch(fetchColorFolder(colorFolder));
+      await dispatch(fetchGetFolder())
+    } catch (error) {
+      console.warn(error)
+    }
+  }
   React.useEffect(() => {
-    appDispatch(fetchGetFolder());
-  }, [appDispatch]);
+    if (folders.length === 0) {
+      dispatch(fetchGetFolder());
+    }
+    if (colorFolder.newColor) {
+      handleColorFolder()
+    }
+  }, [colorFolder.newColor]);
 
   return (
     <div className={style.wrapper}>
@@ -29,7 +41,7 @@ const Folders: React.FC = () => {
           spaceBetween={30}
           navigation={{
             nextEl: `.${style.swiperButtonNext}`,
-            prevEl: `.${style.swiperButtonPrev}`
+            prevEl: `.${style.swiperButtonPrev}`,
           }}
           modules={[Navigation]}
           className="mySwiper"

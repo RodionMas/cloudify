@@ -1,8 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "../instanceAxios";
 import download from "../assets/img/dots/Download.png";
-import createLink from "../assets/img/dots/CloudLink.png";
-import Favourite from "../assets/img/dots/Bookmark.png";
 import Label from "../assets/img/dots/PriceTag.png";
 import Rename from "../assets/img/dots/EditFile.png";
 import Delete from "../assets/img/dots/TrashCan.png";
@@ -31,6 +29,19 @@ interface FoldersTypeState {
   foldersForPagckage: string[];
   filesForPackage: FilesForPackageType[];
   movedObjForFetch: any;
+  renameFolderModal: boolean;
+  renameFolder: RenameFolder;
+  colorFolder: ColorFolderType;
+}
+
+interface ColorFolderType {
+  name: string;
+  newColor: string;
+}
+
+interface RenameFolder {
+  oldName: string;
+  newName: string
 }
 
 interface Dots {
@@ -66,7 +77,7 @@ interface DateType {
 }
 
 interface FetchDelFiles {
-  username: string;
+  username?: string;
   deletedFiles?: DeleteFiles[];
   delFile?: DeleteFiles[];
 }
@@ -172,10 +183,10 @@ export const fetchDeleteFiles = createAsyncThunk<
   { rejectValue: string }
 >(
   "folder/fetchDeleteFiles",
-  async ({ username, deletedFiles }, { rejectWithValue }) => {
+  async ({ deletedFiles }, { rejectWithValue }) => {
     try {
       const response = await axios.delete<string>(
-        `files?username=${username}`,
+        `files`,
         {
           data: deletedFiles,
         }
@@ -193,10 +204,10 @@ export const fetchDeleteFile = createAsyncThunk<
   { rejectValue: string }
 >(
   "folder/fetchDeleteFile",
-  async ({ username, delFile }, { rejectWithValue }) => {
+  async ({ delFile }, { rejectWithValue }) => {
     try {
       const response = await axios.delete<string>(
-        `files?username=${username}`,
+        `files`,
         {
           data: delFile,
         }
@@ -321,8 +332,8 @@ export const fetchGetFoldersFiles = createAsyncThunk<
     return rejectWithValue(error.message);
   }
 });
-// DeleteFiles
 
+// DeleteFiles
 export const fetchDelCheckbox = createAsyncThunk<
   string,
   DeleteFiles[],
@@ -330,6 +341,32 @@ export const fetchDelCheckbox = createAsyncThunk<
 >("folder/fetchDelCheckbox", async (movedObjForFetch, { rejectWithValue }) => {
   try {
     const { data } = await axios.post(`/files/move/deleted`, movedObjForFetch);
+    return data;
+  } catch (error: any) {
+    return rejectWithValue(error.message);
+  }
+});
+
+export const fetchRenameFodler = createAsyncThunk<
+  string,
+  RenameFolder,
+  { rejectValue: string }
+>("folder/fetchRenameFodler", async (renameFolder, { rejectWithValue }) => {
+  try {
+    const { data } = await axios.patch(`/folders/${renameFolder.oldName}`, renameFolder.newName);
+    return data;
+  } catch (error: any) {
+    return rejectWithValue(error.message);
+  }
+});
+
+export const fetchColorFolder = createAsyncThunk<
+  string,
+  ColorFolderType,
+  { rejectValue: string }
+>("folder/fetchColorFolder", async (colorFolder, { rejectWithValue }) => {
+  try {
+    const { data } = await axios.patch(`/folders/color/${colorFolder.name}`, colorFolder.newColor);
     return data;
   } catch (error: any) {
     return rejectWithValue(error.message);
@@ -374,6 +411,11 @@ const initialState: FoldersTypeState = {
   folderName: "",
   recoverItem: [],
   renameModal: false,
+  renameFolderModal: false,
+  renameFolder: {
+    newName: '',
+    oldName: '',
+  },
   renameObj: {
     oldFileName: "",
     filepath: "",
@@ -388,6 +430,10 @@ const initialState: FoldersTypeState = {
   foldersForPagckage: [],
   filesForPackage: [],
   movedObjForFetch: [],
+  colorFolder: {
+    name: '',
+    newColor: '',
+  },
 };
 
 export const FoldersSlice = createSlice({
@@ -415,6 +461,15 @@ export const FoldersSlice = createSlice({
     changeRenameModal: (state) => {
       state.renameModal = !state.renameModal;
     },
+    changeRenameFolderModal: (state) => {
+      state.renameFolderModal = !state.renameFolderModal
+    },
+    renameNewNameFolder: (state, action) => {
+      state.renameFolder.newName = action.payload
+    },
+    renameLastNameFolder: (state, action) => {
+      state.renameFolder.oldName = action.payload
+    },
     renameFile: (state, action) => {
       if (action.payload.oldFileName) {
         state.renameObj = {
@@ -431,6 +486,16 @@ export const FoldersSlice = createSlice({
     },
     checkColor: (state, action) => {
       state.colorForFolder = action.payload;
+    },
+    changeColorFolderName: (state, action) => {
+      state.colorFolder.name = action.payload;
+    },
+    changeColorFolder: (state, action) => {
+      state.colorFolder = {
+        ...state.colorFolder,  
+        newColor: action.payload
+      };
+      console.log(state.colorFolder.newColor)
     },
     SubfolderModal: (state) => {
       state.createSubfolderModal = !state.createSubfolderModal;
@@ -618,9 +683,29 @@ export const FoldersSlice = createSlice({
       state.err = action.payload;
       state.loading = "failed";
     });
+    builder.addCase(fetchRenameFodler.pending, (state) => {
+      state.loading = "pending";
+    });
+    builder.addCase(fetchRenameFodler.fulfilled, (state) => {
+      state.loading = "succeeded";
+    });
+    builder.addCase(fetchRenameFodler.rejected, (state, action) => {
+      state.err = action.payload;
+      state.loading = "failed";
+    });
+    builder.addCase(fetchColorFolder.pending, (state) => {
+      state.loading = "pending";
+    });
+    builder.addCase(fetchColorFolder.fulfilled, (state) => {
+      state.loading = "succeeded";
+    });
+    builder.addCase(fetchColorFolder.rejected, (state, action) => {
+      state.err = action.payload;
+      state.loading = "failed";
+    });
   },
 });
-// fetchDelCheckbox
+// fetchColorFolder
 export const {
   changeLogout,
   changeDragDrop,
@@ -636,6 +721,11 @@ export const {
   setSourceAndTarget,
   addFile,
   removeFile,
+  changeRenameFolderModal,
+  renameNewNameFolder,
+  renameLastNameFolder,
+  changeColorFolderName,
+  changeColorFolder,
 } = FoldersSlice.actions;
 
 export default FoldersSlice.reducer;
