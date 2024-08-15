@@ -30,7 +30,7 @@ const FileActions: React.FC = () => {
     } else if(pathname === '/home/deleted'){
       setActiveLink(2)
     }
-  }, [])
+  }, [pathname])
   return (
     <div className={style.wrapper}>
       {categoryArr.map((category, i) => {

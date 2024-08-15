@@ -1,6 +1,9 @@
 import React from "react";
 import style from "../BtnShowMore.module.css";
-import { useAppDispatch, useAppSelector } from "../../../../../../../store/hooks";
+import {
+  useAppDispatch,
+  useAppSelector,
+} from "../../../../../../../store/hooks";
 import {
   fetchGetAllFiles,
   fetchGetFolder,
@@ -20,14 +23,22 @@ interface FileNameType {
   filename: string;
   filePath: string;
 }
+
+interface MoveFileType {
+  files: string[];
+  source: string;
+  target: string;
+}
 const ChooseFolder: React.FC<FileNameType> = ({ filename, filePath }) => {
   const dispatch = useAppDispatch();
   const { foldersShowMore } = useAppSelector(selectFolders);
-  const [movedObjForFetch, setMovedObjForFetch] = React.useState<any>({
-    source: "",
-    target: "",
-    files: [],
-  });
+  const handleMove = async (moveFile: MoveFileType) => {
+    try {
+      await dispatch(fetchMove(moveFile));
+      await dispatch(fetchGetAllFiles());
+      await dispatch(fetchGetFolder());
+    } catch (error) {}
+  };
   React.useEffect(() => {
     dispatch(fetchGetMoverShowMore());
   }, []);
@@ -39,37 +50,34 @@ const ChooseFolder: React.FC<FileNameType> = ({ filename, filePath }) => {
           return (
             <div
               onClick={() => {
-                setMovedObjForFetch(
-                  ((movedObjForFetch.source = filePath),
-                  (movedObjForFetch.target = folder.name),
-                  (movedObjForFetch.files = [
-                    ...movedObjForFetch.files,
-                    filename,
-                  ]))
-                );
-                dispatch(fetchMove(movedObjForFetch)).then(() => {
-                  dispatch(fetchGetAllFiles()).then(() =>
-                    dispatch(fetchGetFolder())
-                  );
-                });
+                let moveFile: MoveFileType = {
+                  source: filePath,
+                  target: folder.name,
+                  files: [],
+                };
+                moveFile = {
+                  ...moveFile,
+                  files: [...moveFile.files, filename],
+                };
+                handleMove(moveFile);
               }}
               className={style.btnFolder}
               key={i}
             >
               {folder.color === "#ffb800" ? (
                 <img className={style.packageImg} src={yellow} alt="package" />
+              ) : folder.color === "#D23434" ? (
+                <img className={style.packageImg} src={red} alt="package" />
+              ) : folder.color === "#D23434" ? (
+                <img className={style.packageImg} src={violet} alt="package" />
+              ) : folder.color === "#0094FF" ? (
+                <img className={style.packageImg} src={blue} alt="package" />
+              ) : folder.color === "#39AA26" ? (
+                <img className={style.packageImg} src={green} alt="package" />
+              ) : folder.color === "#A76E2B" ? (
+                <img className={style.packageImg} src={brown} alt="package" />
               ) : (
-                folder.color === "#D23434" ? 
-                <img className={style.packageImg} src={red} alt="package" /> :
-                folder.color === "#D23434" ? 
-                <img className={style.packageImg} src={violet} alt="package" /> :
-                folder.color === "#0094FF" ? 
-                <img className={style.packageImg} src={blue} alt="package" /> :
-                folder.color === "#39AA26" ? 
-                <img className={style.packageImg} src={green} alt="package" /> :
-                folder.color === "#A76E2B" ? 
-                <img className={style.packageImg} src={brown} alt="package" /> :
-                <img className={style.packageImg} src={black} alt="package" /> 
+                <img className={style.packageImg} src={black} alt="package" />
               )}
               <span>{folder.name}</span>
             </div>

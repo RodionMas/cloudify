@@ -22,7 +22,7 @@ const Checkbox: React.FC<CheckboxProps> =
   ({ filename, filePath, filesArr, setFilesArr }) => {
     const dispatch = useAppDispatch();
     const [isChecked, setIsChecked] = React.useState(false);
-    const { movedObjForFetch } = useAppSelector(selectFolders)
+    const { moveFiles } = useAppSelector(selectFolders)
     const handleCheckboxChange = () => {
       const newCheckedState = !isChecked;
       setIsChecked(newCheckedState);
@@ -43,10 +43,10 @@ const Checkbox: React.FC<CheckboxProps> =
       }
     };
     React.useEffect(() => {
-      if (filesArr.length !== movedObjForFetch.length) {
+      if (filesArr.length !== moveFiles.length) {
         dispatch(addFile(filesArr))
       }
-    }, [filesArr, movedObjForFetch, dispatch])
+    }, [filesArr, moveFiles, dispatch])
     return (
       <input
         checked={isChecked}

@@ -32,7 +32,7 @@ const MoreFileSmall = forwardRef<HTMLDivElement, any>((props, ref) => {
     { name: "Recover", image: recet },
     { name: "Delete", image: cash },
   ];
-  const [movedObjForFetch, setMovedObjForFetch] = useState<any>({
+  const [moveFiles, setMoveFiles] = useState<any>({
     source: props.filePath,
     target: `deleted/${props.filePath}`,
     files: [],
@@ -42,11 +42,11 @@ const MoreFileSmall = forwardRef<HTMLDivElement, any>((props, ref) => {
   const { foldername } = useParams();
   async function deleteMove(item: string) {
     if (item === "Delete") {
-      setMovedObjForFetch(
-        (movedObjForFetch.files = [...movedObjForFetch.files, props.filename])
+      setMoveFiles(
+        (moveFiles.files = [...moveFiles.files, props.filename])
       );
       try {
-        await appDispatch(fetchMove(movedObjForFetch));
+        await appDispatch(fetchMove(moveFiles));
         await appDispatch(fetchGetAllFiles());
         await appDispatch(fetchGetFolder());
         await appDispatch(fetchGetFoldersFiles(foldername));

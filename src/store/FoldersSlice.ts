@@ -1,9 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "../instanceAxios";
-import download from "../assets/img/dots/Download.png";
-import Label from "../assets/img/dots/PriceTag.png";
-import Rename from "../assets/img/dots/EditFile.png";
-import Delete from "../assets/img/dots/TrashCan.png";
 import {
   AmountDataType,
   ColorFolderType,
@@ -106,9 +102,9 @@ export const fetchDeleteFile = createAsyncThunk<
 
 export const fetchMove = createAsyncThunk<string, any, { rejectValue: string }>(
   "folder/fetchMove",
-  async (movedObjForFetch, { rejectWithValue }) => {
+  async (moveFiles, { rejectWithValue }) => {
     try {
-      const { data } = await axios.post(`/files/move`, movedObjForFetch);
+      const { data } = await axios.post(`/files/move`, moveFiles);
       return data;
     } catch (error: any) {
       return rejectWithValue(error.message);
@@ -222,9 +218,9 @@ export const fetchDelCheckbox = createAsyncThunk<
   string,
   DeleteFiles[],
   { rejectValue: string }
->("folder/fetchDelCheckbox", async (movedObjForFetch, { rejectWithValue }) => {
+>("folder/fetchDelCheckbox", async (moveFiles, { rejectWithValue }) => {
   try {
-    const { data } = await axios.post(`/files/move/deleted`, movedObjForFetch);
+    const { data } = await axios.post(`/files/move/deleted`, moveFiles);
     return data;
   } catch (error: any) {
     return rejectWithValue(error.message);
@@ -291,25 +287,7 @@ const handleRejected = (state: FoldersTypeState, action: PayloadAction<string | 
 };
 
 const initialState: FoldersTypeState = {
-  dots: [
-    {
-      name: "Download",
-      image: download,
-    },
-    {
-      name: "Label",
-      image: Label,
-      color: ["#FFB800", "#0094FF", "#D23434", "#39AA26"],
-    },
-    {
-      name: "Rename",
-      image: Rename,
-    },
-    {
-      name: "Delete",
-      image: Delete,
-    },
-  ],
+  
   loading: "idle",
   err: null,
   totalSize: 0.0,
@@ -346,7 +324,7 @@ const initialState: FoldersTypeState = {
   },
   foldersForPagckage: [],
   filesForPackage: [],
-  movedObjForFetch: [],
+  moveFiles: [],
   colorFolder: {
     name: "",
     newColor: "",
@@ -428,22 +406,22 @@ export const FoldersSlice = createSlice({
       state,
       action: PayloadAction<{ source: string; target: string }>
     ) {
-      state.movedObjForFetch.source = action.payload.source;
-      state.movedObjForFetch.target = action.payload.target;
+      state.moveFiles.source = action.payload.source;
+      state.moveFiles.target = action.payload.target;
     },
     // Добавление файла в массив files
     addFile(state, action: PayloadAction<any>) {
-      state.movedObjForFetch = [...action.payload];
-      const updatedArray = state.movedObjForFetch.map(
+      state.moveFiles = [...action.payload];
+      const updatedArray = state.moveFiles.map(
         (file: { newFilePath: string }) => {
           return { ...file, file, newFilePath: "deleted" };
         }
       );
-      state.movedObjForFetch = [...updatedArray];
+      state.moveFiles = [...updatedArray];
     },
     // Удаление файла из массива files
     removeFile(state, action: PayloadAction<string>) {
-      state.movedObjForFetch.files = state.movedObjForFetch.files.filter(
+      state.moveFiles.files = state.moveFiles.files.filter(
         (file: string) => file !== action.payload
       );
     },

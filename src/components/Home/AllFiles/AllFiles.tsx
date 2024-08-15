@@ -19,10 +19,10 @@ const AllFiles: React.FC = () => {
   const { allFiles } = useSelector(selectFolders);
   const [filesArr, setFilesArr] = React.useState([]);
   const appDispatch = useAppDispatch();
-  const { movedObjForFetch } = useAppSelector(selectFolders);
+  const { moveFiles } = useAppSelector(selectFolders);
   async function handleDeleteChebox() {
     try {
-      await appDispatch(fetchDelCheckbox(movedObjForFetch));
+      await appDispatch(fetchDelCheckbox(moveFiles));
       await appDispatch(fetchGetAllFiles());
       setFilesArr([])
     } catch (error) {

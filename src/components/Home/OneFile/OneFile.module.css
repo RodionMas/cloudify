@@ -86,6 +86,9 @@
   font-weight: 400;
 }
 .checkbox {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
   position: absolute;
   left: -45px;
   top: 5px;
@@ -93,4 +96,15 @@
   height: 23px;
   box-sizing: border-box;
   border: 2px solid rgb(217, 217, 217);
+}
+.checkbox:checked::after {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: -3px;
+  width: 28px; /* Размер изображения */
+  height: 28px;
+  background-image: url('../../../assets/img/Done.png '); /* Путь к вашему изображению */
+  background-size: cover;
+  background-repeat: no-repeat;
 }

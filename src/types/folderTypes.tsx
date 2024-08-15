@@ -1,5 +1,4 @@
 export interface FoldersTypeState {
-  dots: Dots[];
   loading: string;
   err: string | unknown | null;
   totalSize: number;
@@ -21,10 +20,16 @@ export interface FoldersTypeState {
   createSubfolder: CreateSubfolderType;
   foldersForPagckage: string[];
   filesForPackage: FilesForPackageType[];
-  movedObjForFetch: any;
+  moveFiles: any;
   renameFolderModal: boolean;
   renameFolder: RenameFolder;
   colorFolder: ColorFolderType;
+}
+
+interface MoveFileType {
+  source: string;
+  target: string;
+  files: string[];
 }
 
 export interface ColorFolderType {

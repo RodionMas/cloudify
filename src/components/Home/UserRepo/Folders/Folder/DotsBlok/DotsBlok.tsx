@@ -1,9 +1,11 @@
 import { forwardRef } from "react";
 import ReactDOM from "react-dom";
 import style from "./DotsBlok.module.css";
-import { useSelector } from "react-redux";
-import { selectFolders } from "../../../../../../selectors/selectors";
 import Forward from "../../../../../../assets/img/dots/Forward.png";
+import download from "../../../../../../assets/img/dots/Download.png";
+import Label from "../../../../../../assets/img/dots/PriceTag.png";
+import Rename from "../../../../../../assets/img/dots/EditFile.png";
+import Delete from "../../../../../../assets/img/dots/TrashCan.png";
 import Colors from "./Colors/Colors";
 import { useAppDispatch } from "../../../../../../store/hooks";
 import { changeRenameFolderModal, fetchDeleteFolder, fetchGetFolder, renameLastNameFolder } from "../../../../../../store/FoldersSlice";
@@ -13,7 +15,25 @@ interface DotsBlokProps {
 }
 
 const DotsBlok = forwardRef<HTMLDivElement, DotsBlokProps & any>(({setHiddenDotsMenu, position, name }, ref) => {
-  const { dots } = useSelector(selectFolders);
+  const dots = [
+    {
+      name: "Download",
+      image: download,
+    },
+    {
+      name: "Label",
+      image: Label,
+      color: ["#FFB800", "#0094FF", "#D23434", "#39AA26"],
+    },
+    {
+      name: "Rename",
+      image: Rename,
+    },
+    {
+      name: "Delete",
+      image: Delete,
+    },
+  ]
   const dispatch = useAppDispatch()
   const handleDeleteFolder = async () => {
     try {
