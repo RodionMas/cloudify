@@ -1,10 +1,13 @@
 import React from "react";
 import style from "./DeletedPage.module.css";
-import { useSelector } from "react-redux";
-import { selectAuth, selectFolders } from "../../../selectors/selectors";
-import { useAppDispatch } from "../../../store/hooks";
+import {
+  selectDelete,
+  selectFolders,
+} from "../../../selectors/selectors";
+import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import Search from "../UserRepo/Search/Search";
 import deleteFolder from "../../../assets/img/dots/TrashCan.png";
+import recoverFolder from "../../../assets/img/showMoreSmall/Reset.png";
 import arrow from "../../../assets/img/Chevron Down.png";
 import OneFile from "../OneFile/OneFile";
 import {
@@ -12,12 +15,30 @@ import {
   fetchGetAmountData,
   fetchGetDeletedFiles,
 } from "../../../store/FoldersSlice";
+import { fetchDeleteSelected, fetchRecoverFiles } from "../../../store/deleteSlise";
 
 const DeletedPage = () => {
   const sortBy = ["Name", "File Size", "Last Changes"];
   const [sortArrow, setSortArrow] = React.useState(0);
-  const { deletedFiles } = useSelector(selectFolders);
+  const { deletedFiles } = useAppSelector(selectFolders);
+  const { files } = useAppSelector(selectDelete);
   const appDispatch = useAppDispatch();
+  const handleRecoverFiles = async () => {
+    try {
+      await appDispatch(fetchRecoverFiles(files))
+      await appDispatch(fetchGetDeletedFiles());
+    } catch (error) {
+      console.warn(error)
+    }
+  }
+  const handleDeleteSelected = async () => {
+   try {
+    await appDispatch(fetchDeleteSelected(files));
+    await appDispatch(fetchGetDeletedFiles());
+   } catch (error) {
+    console.warn(error)
+   }
+  };
   const handleDeleteFiles = async () => {
     try {
       await appDispatch(fetchDeleteFiles({ deletedFiles }));
@@ -34,10 +55,26 @@ const DeletedPage = () => {
       <Search />
       <div className={style.box}>
         <h1 className={style.title}>Deleted</h1>
-        <button onClick={() => handleDeleteFiles()} className={style.delAll}>
-          Delete All{" "}
-          <img className={style.linkImg} src={deleteFolder} alt="all" />
-        </button>
+        <div className={style.doBtn}>
+          <button
+            onClick={handleDeleteFiles}
+            className={style.actionCheckbox}
+          >
+            Delete All{" "}
+            <img className={style.linkImg} src={deleteFolder} alt="all" />
+          </button>
+          <button onClick={handleDeleteSelected} className={style.actionCheckbox}>
+            Delete selected{" "}
+            <img className={style.linkImg} src={deleteFolder} alt="all" />
+          </button>
+          <button
+            onClick={handleRecoverFiles}
+            className={style.actionCheckbox}
+          >
+            Recover selected{" "}
+            <img className={style.linkImg} src={recoverFolder} alt="all" />
+          </button>
+        </div>
       </div>
       <div className={style.allFiles}>
         <div className={style.sortBy}>
@@ -58,8 +95,8 @@ const DeletedPage = () => {
             </button>
           ))}
         </div>
-        {deletedFiles.map((item, i) => {
-          return <OneFile key={i} {...item} />;
+        {deletedFiles.map((item) => {
+          return <OneFile key={item.filename} {...item} />;
         })}
       </div>
     </section>

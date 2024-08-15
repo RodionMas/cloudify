@@ -10,9 +10,19 @@ import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import { checkColor } from "../../../store/FoldersSlice";
 import { selectFolders } from "../../../selectors/selectors";
 import Checkbox from "./Checkbox/Checkbox";
+import CheckboxDeleted from "./CheckboxDeleted/CheckboxDeleted";
 
 const OneFile: React.FC<any> = React.memo(
-  ({ filename, size, lastModified, customFolderName, filePath, color, setFilesArr, filesArr }) => {
+  ({
+    filename,
+    size,
+    lastModified,
+    customFolderName,
+    filePath,
+    color,
+    setFilesArr,
+    filesArr,
+  }) => {
     const hideRef = React.useRef<HTMLButtonElement | null>(null);
     const moreFileRef = React.useRef<HTMLDivElement | null>(null);
     const [hideContent, setHideContent] = React.useState(false);
@@ -31,7 +41,7 @@ const OneFile: React.FC<any> = React.memo(
     });
 
     const { pathname } = useLocation();
-    
+
     // Мемоизируем функцию handleButtonClick с правильными зависимостями
     const handleButtonClick = React.useCallback(
       (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -54,8 +64,17 @@ const OneFile: React.FC<any> = React.memo(
     return (
       <div className={style.files}>
         <div className={style.fileRow}>
-          {pathname === "/home/files"  && (
-            <Checkbox filesArr={filesArr} setFilesArr={setFilesArr} filename={filename} filePath={filePath} />
+          {pathname === "/home/files" ? (
+            <Checkbox
+              filesArr={filesArr}
+              setFilesArr={setFilesArr}
+              filename={filename}
+              filePath={filePath}
+            />
+          ) : (
+            pathname === "/home/deleted" && <CheckboxDeleted 
+            filename={filename}
+            filePath={filePath} />
           )}
           <span className={style.fileName}>
             <img className={style.fileImg} src={fileImg} alt="file" />{" "}

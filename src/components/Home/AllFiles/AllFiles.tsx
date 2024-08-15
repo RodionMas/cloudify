@@ -54,7 +54,6 @@ const AllFiles: React.FC = () => {
               alt="moved all"
             />
           </button>
-          <button className={style.btnAll}>Cancel</button>
         </div>
       </div>
       <div className={style.allFiles}>

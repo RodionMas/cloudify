@@ -1,7 +1,7 @@
 import React from "react";
 import style from "../OneFile.module.css";
 import { useAppDispatch, useAppSelector } from "../../../../store/hooks";
-import { addFile, fetchDelCheckbox } from "../../../../store/FoldersSlice";
+import { addFile } from "../../../../store/FoldersSlice";
 import { selectFolders } from "../../../../selectors/selectors";
 
 // Интерфейс для одного файла
