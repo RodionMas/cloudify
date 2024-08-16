@@ -1,22 +1,25 @@
 import React from "react";
 import style from "./DragAndDrop.module.css";
-import { useAppDispatch } from "../../../store/hooks";
+import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import {
   changeDragDrop,
   fetchDrop,
   fetchGetAllFiles,
   fetchGetAmountData,
+  FetchsubfoldersPackage,
 } from "../../../store/FoldersSlice";
-import { useSelector } from "react-redux";
 import { selectAuth, selectFolders } from "../../../selectors/selectors";
 import filePng from '../../../assets/img/File.png'
+import { useLocation } from "react-router-dom";
 
 const DragAndDrop: React.FC = () => {
-  const appDispatch = useAppDispatch();
-  const { username } = useSelector(selectAuth);
+  const dispatch = useAppDispatch();
+  const { pathname } = useLocation()
+  const { username } = useAppSelector(selectAuth);
   const [drag, setDrag] = React.useState(false);
-  const [formData, setFormData] = React.useState<FormData | null>(null);
-  const { totalSize } = useSelector(selectFolders);
+  const [formData, setFormData] = React.useState<FormData & {folderPath?: string | undefined} | null>(null);
+  const { totalSize } = useAppSelector(selectFolders);
+  const { subfoldersURL } = useAppSelector(selectFolders)
   const [onVisibleFiles, setOnVisibleFiles] = React.useState<string[]>([]);
   function dragStartHandler(e: React.DragEvent<HTMLDivElement>): void {
     e.preventDefault();
@@ -42,18 +45,31 @@ const DragAndDrop: React.FC = () => {
     setDrag(false);
   }
   async function handleSelectClick() {
-    try {
-      if (formData) {
-        await appDispatch(fetchDrop(formData));
-        await appDispatch(fetchGetAllFiles());
-        await appDispatch(fetchGetAmountData());
-      }
-    } catch (error) {
-      console.error("Error creating folder:", error);
-    } finally {
-      appDispatch(changeDragDrop());
+  try {
+    if (pathname.includes('userfolder') && formData) {
+      const parts = pathname.split('/');
+      const index = parts.indexOf('userfolder');
+      const result = parts.slice(index + 1).join("/"); // Забираем все элементы после "userfolder" и соединяем их обратно в строку
+
+      // Добавляем поле folderPath в formData
+      formData.append('folderPath', result);
+
+      // Обновляем состояние formData
+      setFormData(formData);
+      await dispatch(fetchDrop(formData));
+      await dispatch(FetchsubfoldersPackage(subfoldersURL))
+      await dispatch(fetchGetAmountData());
+    } else if (formData) {
+      await dispatch(fetchDrop(formData));
+      await dispatch(fetchGetAllFiles());
+      await dispatch(fetchGetAmountData());
     }
+  } catch (error) {
+    console.error("Error creating folder:", error);
+  } finally {
+    dispatch(changeDragDrop());
   }
+}
   React.useEffect(() => {}, [totalSize, onVisibleFiles]);
   return (
     <div className={style.wrapper}>
@@ -93,7 +109,7 @@ const DragAndDrop: React.FC = () => {
           Select
         </button>
         <button
-          onClick={() => appDispatch(changeDragDrop())}
+          onClick={() => dispatch(changeDragDrop())}
           className={style.cancel}
         >
           Cancel

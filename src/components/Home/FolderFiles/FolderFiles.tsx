@@ -33,8 +33,6 @@ const FolderFiles: React.FC = () => {
   const { filesForPackage, foldersForPagckage } = useAppSelector(selectFolders);
   const { colorForFolder } = useAppSelector(selectFolders);
   const { subfoldersURL } = useAppSelector(selectFolders)
-  const { subfilesForPackage, subfoldersForPackage } =
-    useAppSelector(selectFolders);
   const dispatch = useAppDispatch();
   const appDispatch = useAppDispatch();
   async function handleGetFiles() {
