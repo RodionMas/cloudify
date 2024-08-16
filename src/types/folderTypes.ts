@@ -20,16 +20,13 @@ export interface FoldersTypeState {
   createSubfolder: CreateSubfolderType;
   foldersForPagckage: string[];
   filesForPackage: FilesForPackageType[];
+  subfoldersForPackage: string[];
+  subfilesForPackage: FilesForPackageType[];
   moveFiles: any;
   renameFolderModal: boolean;
   renameFolder: RenameFolder;
   colorFolder: ColorFolderType;
-}
-
-interface MoveFileType {
-  source: string;
-  target: string;
-  files: string[];
+  subfoldersURL: string;
 }
 
 export interface ColorFolderType {
@@ -121,14 +118,3 @@ export interface CreateSubfolderType {
   name: string;
 }
 // DELETE
-
-export interface DeleteTypeState {
-  files: DeleteSelectedFiles[];
-  loading: string;
-  err: null | string;
-}
-export interface RecoverFilesType extends DeleteSelectedFiles {}
-export interface DeleteSelectedFiles {
-  filename: string;
-  filePath: string;
-}

@@ -5,50 +5,77 @@ import { Link, useLocation, useParams } from "react-router-dom";
 // import openFolder from "../../../assets/img/OpenedFolder.png";
 import arrow from "../../../assets/img/Chevron Down.png";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
-import { fetchGetAllFiles, fetchGetFoldersFiles, SubfolderModal } from "../../../store/FoldersSlice";
+import {
+  fetchGetAllFiles,
+  fetchGetFoldersFiles,
+  FetchsubfoldersPackage,
+  setFoldersURL,
+  SubfolderModal,
+} from "../../../store/FoldersSlice";
 import { selectFolders } from "../../../selectors/selectors";
 import OneFile from "../OneFile/OneFile";
-import createFolderImg from '../../../assets/img/Add Folder.png'
+import createFolderImg from "../../../assets/img/Add Folder.png";
 import OneFolder from "../OneFolder/OneFolder";
-
+import Subfolders from "./Subfolders/Subfolders";
 
 const FolderFiles: React.FC = () => {
-  const { foldername } = useParams()
+  const { foldername } = useParams();
   const sortBy = ["Name", "Folder", "File Size", "Changes"];
-  const {pathname} = useLocation()
-  const lastSlashIndex = pathname.lastIndexOf("/");
-  const newUrl = pathname.substring(0, lastSlashIndex);
+  const { pathname } = useLocation();
+  const newUrlFn = () => {
+    const lastSlashIndex = pathname.lastIndexOf("/");
+    const newUrl = pathname.substring(0, lastSlashIndex);
+    return newUrl;
+  };
   const [sortDownArrow, setSortDownArrow] = React.useState(0);
-  const { filesForPackage, foldersForPagckage } = useAppSelector(selectFolders)
-  const { colorForFolder } = useAppSelector(selectFolders)
-  const dispatch = useAppDispatch()
-  const appDispatch = useAppDispatch()
+  const { filesForPackage, foldersForPagckage } = useAppSelector(selectFolders);
+  const { colorForFolder } = useAppSelector(selectFolders);
+  const { subfoldersURL } = useAppSelector(selectFolders);
+
+  const dispatch = useAppDispatch();
+  const appDispatch = useAppDispatch();
   async function handleGetFiles() {
     try {
-     await appDispatch(fetchGetAllFiles())
-     await appDispatch(fetchGetFoldersFiles(foldername))
+      await appDispatch(fetchGetAllFiles());
+      await appDispatch(fetchGetFoldersFiles(foldername));
     } catch (error) {
-      console.log(error)
+      console.warn(error);
     }
   }
+  const count = pathname.split("/").length - 1; //проверка чтобы послать запрос на subfolders или отобразить main папку
   React.useEffect(() => {
-    handleGetFiles()
-  }, [])
+    if (count === 3) {
+      handleGetFiles();
+    } else if (count > 3) {
+      dispatch(setFoldersURL(pathname));
+      if (subfoldersURL) {
+        dispatch(FetchsubfoldersPackage(subfoldersURL));
+      }
+    }
+  }, [pathname, subfoldersURL]);
   return (
     <section className={style.wrapper}>
       <Search />
       <div className={style.box}>
         <h1 className={style.title}>{foldername}</h1>
         <div className={style.folderClickBox}>
-        <button onClick={() => dispatch(SubfolderModal())} className={style.createFolderBtn}>Create Subfolder <img src={createFolderImg} alt="create folder" /></button>
-        <Link className={style.linkAll} to={newUrl}>
-          Back
-        </Link>
+          <button
+            onClick={() => dispatch(SubfolderModal())}
+            className={style.createFolderBtn}
+          >
+            Create Subfolder <img src={createFolderImg} alt="create folder" />
+          </button>
+          <Link className={style.linkAll} to={newUrlFn()}>
+            Back
+          </Link>
         </div>
       </div>
       <div className={style.allFiles}>
-      <div style={{backgroundColor: colorForFolder}} className={style.color}></div>
-      <div className={style.sortBy}>
+        <div
+          style={{ backgroundColor: colorForFolder }}
+          className={style.color}
+        ></div>
+        <div className={style.sortBy}>
           {sortBy.map((sort, i) => (
             <button
               key={i}
@@ -66,16 +93,18 @@ const FolderFiles: React.FC = () => {
             </button>
           ))}
         </div>
-        {filesForPackage.map((item, i) => {
-          return (
-            <OneFile key={i} {...item} />
-          );
-        })}
-        {foldersForPagckage.map((folder, i) => {
-          return (
-            <OneFolder key={i} folder={folder} />
-          )
-        })}
+        {count === 3 ? (
+          <>
+            {filesForPackage.map((item, i) => (
+              <OneFile key={i} {...item} />
+            ))}
+            {foldersForPagckage.map((folder, i) => (
+              <OneFolder key={i} folder={folder} />
+            ))}
+          </>
+        ) : (
+          <Subfolders />
+        )}
       </div>
     </section>
   );

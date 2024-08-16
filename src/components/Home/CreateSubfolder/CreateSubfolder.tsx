@@ -1,9 +1,8 @@
 import React from "react";
 import style from "./CreateSubfolder.module.css";
-import { useAppDispatch, useAppSelector } from "../../../store/hooks";
+import { useAppDispatch } from "../../../store/hooks";
 import { createSubfolderReducer, fetchCreateSubfolder, fetchGetFoldersFiles, SubfolderModal } from "../../../store/FoldersSlice";
 import { useLocation, useParams } from "react-router-dom";
-import { selectFolders } from "../../../selectors/selectors";
 
 const CreateSubfolder: React.FC =  () => {
   const dispatch = useAppDispatch();
@@ -28,7 +27,7 @@ const CreateSubfolder: React.FC =  () => {
         onChange={e => setInputValue(e.target.value)}
         className={style.inp}
         type="text"
-        placeholder="Enter a subfolder name and choose a color"
+        placeholder="Enter a subfolder name"
       />
       <div className={style.btnBox}>
         <button

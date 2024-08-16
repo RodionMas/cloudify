@@ -1,6 +1,6 @@
 import React from 'react';
 import style from './OneFolder.module.css'
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useClickOutside } from '../../../tools/UseClickOutside';
 import folderPng from '../../../assets/img/OpenedFolder.png'
 import more from "../../../assets/img/More.png";
@@ -33,6 +33,7 @@ const OneFolder: React.FC<any> = ({folder}) => {
       };
     return (
         <div className={style.files}>
+          <Link to={`${pathname}/${folder.name}`} className={style.filesLink}>
         <div className={style.fileRow}>
           <span className={style.fileName}>
             <img className={style.fileImg} src={folderPng} alt="folder" />{" "}
@@ -48,16 +49,18 @@ const OneFolder: React.FC<any> = ({folder}) => {
           <span className={style.size}>{size}</span>
         </div>
         <div className={pathname !== '/home/deleted' ? style.fileRow : style.fileRowDeleted}>
-          {/* last mod */}
           <span>{lastModified.day}</span> 
+          </div>
+          </Link>
           <button
             ref={hideRef}
             onClick={handleButtonClick}
             className={style.moreBtn}
           >
-            <img src={more} alt="show more" />
+            <img className={style.moreBtnImg} src={more} alt="show more" />
           </button>
-        </div>
+        
+        
         {hideContent &&
           (location.pathname === "/home/deleted" ? (
             <MoreFileSmall

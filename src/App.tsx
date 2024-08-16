@@ -6,24 +6,26 @@ import NonAuth from "./components/AuthFolder/NonAuth/NonAuth";
 import Register from "./components/AuthFolder/Register/Register";
 import Login from "./components/AuthFolder/Login/Login";
 import { useSelector } from "react-redux";
-import { selectAuth } from "./selectors/selectors";
+import { selectAuth, selectFolders } from "./selectors/selectors";
 import Home from "./components/Home/Home";
 import UserRepo from "./components/Home/UserRepo/UserRepo";
 import AllFiles from "./components/Home/AllFiles/AllFiles";
-import { useAppDispatch } from "./store/hooks";
+import { useAppDispatch, useAppSelector } from "./store/hooks";
 import { fetchGetMe } from "./store/authSlice";
 import DeletedPage from "./components/Home/DeletedPage/DeletedPage";
 import FolderFiles from "./components/Home/FolderFiles/FolderFiles";
+import Preloader from "./Preloader/Preloader";
 
 const App: React.FC = () => {
   const { isAuth } = useSelector(selectAuth);
   const appDispatch = useAppDispatch();
-
+  const { loading } = useAppSelector(selectFolders)
   React.useEffect(() => {
     appDispatch(fetchGetMe());
   }, [appDispatch]);
   return (
     <div className={isAuth ? style.wrapperHome : style.wrapperAuth}>
+      {loading === 'pending' && <Preloader />}
       <div className={style.container}>
         <Routes>
           <Route path="/" element={<AuthFolder />}>
@@ -35,7 +37,7 @@ const App: React.FC = () => {
           <Route path="/home" element={<Home />}>
             <Route index element={<UserRepo />} />
             <Route path="/home/files" element={<AllFiles />} />
-            <Route path="/home/userfolder/:foldername/" element={<FolderFiles />} />
+            <Route path="/home/userfolder/:foldername/*" element={<FolderFiles />} />
             <Route path="/home/deleted" element={<DeletedPage />} />
           </Route>
           <Route path="*" element={<Navigate to="/" />} />
