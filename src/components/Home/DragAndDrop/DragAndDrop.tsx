@@ -9,6 +9,7 @@ import {
 } from "../../../store/FoldersSlice";
 import { useSelector } from "react-redux";
 import { selectAuth, selectFolders } from "../../../selectors/selectors";
+import filePng from '../../../assets/img/File.png'
 
 const DragAndDrop: React.FC = () => {
   const appDispatch = useAppDispatch();
@@ -16,6 +17,7 @@ const DragAndDrop: React.FC = () => {
   const [drag, setDrag] = React.useState(false);
   const [formData, setFormData] = React.useState<FormData | null>(null);
   const { totalSize } = useSelector(selectFolders);
+  const [onVisibleFiles, setOnVisibleFiles] = React.useState<string[]>([]);
   function dragStartHandler(e: React.DragEvent<HTMLDivElement>): void {
     e.preventDefault();
     setDrag(true);
@@ -29,11 +31,12 @@ const DragAndDrop: React.FC = () => {
   function onDropHandler(e: any): void {
     e.preventDefault();
     let files: File[] = [...e.dataTransfer.files];
+
     const newFormData = new FormData();
     files.forEach((files) => {
       newFormData.append(`files`, files);
     });
-
+    files.map((file) => setOnVisibleFiles((prev) => [...prev, file.name]));
     newFormData.append("user", username);
     setFormData(newFormData); // Сохраняем FormData в состоянии
     setDrag(false);
@@ -41,20 +44,29 @@ const DragAndDrop: React.FC = () => {
   async function handleSelectClick() {
     try {
       if (formData) {
-      await appDispatch(fetchDrop(formData));
-      await appDispatch(fetchGetAllFiles());
-      await appDispatch(fetchGetAmountData());
+        await appDispatch(fetchDrop(formData));
+        await appDispatch(fetchGetAllFiles());
+        await appDispatch(fetchGetAmountData());
       }
     } catch (error) {
-      console.error('Error creating folder:', error);
+      console.error("Error creating folder:", error);
     } finally {
       appDispatch(changeDragDrop());
     }
   }
-  React.useEffect(() => {}, [totalSize]);
+  React.useEffect(() => {}, [totalSize, onVisibleFiles]);
   return (
     <div className={style.wrapper}>
-      {drag ? (
+      {onVisibleFiles.length !== 0 ? (
+        <div className={style.dropFiles}>
+          {onVisibleFiles.map((file) => {
+            return <div key={file} className={style.filesBox}>
+              <img src={filePng} alt="file" />
+              <span className={style.textFiles}>{file}</span>
+            </div>;
+          })}
+        </div>
+      ) : drag ? (
         <div
           onDragStart={(e) => dragStartHandler(e)}
           onDragLeave={(e) => dragLeaveHandler(e)}

@@ -1,29 +1,9 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import axios from "../instanceAxios";
+import { GetMeType, Username, userRegister, UserRespone, UserTypeState } from "../types/authTypes";
 
-interface UserTypeState {
-  userRegister: userRegister;
-  loading: string;
-  err: string | unknown | null;
-  isAuth: boolean;
-  username: string;
-}
 
-interface Username {
-  username: string | undefined;
-}
-interface userRegister extends Username {
-  password: string | undefined;
-}
-interface UserRespone extends Username {
-  message?: string;
-}
-
-interface GetMeType {
-  authenticated: boolean;
-  username: string;
-}
 
 export const fetchLogin = createAsyncThunk<
   UserRespone,

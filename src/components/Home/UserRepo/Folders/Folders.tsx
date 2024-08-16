@@ -2,7 +2,7 @@ import React from "react";
 import style from "./Folders.module.css";
 import Folder from "./Folder/Folder";
 import { useAppDispatch, useAppSelector } from "../../../../store/hooks";
-import { fetchColorFolder, fetchGetFolder } from "../../../../store/FoldersSlice";
+import { fetchColorFolder, fetchGetAllFiles, fetchGetFolder } from "../../../../store/FoldersSlice";
 import { selectFolders } from "../../../../selectors/selectors";
 import NoFolders from "./NoFolders/NoFolders";
 import { Navigation } from "swiper/modules";
@@ -19,6 +19,7 @@ const Folders: React.FC = () => {
     try {
       await dispatch(fetchColorFolder(colorFolder));
       await dispatch(fetchGetFolder())
+      await dispatch(fetchGetAllFiles())
     } catch (error) {
       console.warn(error)
     }
