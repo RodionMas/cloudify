@@ -1,0 +1,93 @@
+.name {
+    font-size: 20px;
+    color: #000;
+    margin-left: 15px;
+    display: flex;
+    align-items: center;
+  }
+  .moreBox {
+    display: flex;
+  }
+  .moreBox {
+    padding-top: 9px;
+    padding-bottom: 9px;
+    padding-left: 30px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    width: 100%;
+  }
+  .moreBox:hover {
+    border-radius: 8px;
+  box-shadow: 0px 4px 9px 4px rgba(0, 0, 0, 0.1);
+  background: rgba(201, 201, 201, 0.7);
+  }
+  .img {
+    width: 20px;
+    height: 20px;
+    margin-left: 84px;
+  }
+  .wrapperFolder {
+    padding: 11px 27px;
+    box-shadow: 0px 4px 7px 6px rgba(0, 0, 0, 0.1);
+    background: rgb(244, 244, 244);
+    position: absolute;
+    width: 228px;
+    max-height: 317px;
+    border: 1px solid rgba(144, 144, 144, 0.2);
+    border-radius: 30px;
+    display: none;
+    margin-top: 30px;
+  }
+  .wrapperOverflow {
+    box-sizing: border-box;
+    text-align: left;
+    overflow-y: scroll;
+  }
+  
+  .wrapperOverflow::-webkit-scrollbar {
+    width: 12px; /* Ширина для вертикального скролла */
+  }
+  
+  /* Ползунок скроллбара */
+  .wrapperOverflow::-webkit-scrollbar-thumb {
+    background-color: #888; /* Цвет ползунка */
+    border-radius: 15px; /* Закругленные углы */
+  }
+  
+  /* Ползунок при наведении */
+  .wrapperOverflow::-webkit-scrollbar-thumb:hover {
+    background-color: #555; /* Цвет ползунка при наведении */
+  }
+  
+  /* Дорожка скроллбара */
+  .wrapperOverflow::-webkit-scrollbar-track {
+    background: #f1f1f1; /* Цвет дорожки */
+  }
+  .btnFolder{
+    border: none;
+    cursor: pointer;
+    background: transparent;
+    display: flex;
+  }
+  .btnFolder+.btnFolder{
+    margin-top: 10px;
+  }
+  .moreBox:hover .wrapperFolder {
+    display: block;
+    cursor: default;
+  }
+  .miniTitle {
+    font-size: 18px;
+    font-weight: 400;
+    margin: 0;
+  }
+  .btnFolder{
+    width: 30px;
+    height: 30px;
+    align-items: center;
+  }
+  .btnFolder img{
+    margin-right: 10px;
+  }
+  

@@ -30,15 +30,15 @@
 }
 .moreBox:hover {
   border-radius: 8px;
-box-shadow: 0px 4px 9px 4px rgba(0, 0, 0, 0.1);
-background: rgba(201, 201, 201, 0.7);
+  box-shadow: 0px 4px 9px 4px rgba(0, 0, 0, 0.1);
+  background: rgba(201, 201, 201, 0.7);
 }
 .img {
   width: 20px;
   height: 20px;
   margin-left: 84px;
 }
-.btnFolder{
+.btnFolder {
   border: none;
   cursor: pointer;
   background: transparent;
@@ -52,7 +52,7 @@ background: rgba(201, 201, 201, 0.7);
   font-weight: 400;
   margin: 0;
 }
-.packageImg{
+.packageImg {
   width: 30px;
   height: 30px;
 }

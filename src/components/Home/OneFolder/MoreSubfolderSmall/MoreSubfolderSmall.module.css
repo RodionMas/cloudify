@@ -1,0 +1,20 @@
+.wrapper {
+    /* height: 344px; */
+    padding: 15px 0px 15px 0;
+    width: 250px;
+    background-color: #fff;
+    border-radius: 30px;
+    border: 1px solid rgba(144, 144, 144, 0.2);
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+    background: rgb(244, 244, 244);
+    z-index: 1050; /* Высокий z-index для отображения поверх других элементов */
+    display: flex;
+    flex-direction: column;
+  }
+  .name {
+    font-size: 20px;
+    color: #000;
+    margin-left: 15px;
+    display: flex;
+    align-items: center;
+  }

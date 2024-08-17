@@ -25,7 +25,7 @@ const RenameFolder: React.FC = () => {
         }}
         className={style.inp}
         type="text"
-        placeholder="Enter a folder name and choose a color"
+        placeholder="Enter a folder name"
       />
       <div className={style.btnBox}>
         <button

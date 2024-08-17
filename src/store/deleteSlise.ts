@@ -13,7 +13,7 @@ export const fetchDeleteSelected = createAsyncThunk<
 string,
 DeleteSelectedFiles[],
   { rejectValue: string }
->("login/fetchDeleteSelected", async (files, { rejectWithValue }) => {
+>("delete/fetchDeleteSelected", async (files, { rejectWithValue }) => {
   try {
     const { data } = await axios.delete(`/files`, {
         data: files
@@ -28,7 +28,7 @@ export const fetchRecoverFiles = createAsyncThunk<
 string,
 RecoverFilesType[],
   { rejectValue: string }
->("login/fetchRecoverFiles", async (files, { rejectWithValue }) => {
+>("delete/fetchRecoverFiles", async (files, { rejectWithValue }) => {
   try {
     const { data } = await axios.post(`/files/recover`, files);
     return data;

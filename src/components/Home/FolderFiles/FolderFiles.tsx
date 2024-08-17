@@ -14,31 +14,28 @@ import {
   SubfolderModal,
 } from "../../../store/FoldersSlice";
 import { selectFolders } from "../../../selectors/selectors";
-import OneFile from "../OneFile/OneFile";
+
 import createFolderImg from "../../../assets/img/Add Folder.png";
 import uploadFilesImg from "../../../assets/img/File.png";
-import OneFolder from "../OneFolder/OneFolder";
+
 import Subfolders from "./Subfolders/Subfolders";
+import FolderFilesArr from "./FolderFiles/FolderFilesArr";
+import { newUrlFn } from "../../../tools/PathName";
 
 const FolderFiles: React.FC = () => {
   const { foldername } = useParams();
   const sortBy = ["Name", "Folder", "File Size", "Changes"];
   const { pathname } = useLocation();
-  const newUrlFn = () => {
-    const lastSlashIndex = pathname.lastIndexOf("/");
-    const newUrl = pathname.substring(0, lastSlashIndex);
-    return newUrl;
-  };
   const [sortDownArrow, setSortDownArrow] = React.useState(0);
-  const { filesForPackage, foldersForPagckage } = useAppSelector(selectFolders);
+
   const { colorForFolder } = useAppSelector(selectFolders);
-  const { subfoldersURL } = useAppSelector(selectFolders)
+  const { subfoldersURL } = useAppSelector(selectFolders);
   const dispatch = useAppDispatch();
-  const appDispatch = useAppDispatch();
+
   async function handleGetFiles() {
     try {
-      await appDispatch(fetchGetAllFiles());
-      await appDispatch(fetchGetFoldersFiles(foldername));
+      await dispatch(fetchGetAllFiles());
+      await dispatch(fetchGetFoldersFiles(foldername));
     } catch (error) {
       console.warn(error);
     }
@@ -46,22 +43,25 @@ const FolderFiles: React.FC = () => {
   const count = pathname.split("/").length - 1; //проверка чтобы послать запрос на subfolders или отобразить main папку
   async function handleGetSubfolders() {
     try {
-       dispatch(setFoldersURL(pathname))
-       await dispatch(FetchsubfoldersPackage(subfoldersURL))
+      dispatch(setFoldersURL(pathname));
+      await dispatch(FetchsubfoldersPackage(subfoldersURL));
     } catch (error) {
       console.warn(error);
     }
   }
-  async function handleUploadFiles(){
-    dispatch(changeDragDrop())
+  async function handleUploadFiles() {
+    dispatch(changeDragDrop());
   }
   React.useEffect(() => {
     if (count === 3) {
       handleGetFiles();
     } else if (count > 3) {
-      handleGetSubfolders()
-    } 
-  }, [pathname,subfoldersURL, dispatch, count, ]);
+      handleGetSubfolders();
+      if (subfoldersURL) {
+        dispatch(FetchsubfoldersPackage(subfoldersURL));
+      }
+    }
+  }, [pathname, subfoldersURL, count]);
   return (
     <section className={style.wrapper}>
       <Search />
@@ -74,13 +74,11 @@ const FolderFiles: React.FC = () => {
           >
             Create Subfolder <img src={createFolderImg} alt="create folder" />
           </button>
-          <button
-            onClick={handleUploadFiles}
-            className={style.createFolderBtn}
-          >
-            Upload files to folder <img src={uploadFilesImg} alt="create folder" />
+          <button onClick={handleUploadFiles} className={style.createFolderBtn}>
+            Upload files to folder{" "}
+            <img src={uploadFilesImg} alt="create folder" />
           </button>
-          <Link className={style.linkAll} to={newUrlFn()}>
+          <Link className={style.linkAll} to={newUrlFn(pathname)}>
             Back
           </Link>
         </div>
@@ -108,16 +106,7 @@ const FolderFiles: React.FC = () => {
             </button>
           ))}
         </div>
-        {count === 3 ? (
-  <>
-    {filesForPackage.map((item, i) => (
-      <OneFile key={i} {...item} />
-    ))}
-    {foldersForPagckage.map((folder, i) => (
-      <OneFolder key={i} folder={folder} />
-    ))}
-  </>
-) : <Subfolders />}
+        {count === 3 ? <FolderFilesArr /> : <Subfolders />}
       </div>
     </section>
   );

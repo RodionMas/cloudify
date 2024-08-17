@@ -6,7 +6,7 @@ import move from "../../../../../assets/img/showMoreSmall/Move.png";
 import edit from "../../../../../assets/img/showMoreSmall/Edit File.png";
 import cash from "../../../../../assets/img/showMoreSmall/Trash Can.png";
 import recet from "../../../../../assets/img/showMoreSmall/Reset.png";
-import { useAppDispatch } from "../../../../../store/hooks";
+import { useAppDispatch, useAppSelector } from "../../../../../store/hooks";
 import {
   fetchDeleteFile,
   fetchGetAllFiles,
@@ -15,12 +15,16 @@ import {
   fetchGetFoldersFiles,
   fetchMove,
   fetchRecover,
+  FetchsubfoldersPackage,
 } from "../../../../../store/FoldersSlice";
-import { useSelector } from "react-redux";
 import { selectFolders } from "../../../../../selectors/selectors";
 import { useLocation, useParams } from "react-router-dom";
 import BtnShowMore from "./BtnShowMore/BtnShowMore";
-
+import { FetchFilesUserRes } from "../../../../../types/folderTypes";
+interface RecoverType {
+  filename: string;
+  filePath: string;
+}
 const MoreFileSmall = forwardRef<HTMLDivElement, any>((props, ref) => {
   const showMoreArr = [
     { name: "Download", image: download },
@@ -37,26 +41,43 @@ const MoreFileSmall = forwardRef<HTMLDivElement, any>((props, ref) => {
     target: `deleted/${props.filePath}`,
     files: [],
   });
-  const appDispatch = useAppDispatch();
-  const { deletedFiles } = useSelector(selectFolders);
+  const dispatch = useAppDispatch();
+  const { deletedFiles } = useAppSelector(selectFolders);
   const { foldername } = useParams();
+  const { subfoldersURL } = useAppSelector(selectFolders);
   async function deleteMove(item: string) {
     if (item === "Delete") {
-      setMoveFiles(
-        (moveFiles.files = [...moveFiles.files, props.filename])
-      );
+      setMoveFiles((moveFiles.files = [...moveFiles.files, props.filename]));
       try {
-        await appDispatch(fetchMove(moveFiles));
-        await appDispatch(fetchGetAllFiles());
-        await appDispatch(fetchGetFolder());
-        await appDispatch(fetchGetFoldersFiles(foldername));
+        await dispatch(fetchMove(moveFiles));
+        await dispatch(fetchGetAllFiles());
+        await dispatch(fetchGetFolder());
+        await dispatch(fetchGetFoldersFiles(foldername));
+        await dispatch(fetchGetDeletedFiles())
+        await dispatch(FetchsubfoldersPackage(subfoldersURL));
       } catch (error) {
         console.warn(error);
       }
     }
   }
   const location = useLocation();
+  const handleDeleteFile = async (delFile: FetchFilesUserRes[]) => {
+    try {
+      await dispatch(fetchDeleteFile({ delFile }));
+      await dispatch(fetchGetDeletedFiles());
+    } catch (error) {
+      console.warn(error);
+    }
+  };
 
+  const handleRecover = async (recover: RecoverType[]) => {
+    try {
+      await dispatch(fetchRecover(recover));
+      await dispatch(fetchGetDeletedFiles());
+    } catch (error) {
+      console.warn(error);
+    }
+  };
   const menu = (
     <div ref={ref} className={style.wrapper} style={props.style}>
       {location.pathname === "/home/deleted"
@@ -67,9 +88,7 @@ const MoreFileSmall = forwardRef<HTMLDivElement, any>((props, ref) => {
                   const delFile = deletedFiles.filter(
                     (deleteItem) => deleteItem.filename === props.filename
                   );
-                  appDispatch(fetchDeleteFile({ delFile })).then(() =>
-                    appDispatch(fetchGetDeletedFiles())
-                  );
+                  handleDeleteFile(delFile);
                 } else if (item.name === "Recover") {
                   const recover = [
                     {
@@ -77,9 +96,7 @@ const MoreFileSmall = forwardRef<HTMLDivElement, any>((props, ref) => {
                       filename: props.filename ? props.filename : "",
                     },
                   ];
-                  appDispatch(fetchRecover(recover)).then(() =>
-                    appDispatch(fetchGetDeletedFiles())
-                  );
+                  handleRecover(recover);
                 }
                 props.hideContentFn();
               }}

@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import {
   fetchDelCheckbox,
   fetchGetAllFiles,
+  fetchGetDeletedFiles,
 } from "../../../store/FoldersSlice";
 import { useSelector } from "react-redux";
 import { selectFolders } from "../../../selectors/selectors";
@@ -24,6 +25,7 @@ const AllFiles: React.FC = () => {
     try {
       await appDispatch(fetchDelCheckbox(moveFiles));
       await appDispatch(fetchGetAllFiles());
+      await appDispatch(fetchGetDeletedFiles())
       setFilesArr([])
     } catch (error) {
       console.warn(error);

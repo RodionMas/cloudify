@@ -4,10 +4,15 @@ import { Link, useLocation } from "react-router-dom";
 import Deleted from "../../../../assets/img/deleted.png";
 import All from "../../../../assets/img/allFiles.png";
 import home from "../../../../assets/img/Home Page.png";
+import { useAppDispatch, useAppSelector } from "../../../../store/hooks";
+import { selectFolders } from "../../../../selectors/selectors";
+import { fetchGetDeletedFiles } from "../../../../store/FoldersSlice";
 
 const FileActions: React.FC = () => {
   const { pathname } = useLocation()
   const [activeLink, setActiveLink] = React.useState(0)
+  const dispatch = useAppDispatch()
+  const { deletedFiles } = useAppSelector(selectFolders);
   const categoryArr = [
     {
       name: "Home",
@@ -30,7 +35,8 @@ const FileActions: React.FC = () => {
     } else if(pathname === '/home/deleted'){
       setActiveLink(2)
     }
-  }, [pathname])
+    dispatch(fetchGetDeletedFiles())
+  }, [pathname, deletedFiles.length])
   return (
     <div className={style.wrapper}>
       {categoryArr.map((category, i) => {
@@ -46,7 +52,7 @@ const FileActions: React.FC = () => {
           >
             {" "}
             <img className={style.img} src={category.image} alt="" />{" "}
-            {category.name}
+            {category.name} {category.name === 'Deleted' && `(${deletedFiles.length})`}
           </Link>
         );
       })}

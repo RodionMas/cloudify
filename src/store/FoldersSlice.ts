@@ -276,7 +276,7 @@ export const FetchsubfoldersPackage = createAsyncThunk<
   any,
   any,
   { rejectValue: string }
->("folder/fetchGetSubfoldersFilesZ", async (subfoldersURL, { rejectWithValue }) => {
+>("folder/FetchsubfoldersPackage", async (subfoldersURL, { rejectWithValue }) => {
   try {
     const { data } = await axios.get(`/files?path=${subfoldersURL}`);
     return data;
