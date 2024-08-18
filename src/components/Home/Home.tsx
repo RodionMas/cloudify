@@ -2,7 +2,7 @@ import React from "react";
 import style from "./Home.module.css";
 import FolderOnActions from "./FolderOnActions/FolderOnActions";
 import { Outlet } from "react-router-dom";
-import { selectFolders, selectSubfolders } from "../../selectors/selectors";
+import { selectAuth, selectFolders, selectSubfolders } from "../../selectors/selectors";
 import Logout from "./LogoutModal/LogoutModal";
 import DragAndDrop from "./DragAndDrop/DragAndDrop";
 import CreateFolder from "./CreateFolder/CreateFolder";
@@ -14,7 +14,7 @@ import RenameSubfolder from "./RenameSubfolder/RenameSubfolder";
 
 const Home: React.FC = () => {
   const { dragAndDrop } = useAppSelector(selectFolders);
-  const { logout } = useAppSelector(selectFolders);
+  const { logout } = useAppSelector(selectAuth);
   const { renameModal } = useAppSelector(selectFolders);
   const { createFolderModal } = useAppSelector(selectFolders);
   const { createSubfolderModal } = useAppSelector(selectFolders);
@@ -35,4 +35,4 @@ const Home: React.FC = () => {
   );
 };
 
-export default Home;
+export default React.memo(Home);

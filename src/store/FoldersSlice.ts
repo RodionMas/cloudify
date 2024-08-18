@@ -272,18 +272,7 @@ export const fetchDeleteFolder = createAsyncThunk<
   }
 });
 
-export const FetchsubfoldersPackage = createAsyncThunk<
-  any,
-  any,
-  { rejectValue: string }
->("folder/FetchsubfoldersPackage", async (subfoldersURL, { rejectWithValue }) => {
-  try {
-    const { data } = await axios.get(`/files?path=${subfoldersURL}`);
-    return data;
-  } catch (error: any) {
-    return rejectWithValue(error.message);
-  }
-});
+
 
 const handlePending = (state: FoldersTypeState) => {
   state.loading = "pending";
@@ -310,7 +299,7 @@ const initialState: FoldersTypeState = {
   err: null,
   totalSize: 0.0,
   userMemory: 500,
-  logout: false,
+  
   dragAndDrop: false,
   allFiles: [],
   deletedFiles: [],
@@ -342,34 +331,17 @@ const initialState: FoldersTypeState = {
   },
   foldersForPagckage: [],
   filesForPackage: [],
-  subfoldersForPackage: [],
-  subfilesForPackage: [],
   moveFiles: [],
   colorFolder: {
     name: "",
     newColor: "",
   },
-  subfoldersURL: "",
 };
 
 export const FoldersSlice = createSlice({
   name: "FoldersSlice",
   initialState,
   reducers: {
-    setFoldersURL: (state, action) => {
-      const path = action.payload;
-      const parts = path.split("/"); // Разбиваем строку на массив по "/"
-      const index = parts.indexOf("userfolder"); // Находим индекс "userfolder"
-
-      if (index !== -1) {
-        const result = parts.slice(index + 1).join("/"); // Забираем все элементы после "userfolder" и соединяем их обратно в строку
-        const encodedPath = result.replace(/\//g, "%2F");
-        state.subfoldersURL = encodedPath;
-      }
-    },
-    changeLogout: (state) => {
-      state.logout = !state.logout;
-    },
     changeDragDrop: (state) => {
       state.dragAndDrop = !state.dragAndDrop;
     },
@@ -513,10 +485,7 @@ export const FoldersSlice = createSlice({
       state.foldersForPagckage = [...action.payload.folders];
       state.filesForPackage = [...action.payload.files];
     });
-    addAsyncThunkCases(FetchsubfoldersPackage, (state, action) => {
-      state.subfoldersForPackage = [...action.payload.folders];
-      state.subfilesForPackage = [...action.payload.files];
-    });
+    
     addAsyncThunkCases(fetchDelCheckbox, () => {});
 
     addAsyncThunkCases(fetchRenameFodler, () => {});
@@ -528,7 +497,6 @@ export const FoldersSlice = createSlice({
 });
 // fetchDeleteFolder
 export const {
-  changeLogout,
   changeDragDrop,
   changeFolderModal,
   createModalName,
@@ -547,7 +515,6 @@ export const {
   renameLastNameFolder,
   changeColorFolderName,
   changeColorFolder,
-  setFoldersURL,
 } = FoldersSlice.actions;
 
 export default FoldersSlice.reducer;

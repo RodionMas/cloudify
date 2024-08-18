@@ -1,16 +1,17 @@
 import React from "react";
 import style from "./CreateSubfolder.module.css";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
-import { createSubfolderReducer, fetchCreateSubfolder, fetchGetFoldersFiles, FetchsubfoldersPackage, SubfolderModal } from "../../../store/FoldersSlice";
+import { createSubfolderReducer, fetchCreateSubfolder, fetchGetFoldersFiles, SubfolderModal } from "../../../store/FoldersSlice";
 import { useLocation, useParams } from "react-router-dom";
-import { selectFolders } from "../../../selectors/selectors";
+import { selectSubfolders } from "../../../selectors/selectors";
+import { FetchsubfoldersPackage } from "../../../store/subfolderSlice";
 
 const CreateSubfolder: React.FC =  () => {
   const dispatch = useAppDispatch();
   const { pathname } = useLocation();
   const [inputValue, setInputValue] = React.useState('');
   const { foldername } = useParams()
-  const { subfoldersURL } = useAppSelector(selectFolders)
+  const { subfoldersURL } = useAppSelector(selectSubfolders)
   async function createSubFolderFn() {
     const word = pathname.split('userfolder/')[1].split('/');
     const result = word.join('/'); // Объединяем элементы массива с разделителем "/"

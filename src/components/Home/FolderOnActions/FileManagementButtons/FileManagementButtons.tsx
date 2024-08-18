@@ -23,4 +23,4 @@ const FileManagementButtons: React.FC = () => {
   );
 };
 
-export default FileManagementButtons;
+export default React.memo(FileManagementButtons);

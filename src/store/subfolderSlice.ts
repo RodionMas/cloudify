@@ -16,6 +16,19 @@ export const fetchRenameSubfolder = createAsyncThunk<
   }
 });
 
+export const FetchsubfoldersPackage = createAsyncThunk<
+  any,
+  any,
+  { rejectValue: string }
+>("subfolder/FetchsubfoldersPackage", async (subfoldersURL, { rejectWithValue }) => {
+  try {
+    const { data } = await axios.get(`/files?path=${subfoldersURL}`);
+    return data;
+  } catch (error: any) {
+    return rejectWithValue(error.message);
+  }
+});
+
 const initialState: SubfolderState = {
   subfolderModal: false,
   renameSubfolder: {
@@ -24,6 +37,9 @@ const initialState: SubfolderState = {
   },
   loading: "idle",
   err: null,
+  subfoldersForPackage: [],
+  subfilesForPackage: [],
+  subfoldersURL: '',
 };
 
 const handlePending = (state: SubfolderState) => {
@@ -65,6 +81,17 @@ export const subfolderSlice = createSlice({
         oldName: action.payload,
       };
     },
+    setFoldersURL: (state, action) => {
+      const path = action.payload;
+      const parts = path.split("/"); // Разбиваем строку на массив по "/"
+      const index = parts.indexOf("userfolder"); // Находим индекс "userfolder"
+
+      if (index !== -1) {
+        const result = parts.slice(index + 1).join("/"); // Забираем все элементы после "userfolder" и соединяем их обратно в строку
+        const encodedPath = result.replace(/\//g, "%2F");
+        state.subfoldersURL = encodedPath;
+      }
+    },
   },
   extraReducers(builder) {
     const addAsyncThunkCases = (
@@ -80,9 +107,13 @@ export const subfolderSlice = createSlice({
         .addCase(thunk.rejected, handleRejected);
     };
     addAsyncThunkCases(fetchRenameSubfolder, () => {});
+    addAsyncThunkCases(FetchsubfoldersPackage, (state, action) => {
+      state.subfoldersForPackage = [...action.payload.folders];
+      state.subfilesForPackage = [...action.payload.files];
+    });
   },
 });
 
-export const { changeModal, renameSubfolderNew, renameSubfolderOld } = subfolderSlice.actions;
+export const { changeModal, renameSubfolderNew, renameSubfolderOld, setFoldersURL } = subfolderSlice.actions;
 
 export default subfolderSlice.reducer;

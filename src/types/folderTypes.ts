@@ -3,7 +3,6 @@ export interface FoldersTypeState {
   err: string | unknown | null;
   totalSize: number;
   userMemory: number;
-  logout: boolean;
   dragAndDrop: boolean;
   allFiles: FetchFilesUserRes[];
   deletedFiles: FetchDeletedFiles[];
@@ -20,13 +19,17 @@ export interface FoldersTypeState {
   createSubfolder: CreateSubfolderType;
   foldersForPagckage: string[];
   filesForPackage: FilesForPackageType[];
-  subfoldersForPackage: string[];
-  subfilesForPackage: FilesForPackageType[];
   moveFiles: any;
   renameFolderModal: boolean;
   renameFolder: RenameFolder;
   colorFolder: ColorFolderType;
-  subfoldersURL: string;
+  
+}
+
+export interface FilesForPackageType {
+  lastModified: LastModifyType;
+  name: string;
+  size: string;
 }
 
 export interface ColorFolderType {
@@ -55,11 +58,7 @@ export interface FetchFilesUserRes {
   lastModified: DateType;
 }
 
-export interface FilesForPackageType {
-  lastModified: LastModifyType;
-  name: string;
-  size: string;
-}
+
 export interface LastModifyType {
   day: string;
   time: string;

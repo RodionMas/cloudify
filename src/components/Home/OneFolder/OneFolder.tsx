@@ -4,21 +4,16 @@ import { Link, useLocation } from "react-router-dom";
 import { useClickOutside } from "../../../tools/UseClickOutside";
 import folderPng from "../../../assets/img/OpenedFolder.png";
 import more from "../../../assets/img/More.png";
-
-import { useAppDispatch, useAppSelector } from "../../../store/hooks";
-import { selectFolders } from "../../../selectors/selectors";
-import { FetchsubfoldersPackage } from "../../../store/FoldersSlice";
 import MoreSubfolderSmall from "./MoreSubfolderSmall/MoreSubfolderSmall";
+
 
 const OneFolder: React.FC<any> = ({ folder }) => {
   const { lastModified, size, name } = folder;
   const { pathname } = useLocation();
-  const dispatch = useAppDispatch()
   const hideRef = React.useRef<HTMLButtonElement | null>(null);
   const moreFileRef = React.useRef<HTMLDivElement | null>(null);
   const [hideContent, setHideContent] = React.useState(false);
   const [menuPosition, setMenuPosition] = React.useState({ top: 0, left: 0 });
-  const location = useLocation();
   const hideContentFn = () => {
     setHideContent(!hideContent);
   };
@@ -36,11 +31,11 @@ const OneFolder: React.FC<any> = ({ folder }) => {
     });
     hideContentFn();
   };
-  const { subfoldersURL } = useAppSelector(selectFolders);
-  console.log(subfoldersURL)
+
   return (
     <div className={style.files}>
-      <Link onClick={async () => await dispatch(FetchsubfoldersPackage(subfoldersURL))} to={`${pathname}/${folder.name}`} className={style.filesLink}>
+      <Link 
+        to={`${pathname}/${folder.name}`} className={style.filesLink}>
         <div className={style.fileRow}>
           <span className={style.fileName}>
             <img className={style.fileImg} src={folderPng} alt="folder" />{" "}

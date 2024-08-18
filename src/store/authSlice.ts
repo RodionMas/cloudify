@@ -66,6 +66,7 @@ const initialState: UserTypeState = {
   err: null,
   isAuth: false,
   username: '',
+  logout: false,
 };
 
 export const authSlice = createSlice({
@@ -78,6 +79,9 @@ export const authSlice = createSlice({
         username: action.payload.username,
         password: action.payload.password,
       };
+    },
+    changeLogout: (state) => {
+      state.logout = !state.logout;
     },
   },
   extraReducers(builder) {
@@ -136,6 +140,6 @@ export const authSlice = createSlice({
   },
 });
 
-export const { changeRegUser } = authSlice.actions;
+export const { changeRegUser, changeLogout } = authSlice.actions;
 
 export default authSlice.reducer;

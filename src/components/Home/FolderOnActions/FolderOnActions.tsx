@@ -18,4 +18,4 @@ const FolderOnActions: React.FC = () => {
     );
 };
 
-export default FolderOnActions;
+export default React.memo(FolderOnActions);

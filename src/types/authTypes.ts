@@ -4,6 +4,7 @@ export interface UserTypeState {
   err: string | unknown | null;
   isAuth: boolean;
   username: string;
+  logout: boolean,
 }
 
 export interface Username {

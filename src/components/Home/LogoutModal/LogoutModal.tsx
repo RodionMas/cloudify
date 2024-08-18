@@ -1,14 +1,13 @@
 import React from "react";
 import style from "./Logout.module.css";
 import { useSelector } from "react-redux";
-import { selectFolders } from "../../../selectors/selectors";
+import { selectAuth } from "../../../selectors/selectors";
 import { useAppDispatch } from "../../../store/hooks";
-import { fetchLogout } from "../../../store/authSlice";
-import { changeLogout } from "../../../store/FoldersSlice";
+import { changeLogout, fetchLogout } from "../../../store/authSlice";
 import { useNavigate } from "react-router-dom";
 
 const Logout: React.FC = () => {
-  const { logout } = useSelector(selectFolders);
+  const { logout } = useSelector(selectAuth);
   const appDispatch = useAppDispatch();
   const navigate = useNavigate();
   const logoutFn = () => {

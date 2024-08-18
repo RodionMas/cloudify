@@ -92,4 +92,4 @@ const AllFiles: React.FC = () => {
   );
 };
 
-export default AllFiles;
+export default React.memo(AllFiles);

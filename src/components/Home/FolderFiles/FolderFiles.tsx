@@ -2,25 +2,24 @@ import React from "react";
 import style from "./FolderFiles.module.css";
 import Search from "../UserRepo/Search/Search";
 import { Link, useLocation, useParams } from "react-router-dom";
-// import openFolder from "../../../assets/img/OpenedFolder.png";
 import arrow from "../../../assets/img/Chevron Down.png";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import {
   changeDragDrop,
   fetchGetAllFiles,
   fetchGetFoldersFiles,
-  FetchsubfoldersPackage,
-  setFoldersURL,
   SubfolderModal,
 } from "../../../store/FoldersSlice";
-import { selectFolders } from "../../../selectors/selectors";
-
+import { selectFolders, selectSubfolders } from "../../../selectors/selectors";
 import createFolderImg from "../../../assets/img/Add Folder.png";
 import uploadFilesImg from "../../../assets/img/File.png";
-
 import Subfolders from "./Subfolders/Subfolders";
 import FolderFilesArr from "./FolderFiles/FolderFilesArr";
 import { newUrlFn } from "../../../tools/PathName";
+import {
+  FetchsubfoldersPackage,
+  setFoldersURL,
+} from "../../../store/subfolderSlice";
 
 const FolderFiles: React.FC = () => {
   const { foldername } = useParams();
@@ -29,8 +28,10 @@ const FolderFiles: React.FC = () => {
   const [sortDownArrow, setSortDownArrow] = React.useState(0);
 
   const { colorForFolder } = useAppSelector(selectFolders);
-  const { subfoldersURL } = useAppSelector(selectFolders);
+  const { subfoldersURL } = useAppSelector(selectSubfolders);
   const dispatch = useAppDispatch();
+
+  const count = pathname.split("/").length - 1;
 
   async function handleGetFiles() {
     try {
@@ -40,28 +41,39 @@ const FolderFiles: React.FC = () => {
       console.warn(error);
     }
   }
-  const count = pathname.split("/").length - 1; //проверка чтобы послать запрос на subfolders или отобразить main папку
+
   async function handleGetSubfolders() {
     try {
-      dispatch(setFoldersURL(pathname));
-      await dispatch(FetchsubfoldersPackage(subfoldersURL));
+      const parts = pathname.split("/");
+      const userfolderIndex = parts.indexOf("userfolder");
+
+      if (userfolderIndex !== -1) {
+        const relevantPathParts = parts.slice(userfolderIndex + 1); // Убираем часть пути до "userfolder"
+        const basePath = relevantPathParts.join("/");
+        const encodedPath = basePath.replace(/\//g, "%2F");
+
+        if (encodedPath !== subfoldersURL) {
+          dispatch(setFoldersURL(basePath)); // Устанавливаем путь без "userfolder"
+          await dispatch(FetchsubfoldersPackage(encodedPath)); // Используем закодированный путь
+        }
+      }
     } catch (error) {
       console.warn(error);
     }
   }
+
   async function handleUploadFiles() {
     dispatch(changeDragDrop());
   }
+
   React.useEffect(() => {
     if (count === 3) {
       handleGetFiles();
     } else if (count > 3) {
       handleGetSubfolders();
-      if (subfoldersURL) {
-        dispatch(FetchsubfoldersPackage(subfoldersURL));
-      }
     }
-  }, [pathname, subfoldersURL, count]);
+  }, [pathname]);
+
   return (
     <section className={style.wrapper}>
       <Search />
@@ -112,4 +124,4 @@ const FolderFiles: React.FC = () => {
   );
 };
 
-export default FolderFiles;
+export default React.memo(FolderFiles);

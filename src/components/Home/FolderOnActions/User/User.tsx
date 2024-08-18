@@ -6,7 +6,7 @@ import line from "../../../../assets/img/horizontalLine.png";
 import { useSelector } from "react-redux";
 import { selectAuth } from "../../../../selectors/selectors";
 import { useDispatch } from "react-redux";
-import { changeLogout } from "../../../../store/FoldersSlice";
+import { changeLogout } from "../../../../store/authSlice";
 
 
 const User: React.FC = () => {

@@ -1,3 +1,4 @@
+import React from 'react'
 import { forwardRef, useState } from "react";
 import ReactDOM from "react-dom";
 import style from "./MoreFileSmall.module.css";
@@ -15,17 +16,17 @@ import {
   fetchGetFoldersFiles,
   fetchMove,
   fetchRecover,
-  FetchsubfoldersPackage,
 } from "../../../../../store/FoldersSlice";
-import { selectFolders } from "../../../../../selectors/selectors";
+import { selectFolders, selectSubfolders } from "../../../../../selectors/selectors";
 import { useLocation, useParams } from "react-router-dom";
 import BtnShowMore from "./BtnShowMore/BtnShowMore";
 import { FetchFilesUserRes } from "../../../../../types/folderTypes";
+import { FetchsubfoldersPackage } from "../../../../../store/subfolderSlice";
 interface RecoverType {
   filename: string;
   filePath: string;
 }
-const MoreFileSmall = forwardRef<HTMLDivElement, any>((props, ref) => {
+const MoreFileSmall = React.memo(forwardRef<HTMLDivElement, any>((props, ref) => {
   const showMoreArr = [
     { name: "Download", image: download },
     { name: "Move", image: move },
@@ -44,7 +45,7 @@ const MoreFileSmall = forwardRef<HTMLDivElement, any>((props, ref) => {
   const dispatch = useAppDispatch();
   const { deletedFiles } = useAppSelector(selectFolders);
   const { foldername } = useParams();
-  const { subfoldersURL } = useAppSelector(selectFolders);
+  const { subfoldersURL } = useAppSelector(selectSubfolders);
   async function deleteMove(item: string) {
     if (item === "Delete") {
       setMoveFiles((moveFiles.files = [...moveFiles.files, props.filename]));
@@ -119,6 +120,6 @@ const MoreFileSmall = forwardRef<HTMLDivElement, any>((props, ref) => {
   );
 
   return ReactDOM.createPortal(menu, document.body);
-});
+}));
 
 export default MoreFileSmall;
