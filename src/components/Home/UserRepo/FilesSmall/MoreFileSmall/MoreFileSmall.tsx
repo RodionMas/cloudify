@@ -42,6 +42,7 @@ const MoreFileSmall = React.memo(forwardRef<HTMLDivElement, any>((props, ref) =>
     target: `deleted/${props.filePath}`,
     files: [],
   });
+
   const dispatch = useAppDispatch();
   const { deletedFiles } = useAppSelector(selectFolders);
   const { foldername } = useParams();
@@ -61,7 +62,8 @@ const MoreFileSmall = React.memo(forwardRef<HTMLDivElement, any>((props, ref) =>
       }
     }
   }
-  const location = useLocation();
+  const {pathname} = useLocation();
+  const isDeleted = pathname === "/home/deleted";
   const handleDeleteFile = async (delFile: FetchFilesUserRes[]) => {
     try {
       await dispatch(fetchDeleteFile({ delFile }));
@@ -81,7 +83,7 @@ const MoreFileSmall = React.memo(forwardRef<HTMLDivElement, any>((props, ref) =>
   };
   const menu = (
     <div ref={ref} className={style.wrapper} style={props.style}>
-      {location.pathname === "/home/deleted"
+      {isDeleted
         ? showMoreDeleted.map((item) => (
             <button
               onClick={() => {
@@ -101,7 +103,7 @@ const MoreFileSmall = React.memo(forwardRef<HTMLDivElement, any>((props, ref) =>
                 }
                 props.hideContentFn();
               }}
-              key={item.name} // Используем имя как ключ
+              key={item.name}
               className={style.moreBox}
             >
               <img src={item.image} alt={item.name} />
@@ -110,9 +112,9 @@ const MoreFileSmall = React.memo(forwardRef<HTMLDivElement, any>((props, ref) =>
           ))
         : showMoreArr.map((item) => (
             <BtnShowMore
+              key={item.name}
               props={props}
-              deleteMove={deleteMove}
-              key={item.name} // Используем имя как ключ
+              deleteMove={() => deleteMove(item.name)}
               {...item}
             />
           ))}

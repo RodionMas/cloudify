@@ -45,6 +45,7 @@ const OneFile: React.FC<any> = React.memo(
     // Мемоизируем функцию handleButtonClick с правильными зависимостями
     const handleButtonClick = React.useCallback(
       (event: React.MouseEvent<HTMLButtonElement>) => {
+        event.stopPropagation(); // Предотвращаем всплытие события
         const rect = event.currentTarget.getBoundingClientRect();
         setMenuPosition({
           top: rect.bottom + window.scrollY,
@@ -52,7 +53,7 @@ const OneFile: React.FC<any> = React.memo(
         });
         hideContentFn();
       },
-      [hideContentFn] // Зависимость от мемоизированной функции hideContentFn
+      [hideContentFn]
     );
 
     React.useEffect(() => {
@@ -134,6 +135,7 @@ const OneFile: React.FC<any> = React.memo(
               }}
             />
           ) : (
+            // MoreSubfolderSmall Сделать новый для сабфолдерс
             <MoreFileSmall
               filename={filename}
               customFolderName={customFolderName}

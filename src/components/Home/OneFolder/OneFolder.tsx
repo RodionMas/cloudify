@@ -15,7 +15,7 @@ const OneFolder: React.FC<any> = ({ folder }) => {
   const [hideContent, setHideContent] = React.useState(false);
   const [menuPosition, setMenuPosition] = React.useState({ top: 0, left: 0 });
   const hideContentFn = () => {
-    setHideContent(!hideContent);
+    setHideContent(prevHideContent => !prevHideContent);
   };
 
   useClickOutside([hideRef, moreFileRef], () => {

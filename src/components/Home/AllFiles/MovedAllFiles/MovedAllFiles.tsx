@@ -1,47 +1,40 @@
 import React from "react";
-import style from "../BtnShowMore.module.css";
+import { useAppDispatch, useAppSelector } from "../../../../store/hooks";
+import { selectFolders } from "../../../../selectors/selectors";
 import {
-  useAppDispatch,
-  useAppSelector,
-} from "../../../../../../../store/hooks";
-import {
+  changeMoveSelectedModal,
+  fetchAllMove,
   fetchGetAllFiles,
-  fetchGetFolder,
   fetchGetMoverShowMore,
-  fetchMove,
-} from "../../../../../../../store/FoldersSlice";
-import { selectFolders } from "../../../../../../../selectors/selectors";
-import black from "../../../../../../../assets/img/foldersColor/black.png";
-import blue from "../../../../../../../assets/img/foldersColor/blue.png";
-import brown from "../../../../../../../assets/img/foldersColor/brown.png";
-import green from "../../../../../../../assets/img/foldersColor/green.png";
-import red from "../../../../../../../assets/img/foldersColor/red.png";
-import violet from "../../../../../../../assets/img/foldersColor/violet.png";
-import yellow from "../../../../../../../assets/img/foldersColor/yellow.png";
+  moveSelectedFiles,
+} from "../../../../store/FoldersSlice";
+import black from "../../../../assets/img/foldersColor/black.png";
+import blue from "../../../../assets/img/foldersColor/blue.png";
+import brown from "../../../../assets/img/foldersColor/brown.png";
+import green from "../../../../assets/img/foldersColor/green.png";
+import red from "../../../../assets/img/foldersColor/red.png";
+import violet from "../../../../assets/img/foldersColor/violet.png";
+import yellow from "../../../../assets/img/foldersColor/yellow.png";
+import style from "./MovedAllFiles.module.css";
 
-interface FileNameType {
-  filename: string;
-  filePath: string;
-}
-
-interface MoveFileType {
-  files: string[];
-  source: string;
-  target: string;
-}
-const ChooseFolder: React.FC<FileNameType> = ({ filename, filePath }) => {
+const MovedAllFiles: React.FC = () => {
   const dispatch = useAppDispatch();
+
   const { foldersShowMore } = useAppSelector(selectFolders);
-  const handleMove = async (moveFile: MoveFileType) => {
+  const { moveFiles } = useAppSelector(selectFolders);
+  const handleMove = async (name: string) => {
     try {
-      await dispatch(fetchMove(moveFile));
+      dispatch(changeMoveSelectedModal());
+      dispatch(moveSelectedFiles(name));
+      await dispatch(fetchAllMove(moveFiles));
       await dispatch(fetchGetAllFiles());
-      await dispatch(fetchGetFolder());
-    } catch (error) {}
+    } catch (error) {
+      console.warn(error);
+    }
   };
   React.useEffect(() => {
     dispatch(fetchGetMoverShowMore());
-  }, []);
+  }, [moveFiles]);
   return (
     <div className={style.wrapperFolder}>
       <div className={style.wrapperOverflow}>
@@ -50,16 +43,7 @@ const ChooseFolder: React.FC<FileNameType> = ({ filename, filePath }) => {
           return (
             <button
               onClick={() => {
-                let moveFile: MoveFileType = {
-                  source: filePath,
-                  target: folder.name,
-                  files: [],
-                };
-                moveFile = {
-                  ...moveFile,
-                  files: [...moveFile.files, filename],
-                };
-                handleMove(moveFile);
+                handleMove(folder.name);
               }}
               className={style.btnFolder}
               key={i}
@@ -88,4 +72,4 @@ const ChooseFolder: React.FC<FileNameType> = ({ filename, filePath }) => {
   );
 };
 
-export default ChooseFolder;
+export default MovedAllFiles;

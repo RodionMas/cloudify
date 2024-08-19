@@ -6,6 +6,7 @@ import moveSelectedImg from "../../../assets/img/showMoreSmall/Move.png";
 import moveDeletedImg from "../../../assets/img/showMoreSmall/Trash Can.png";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import {
+  changeMoveSelectedModal,
   fetchDelCheckbox,
   fetchGetAllFiles,
   fetchGetDeletedFiles,
@@ -13,27 +14,41 @@ import {
 import { useSelector } from "react-redux";
 import { selectFolders } from "../../../selectors/selectors";
 import OneFile from "../OneFile/OneFile";
+import MovedAllFiles from "./MovedAllFiles/MovedAllFiles";
+import { useClickOutside } from "../../../tools/UseClickOutside";
 
 const AllFiles: React.FC = () => {
   const sortBy = ["Name", "Folder", "File Size", "Last Changes"];
   const [sortArrow, setSortArrow] = React.useState(0);
   const { allFiles } = useSelector(selectFolders);
   const [filesArr, setFilesArr] = React.useState([]);
-  const appDispatch = useAppDispatch();
+  const { moveSelectedModal } = useAppSelector(selectFolders)
+  const dispatch = useAppDispatch();
   const { moveFiles } = useAppSelector(selectFolders);
+  const hideRef = React.useRef<HTMLButtonElement | null>(null);
+  const menuRef = React.useRef<HTMLDivElement | null>(null);
+
+  useClickOutside([hideRef, menuRef], () => {
+    if (moveSelectedModal) {
+      dispatch(changeMoveSelectedModal());
+    }
+  });
+
   async function handleDeleteChebox() {
     try {
-      await appDispatch(fetchDelCheckbox(moveFiles));
-      await appDispatch(fetchGetAllFiles());
-      await appDispatch(fetchGetDeletedFiles())
+      await dispatch(fetchDelCheckbox(moveFiles));
+      await dispatch(fetchGetAllFiles());
+      await dispatch(fetchGetDeletedFiles())
       setFilesArr([])
     } catch (error) {
       console.warn(error);
     }
   }
+
   React.useEffect(() => {
-    appDispatch(fetchGetAllFiles());
-  }, [appDispatch]);
+    dispatch(fetchGetAllFiles());
+  }, [dispatch]);
+
   return (
     <section className={style.wrapper}>
       <Search />
@@ -48,7 +63,11 @@ const AllFiles: React.FC = () => {
               alt="deleted all"
             />
           </button>
-          <button className={style.btnAll}>
+          <button
+            ref={hideRef}
+            onClick={() => dispatch(changeMoveSelectedModal())}
+            className={style.btnAll}
+          >
             Move selected{" "}
             <img
               className={style.linkImg}
@@ -56,6 +75,11 @@ const AllFiles: React.FC = () => {
               alt="moved all"
             />
           </button>
+          {moveSelectedModal && (
+            <div ref={menuRef}>
+              <MovedAllFiles />
+            </div>
+          )}
         </div>
       </div>
       <div className={style.allFiles}>

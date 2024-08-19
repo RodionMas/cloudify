@@ -26,6 +26,7 @@
 }
 .btnAllBox{
   display: flex;
+  position: relative;
 }
 .btnAll:hover {
   background-color: #ccc;

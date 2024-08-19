@@ -272,6 +272,18 @@ export const fetchDeleteFolder = createAsyncThunk<
   }
 });
 
+export const fetchAllMove = createAsyncThunk<
+  string,
+  string,
+  { rejectValue: string }
+>("folder/fetchAllMove", async (moveFiles, { rejectWithValue }) => {
+  try {
+    const { data } = await axios.post(`/files/all/move`, moveFiles);
+    return data;
+  } catch (error: any) {
+    return rejectWithValue(error.message);
+  }
+});
 
 
 const handlePending = (state: FoldersTypeState) => {
@@ -336,12 +348,16 @@ const initialState: FoldersTypeState = {
     name: "",
     newColor: "",
   },
+  moveSelectedModal: false,
 };
 
 export const FoldersSlice = createSlice({
   name: "FoldersSlice",
   initialState,
   reducers: {
+    changeMoveSelectedModal: (state) => {
+      state.moveSelectedModal = !state.moveSelectedModal;
+    },
     changeDragDrop: (state) => {
       state.dragAndDrop = !state.dragAndDrop;
     },
@@ -429,6 +445,14 @@ export const FoldersSlice = createSlice({
         (file: string) => file !== action.payload
       );
     },
+    moveSelectedFiles: (state, action) => {
+      const updatedArray = state.moveFiles.map(
+        (file: { newFilePath: string }) => {
+          return { ...file, file, newFilePath: action.payload };
+        }
+      );
+      state.moveFiles = [...updatedArray];
+    }
   },
   extraReducers: (builder) => {
     const addAsyncThunkCases = (
@@ -458,6 +482,8 @@ export const FoldersSlice = createSlice({
     addAsyncThunkCases(fetchGetDeletedFiles, (state, action) => {
       state.deletedFiles = [...action.payload];
     });
+
+    addAsyncThunkCases(fetchAllMove, () => {});
 
     addAsyncThunkCases(fetchDeleteFiles, (state) => {
       state.deletedFiles = [];
@@ -515,6 +541,8 @@ export const {
   renameLastNameFolder,
   changeColorFolderName,
   changeColorFolder,
+  changeMoveSelectedModal,
+  moveSelectedFiles,
 } = FoldersSlice.actions;
 
 export default FoldersSlice.reducer;
