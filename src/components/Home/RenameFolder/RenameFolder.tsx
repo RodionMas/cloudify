@@ -1,7 +1,7 @@
 import React from "react";
 import style from "./RenameFolder.module.css";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
-import { changeRenameFolderModal, fetchGetFolder, fetchRenameFodler, renameNewNameFolder } from "../../../store/FoldersSlice";
+import { changeRenameFolderModal, fetchGetFolder, fetchRenameFodler, renameNewNameFolder } from "../../../store/foldersSlice";
 import { selectFolders } from "../../../selectors/selectors";
 
 

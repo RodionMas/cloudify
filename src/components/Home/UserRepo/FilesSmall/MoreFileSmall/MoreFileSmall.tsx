@@ -16,7 +16,7 @@ import {
   fetchGetFoldersFiles,
   fetchMove,
   fetchRecover,
-} from "../../../../../store/FoldersSlice";
+} from "../../../../../store/foldersSlice";
 import { selectFolders, selectSubfolders } from "../../../../../selectors/selectors";
 import { useLocation, useParams } from "react-router-dom";
 import BtnShowMore from "./BtnShowMore/BtnShowMore";

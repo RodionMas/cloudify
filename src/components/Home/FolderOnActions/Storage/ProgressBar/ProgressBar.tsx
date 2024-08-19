@@ -1,7 +1,7 @@
 import React from "react";
 import style from "./ProgressBar.module.css";
 import { useAppDispatch } from "../../../../../store/hooks";
-import { fetchGetAmountData } from "../../../../../store/FoldersSlice";
+import { fetchGetAmountData } from "../../../../../store/foldersSlice";
 import { useSelector } from "react-redux";
 import { selectFolders } from "../../../../../selectors/selectors";
 

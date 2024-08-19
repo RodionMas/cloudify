@@ -2,7 +2,7 @@ import React from 'react';
 import style from './NoFolders.module.css'
 import add from '../../../../../assets/img/Add.png'
 import { useAppDispatch } from '../../../../../store/hooks';
-import { changeFolderModal } from '../../../../../store/FoldersSlice';
+import { changeFolderModal } from '../../../../../store/foldersSlice';
 
 const NoFolders: React.FC = () => {
     const dispatch = useAppDispatch()

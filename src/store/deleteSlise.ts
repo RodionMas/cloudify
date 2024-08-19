@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import axios from "../instanceAxios";
-import { DeleteSelectedFiles, DeleteTypeState, RecoverFilesType } from "../types/DeleteTypes";
+import { DeleteSelectedFiles, DeleteTypeState, RecoverFilesType } from "../types/deleteTypes";
 
 const initialState: DeleteTypeState = {
     files: [],

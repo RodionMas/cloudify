@@ -7,7 +7,7 @@ import {
   fetchGetAllFiles,
   fetchGetAmountData,
   
-} from "../../../store/FoldersSlice";
+} from "../../../store/foldersSlice";
 import { selectAuth, selectFolders, selectSubfolders } from "../../../selectors/selectors";
 import filePng from '../../../assets/img/File.png'
 import { useLocation } from "react-router-dom";

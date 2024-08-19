@@ -7,7 +7,7 @@ import {
   renameSubfolderNew,
 } from "../../../store/subfolderSlice";
 import { selectSubfolders } from "../../../selectors/selectors";
-import { fetchGetFoldersFiles } from "../../../store/FoldersSlice";
+import { fetchGetFoldersFiles } from "../../../store/foldersSlice";
 import { useLocation, useParams } from "react-router-dom";
 import { pathFn } from "../../../tools/PathName";
 

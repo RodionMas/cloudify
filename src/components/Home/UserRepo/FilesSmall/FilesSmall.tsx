@@ -4,7 +4,7 @@ import arrow from "../../../../assets/img/Chevron Down.png";
 import { useSelector } from "react-redux";
 import { selectFolders } from "../../../../selectors/selectors";
 import { useAppDispatch } from "../../../../store/hooks";
-import { fetchGetAllFiles } from "../../../../store/FoldersSlice";
+import { fetchGetAllFiles } from "../../../../store/foldersSlice";
 import OneFile from "../../OneFile/OneFile";
 
 const FilesSmall: React.FC = () => {

@@ -6,7 +6,7 @@ import { useAppDispatch } from "../../../../../../store/hooks";
 import {
   changeRenameModal,
   renameFile,
-} from "../../../../../../store/FoldersSlice";
+} from "../../../../../../store/foldersSlice";
 
 const BtnShowMore: React.FC<any> = React.memo(
   ({ name, image, deleteMove, props }) => {

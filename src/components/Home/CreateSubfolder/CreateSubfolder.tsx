@@ -1,7 +1,7 @@
 import React from "react";
 import style from "./CreateSubfolder.module.css";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
-import { createSubfolderReducer, fetchCreateSubfolder, fetchGetFoldersFiles, SubfolderModal } from "../../../store/FoldersSlice";
+import { createSubfolderReducer, fetchCreateSubfolder, fetchGetFoldersFiles, SubfolderModal } from "../../../store/foldersSlice";
 import { useLocation, useParams } from "react-router-dom";
 import { selectSubfolders } from "../../../selectors/selectors";
 import { FetchsubfoldersPackage } from "../../../store/subfolderSlice";

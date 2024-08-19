@@ -1,13 +1,13 @@
 import React from "react";
 import { useAppDispatch, useAppSelector } from "../../../../store/hooks";
-import { selectFolders } from "../../../../selectors/selectors";
+import { selectFolders, selectMove } from "../../../../selectors/selectors";
 import {
   changeMoveSelectedModal,
-  fetchAllMove,
+ 
   fetchGetAllFiles,
   fetchGetMoverShowMore,
-  moveSelectedFiles,
-} from "../../../../store/FoldersSlice";
+
+} from "../../../../store/foldersSlice";
 import black from "../../../../assets/img/foldersColor/black.png";
 import blue from "../../../../assets/img/foldersColor/blue.png";
 import brown from "../../../../assets/img/foldersColor/brown.png";
@@ -16,25 +16,28 @@ import red from "../../../../assets/img/foldersColor/red.png";
 import violet from "../../../../assets/img/foldersColor/violet.png";
 import yellow from "../../../../assets/img/foldersColor/yellow.png";
 import style from "./MovedAllFiles.module.css";
+import { fetchAllMove, moveSelectedFiles } from "../../../../store/moveSlice";
 
 const MovedAllFiles: React.FC = () => {
   const dispatch = useAppDispatch();
 
   const { foldersShowMore } = useAppSelector(selectFolders);
-  const { moveFiles } = useAppSelector(selectFolders);
-  const handleMove = async (name: string) => {
+  const { moveFiles } = useAppSelector(selectMove);
+  
+  React.useEffect(() => {
+    dispatch(fetchGetMoverShowMore());
+    // console.log("Updated moveFiles in component:", moveFiles);
+  }, [moveFiles]);
+  const handleMove = async (folderName: string) => {
     try {
-      dispatch(changeMoveSelectedModal());
-      dispatch(moveSelectedFiles(name));
-      await dispatch(fetchAllMove(moveFiles));
-      await dispatch(fetchGetAllFiles());
+      dispatch(moveSelectedFiles(folderName)); // обновляем путь
+      await dispatch(fetchAllMove(moveFiles)); // отправляем обновленные файлы на сервер
+      await dispatch(fetchGetAllFiles()); // обновляем список файлов после перемещения
+      dispatch(changeMoveSelectedModal()); // закрываем модальное окно
     } catch (error) {
       console.warn(error);
     }
   };
-  React.useEffect(() => {
-    dispatch(fetchGetMoverShowMore());
-  }, [moveFiles]);
   return (
     <div className={style.wrapperFolder}>
       <div className={style.wrapperOverflow}>

@@ -6,7 +6,7 @@ import All from "../../../../assets/img/allFiles.png";
 import home from "../../../../assets/img/Home Page.png";
 import { useAppDispatch, useAppSelector } from "../../../../store/hooks";
 import { selectFolders } from "../../../../selectors/selectors";
-import { fetchGetDeletedFiles } from "../../../../store/FoldersSlice";
+import { fetchGetDeletedFiles } from "../../../../store/foldersSlice";
 
 const FileActions: React.FC = () => {
   const { pathname } = useLocation()

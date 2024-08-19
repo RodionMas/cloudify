@@ -3,7 +3,7 @@ import style from "./FileManagementButtons.module.css";
 import upload from "../../../../assets/img/upload.png";
 import folder from "../../../../assets/img/Folder.png";
 import { useDispatch } from "react-redux";
-import { changeDragDrop, changeFolderModal } from "../../../../store/FoldersSlice";
+import { changeDragDrop, changeFolderModal } from "../../../../store/foldersSlice";
 
 const FileManagementButtons: React.FC = () => {
   const dispatch = useDispatch()

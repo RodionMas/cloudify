@@ -4,7 +4,7 @@ import folderImg from "../../../../../assets/img/OpenedFolder.png";
 import more from "../../../../../assets/img/More.png";
 import DotsBlok from "./DotsBlok/DotsBlok";
 import { useClickOutside } from "../../../../../tools/UseClickOutside";
-import { checkColor } from "../../../../../store/FoldersSlice";
+import { checkColor } from "../../../../../store/foldersSlice";
 import { Link } from "react-router-dom";
 import { useAppDispatch } from "../../../../../store/hooks";
 import { FolderType } from "../../../../../types/folderTypes";

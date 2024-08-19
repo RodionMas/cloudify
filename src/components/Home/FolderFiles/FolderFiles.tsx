@@ -9,7 +9,7 @@ import {
   fetchGetAllFiles,
   fetchGetFoldersFiles,
   SubfolderModal,
-} from "../../../store/FoldersSlice";
+} from "../../../store/foldersSlice";
 import { selectFolders, selectSubfolders } from "../../../selectors/selectors";
 import createFolderImg from "../../../assets/img/Add Folder.png";
 import uploadFilesImg from "../../../assets/img/File.png";

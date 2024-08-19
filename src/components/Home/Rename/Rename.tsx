@@ -1,7 +1,7 @@
 import React from "react";
 import style from "./Rename.module.css";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
-import { changeRenameModal, fetchGetAllFiles, fetchRenameFile } from "../../../store/FoldersSlice";
+import { changeRenameModal, fetchGetAllFiles, fetchRenameFile } from "../../../store/foldersSlice";
 import { selectFolders } from "../../../selectors/selectors";
 interface newFileNameType {
   newFileName: string;

@@ -2,7 +2,7 @@
 import React, { useEffect } from "react";
 import style from '../DotsBlok.module.css';
 import { useAppDispatch, useAppSelector } from "../../../../../../../store/hooks";
-import { changeColorFolder, changeColorFolderName, fetchColorFolder } from "../../../../../../../store/FoldersSlice";
+import { changeColorFolder, changeColorFolderName, fetchColorFolder } from "../../../../../../../store/foldersSlice";
 import { selectFolders } from "../../../../../../../selectors/selectors";
 
 interface ColorType {

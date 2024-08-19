@@ -2,7 +2,7 @@ import React from "react";
 import style from "./Folders.module.css";
 import Folder from "./Folder/Folder";
 import { useAppDispatch, useAppSelector } from "../../../../store/hooks";
-import { fetchColorFolder, fetchGetAllFiles, fetchGetFolder } from "../../../../store/FoldersSlice";
+import { fetchColorFolder, fetchGetAllFiles, fetchGetFolder } from "../../../../store/foldersSlice";
 import { selectFolders } from "../../../../selectors/selectors";
 import NoFolders from "./NoFolders/NoFolders";
 import { Navigation } from "swiper/modules";

@@ -9,7 +9,7 @@ import {
   createModalName,
   fetchCreateFolder,
   fetchGetFolder,
-} from "../../../store/FoldersSlice";
+} from "../../../store/foldersSlice";
 
 const CreateFolder: React.FC = () => {
   const [selectedColor, setSelectedColor] = React.useState(0);

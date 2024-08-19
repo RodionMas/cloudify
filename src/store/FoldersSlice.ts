@@ -4,7 +4,6 @@ import {
   AmountDataType,
   ColorFolderType,
   CreateSubfolderType,
-  DeleteFiles,
   FetchDeletedFiles,
   FetchDelFiles,
   FetchFilesUserRes,
@@ -213,20 +212,6 @@ export const fetchGetFoldersFiles = createAsyncThunk<
   }
 });
 
-// DeleteFiles
-export const fetchDelCheckbox = createAsyncThunk<
-  string,
-  DeleteFiles[],
-  { rejectValue: string }
->("folder/fetchDelCheckbox", async (moveFiles, { rejectWithValue }) => {
-  try {
-    const { data } = await axios.post(`/files/move/deleted`, moveFiles);
-    return data;
-  } catch (error: any) {
-    return rejectWithValue(error.message);
-  }
-});
-
 export const fetchRenameFodler = createAsyncThunk<
   string,
   RenameFolder,
@@ -272,20 +257,6 @@ export const fetchDeleteFolder = createAsyncThunk<
   }
 });
 
-export const fetchAllMove = createAsyncThunk<
-  string,
-  string,
-  { rejectValue: string }
->("folder/fetchAllMove", async (moveFiles, { rejectWithValue }) => {
-  try {
-    const { data } = await axios.post(`/files/all/move`, moveFiles);
-    return data;
-  } catch (error: any) {
-    return rejectWithValue(error.message);
-  }
-});
-
-
 const handlePending = (state: FoldersTypeState) => {
   state.loading = "pending";
 };
@@ -311,7 +282,7 @@ const initialState: FoldersTypeState = {
   err: null,
   totalSize: 0.0,
   userMemory: 500,
-  
+
   dragAndDrop: false,
   allFiles: [],
   deletedFiles: [],
@@ -343,7 +314,7 @@ const initialState: FoldersTypeState = {
   },
   foldersForPagckage: [],
   filesForPackage: [],
-  moveFiles: [],
+
   colorFolder: {
     name: "",
     newColor: "",
@@ -410,7 +381,6 @@ export const FoldersSlice = createSlice({
         ...state.colorFolder,
         newColor: action.payload,
       };
-      console.log(state.colorFolder.newColor);
     },
     SubfolderModal: (state) => {
       state.createSubfolderModal = !state.createSubfolderModal;
@@ -421,38 +391,6 @@ export const FoldersSlice = createSlice({
         ...action.payload,
       };
     },
-    // Обновление source и target
-    setSourceAndTarget(
-      state,
-      action: PayloadAction<{ source: string; target: string }>
-    ) {
-      state.moveFiles.source = action.payload.source;
-      state.moveFiles.target = action.payload.target;
-    },
-    // Добавление файла в массив files
-    addFile(state, action: PayloadAction<any>) {
-      state.moveFiles = [...action.payload];
-      const updatedArray = state.moveFiles.map(
-        (file: { newFilePath: string }) => {
-          return { ...file, file, newFilePath: "deleted" };
-        }
-      );
-      state.moveFiles = [...updatedArray];
-    },
-    // Удаление файла из массива files
-    removeFile(state, action: PayloadAction<string>) {
-      state.moveFiles.files = state.moveFiles.files.filter(
-        (file: string) => file !== action.payload
-      );
-    },
-    moveSelectedFiles: (state, action) => {
-      const updatedArray = state.moveFiles.map(
-        (file: { newFilePath: string }) => {
-          return { ...file, file, newFilePath: action.payload };
-        }
-      );
-      state.moveFiles = [...updatedArray];
-    }
   },
   extraReducers: (builder) => {
     const addAsyncThunkCases = (
@@ -483,8 +421,6 @@ export const FoldersSlice = createSlice({
       state.deletedFiles = [...action.payload];
     });
 
-    addAsyncThunkCases(fetchAllMove, () => {});
-
     addAsyncThunkCases(fetchDeleteFiles, (state) => {
       state.deletedFiles = [];
     });
@@ -511,8 +447,6 @@ export const FoldersSlice = createSlice({
       state.foldersForPagckage = [...action.payload.folders];
       state.filesForPackage = [...action.payload.files];
     });
-    
-    addAsyncThunkCases(fetchDelCheckbox, () => {});
 
     addAsyncThunkCases(fetchRenameFodler, () => {});
 
@@ -533,16 +467,13 @@ export const {
   checkColor,
   SubfolderModal,
   createSubfolderReducer,
-  setSourceAndTarget,
-  addFile,
-  removeFile,
+  
   changeRenameFolderModal,
   renameNewNameFolder,
   renameLastNameFolder,
   changeColorFolderName,
   changeColorFolder,
   changeMoveSelectedModal,
-  moveSelectedFiles,
 } = FoldersSlice.actions;
 
 export default FoldersSlice.reducer;

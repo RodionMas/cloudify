@@ -7,3 +7,5 @@ export const selectFolders = (state: RootState) => state.FoldersReducer;
 export const selectDelete = (state: RootState) => state.deleteReducer;
 
 export const selectSubfolders = (state: RootState) => state.subfolderReducer;
+
+export const selectMove = (state: RootState) => state.moveReducer;

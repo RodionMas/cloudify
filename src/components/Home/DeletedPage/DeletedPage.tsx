@@ -14,7 +14,7 @@ import {
   fetchDeleteFiles,
   fetchGetAmountData,
   fetchGetDeletedFiles,
-} from "../../../store/FoldersSlice";
+} from "../../../store/foldersSlice";
 import { fetchDeleteSelected, fetchRecoverFiles } from "../../../store/deleteSlise";
 
 const DeletedPage = () => {

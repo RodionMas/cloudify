@@ -9,7 +9,7 @@ import {
   fetchGetFolder,
   fetchGetMoverShowMore,
   fetchMove,
-} from "../../../../../../../store/FoldersSlice";
+} from "../../../../../../../store/foldersSlice";
 import { selectFolders } from "../../../../../../../selectors/selectors";
 import black from "../../../../../../../assets/img/foldersColor/black.png";
 import blue from "../../../../../../../assets/img/foldersColor/blue.png";

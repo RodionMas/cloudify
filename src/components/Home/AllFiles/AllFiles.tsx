@@ -7,15 +7,15 @@ import moveDeletedImg from "../../../assets/img/showMoreSmall/Trash Can.png";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import {
   changeMoveSelectedModal,
-  fetchDelCheckbox,
   fetchGetAllFiles,
   fetchGetDeletedFiles,
-} from "../../../store/FoldersSlice";
+} from "../../../store/foldersSlice";
 import { useSelector } from "react-redux";
-import { selectFolders } from "../../../selectors/selectors";
+import { selectFolders, selectMove } from "../../../selectors/selectors";
 import OneFile from "../OneFile/OneFile";
 import MovedAllFiles from "./MovedAllFiles/MovedAllFiles";
 import { useClickOutside } from "../../../tools/UseClickOutside";
+import { fetchDelCheckbox } from "../../../store/moveSlice";
 
 const AllFiles: React.FC = () => {
   const sortBy = ["Name", "Folder", "File Size", "Last Changes"];
@@ -24,7 +24,7 @@ const AllFiles: React.FC = () => {
   const [filesArr, setFilesArr] = React.useState([]);
   const { moveSelectedModal } = useAppSelector(selectFolders)
   const dispatch = useAppDispatch();
-  const { moveFiles } = useAppSelector(selectFolders);
+  const { moveFiles } = useAppSelector(selectMove);
   const hideRef = React.useRef<HTMLButtonElement | null>(null);
   const menuRef = React.useRef<HTMLDivElement | null>(null);
 

@@ -7,7 +7,7 @@ import folderImg from "../../../assets/img/Folder.png";
 import { useClickOutside } from "../../../tools/UseClickOutside";
 import { useLocation } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
-import { checkColor } from "../../../store/FoldersSlice";
+import { checkColor } from "../../../store/foldersSlice";
 import { selectFolders } from "../../../selectors/selectors";
 import Checkbox from "./Checkbox/Checkbox";
 import CheckboxDeleted from "./CheckboxDeleted/CheckboxDeleted";

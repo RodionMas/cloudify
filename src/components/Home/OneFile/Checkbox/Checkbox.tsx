@@ -1,8 +1,9 @@
 import React from "react";
 import style from "../OneFile.module.css";
 import { useAppDispatch, useAppSelector } from "../../../../store/hooks";
-import { addFile } from "../../../../store/FoldersSlice";
-import { selectFolders } from "../../../../selectors/selectors";
+
+import { selectFolders, selectMove } from "../../../../selectors/selectors";
+import { addFile } from "../../../../store/moveSlice";
 
 // Интерфейс для одного файла
 interface FileType {
@@ -22,7 +23,7 @@ const Checkbox: React.FC<CheckboxProps> =
   ({ filename, filePath, filesArr, setFilesArr }) => {
     const dispatch = useAppDispatch();
     const [isChecked, setIsChecked] = React.useState(false);
-    const { moveFiles } = useAppSelector(selectFolders)
+    const { moveFiles } = useAppSelector(selectMove)
     const handleCheckboxChange = () => {
       const newCheckedState = !isChecked;
       setIsChecked(newCheckedState);

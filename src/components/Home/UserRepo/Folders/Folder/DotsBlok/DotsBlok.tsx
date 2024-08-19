@@ -8,7 +8,7 @@ import Rename from "../../../../../../assets/img/dots/EditFile.png";
 import Delete from "../../../../../../assets/img/dots/TrashCan.png";
 import Colors from "./Colors/Colors";
 import { useAppDispatch } from "../../../../../../store/hooks";
-import { changeRenameFolderModal, fetchDeleteFolder, fetchGetFolder, renameLastNameFolder } from "../../../../../../store/FoldersSlice";
+import { changeRenameFolderModal, fetchDeleteFolder, fetchGetFolder, renameLastNameFolder } from "../../../../../../store/foldersSlice";
 
 interface DotsBlokProps {
   position: { top: number; left: number };
