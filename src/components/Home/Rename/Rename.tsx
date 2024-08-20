@@ -1,8 +1,14 @@
 import React from "react";
 import style from "./Rename.module.css";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
-import { changeRenameModal, fetchGetAllFiles, fetchRenameFile } from "../../../store/foldersSlice";
+import {
+  changeRenameModal,
+  fetchGetAllFiles,
+  fetchGetFoldersFiles,
+  fetchRenameFile,
+} from "../../../store/foldersSlice";
 import { selectFolders } from "../../../selectors/selectors";
+import { useParams } from "react-router-dom";
 interface newFileNameType {
   newFileName: string;
 }
@@ -11,21 +17,29 @@ const Rename: React.FC = () => {
   const dispatch = useAppDispatch();
   const { renameObj } = useAppSelector(selectFolders);
   const [renameInp, setRenameInp] = React.useState<newFileNameType>(renameObj);
-  React.useEffect(() => {
-
-  }, [renameObj])
+  const { foldername } = useParams();
+  const handleRename = async () => {
+    try {
+      await dispatch(fetchRenameFile(renameInp));
+      await dispatch(fetchGetAllFiles());
+      await dispatch(fetchGetFoldersFiles(foldername));
+      dispatch(changeRenameModal());
+    } catch (error) {
+      console.warn(error);
+    }
+  };
+  React.useEffect(() => {}, [renameObj]);
   return (
     <div className={style.wrapper}>
       <h1 className={style.title}>Rename</h1>
       <input
         onChange={(e) => {
           const lastDotIndex: any = renameObj.oldFileName?.lastIndexOf(".");
-          const extension = renameObj.oldFileName?.substring(lastDotIndex)
+          const extension = renameObj.oldFileName?.substring(lastDotIndex);
           setRenameInp({
             ...renameInp,
             newFileName: `${e.target.value}${extension}`,
           });
-         
         }}
         className={style.inp}
         type="text"
@@ -34,8 +48,7 @@ const Rename: React.FC = () => {
       <div className={style.btnBox}>
         <button
           onClick={() => {
-            dispatch(changeRenameModal());
-            dispatch(fetchRenameFile(renameInp)).then(() => dispatch(fetchGetAllFiles()))
+            handleRename();
           }}
           className={style.save}
         >

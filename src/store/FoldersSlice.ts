@@ -257,11 +257,26 @@ export const fetchDeleteFolder = createAsyncThunk<
   }
 });
 
-export const fetchSearch = createAsyncThunk<
+export const fetchSearchDel = createAsyncThunk<
   string,
   any,
   { rejectValue: string }
->("folder/fetchSearch", async (folderName, { rejectWithValue }) => {
+>("folder/fetchSearchDel", async (folderName, { rejectWithValue }) => {
+  try {
+    const { data } = await axios.get(
+      `/files/deleted/search?fileName=${folderName}`
+    );
+    return data;
+  } catch (error: any) {
+    return rejectWithValue(error.message);
+  }
+});
+
+export const fetchSearchFiles = createAsyncThunk<
+  string,
+  any,
+  { rejectValue: string }
+>("folder/fetchSearchFiles", async (folderName, { rejectWithValue }) => {
   try {
     const { data } = await axios.get(`/files/search?fileName=${folderName}`);
     return data;
@@ -298,7 +313,9 @@ const initialState: FoldersTypeState = {
 
   dragAndDrop: false,
   allFiles: [],
+  searchAllFiles: [],
   deletedFiles: [],
+  searchDelFiles: [],
   createFolderModal: false,
   createFolder: {
     name: "",
@@ -333,7 +350,7 @@ const initialState: FoldersTypeState = {
     newColor: "",
   },
   moveSelectedModal: false,
-  inpValue: '',
+  inpValue: "",
 };
 
 export const FoldersSlice = createSlice({
@@ -341,7 +358,7 @@ export const FoldersSlice = createSlice({
   initialState,
   reducers: {
     changeInpSearch: (state, action) => {
-      state.inpValue = action.payload
+      state.inpValue = action.payload;
     },
     changeMoveSelectedModal: (state) => {
       state.moveSelectedModal = !state.moveSelectedModal;
@@ -442,9 +459,13 @@ export const FoldersSlice = createSlice({
       state.deletedFiles = [];
     });
 
-    addAsyncThunkCases(fetchSearch, (state, action) => {
-      console.log(action.payload)
-    })
+    addAsyncThunkCases(fetchSearchDel, (state, action) => {
+      state.searchDelFiles = [...action.payload];
+    });
+
+    addAsyncThunkCases(fetchSearchFiles, (state, action) => {
+      state.searchAllFiles = [...action.payload];
+    });
 
     addAsyncThunkCases(fetchMove, () => {});
 

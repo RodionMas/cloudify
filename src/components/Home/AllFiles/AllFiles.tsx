@@ -11,7 +11,7 @@ import {
   fetchGetDeletedFiles,
 } from "../../../store/foldersSlice";
 import { useSelector } from "react-redux";
-import { selectFolders, selectMove } from "../../../selectors/selectors";
+import { selectFolders } from "../../../selectors/selectors";
 import OneFile from "../OneFile/OneFile";
 import MovedAllFiles from "./MovedAllFiles/MovedAllFiles";
 import { useClickOutside } from "../../../tools/UseClickOutside";
@@ -22,10 +22,10 @@ const AllFiles: React.FC = () => {
   const sortBy = ["Name", "Folder", "File Size", "Last Changes"];
   const [sortArrow, setSortArrow] = React.useState(0);
   const { allFiles } = useSelector(selectFolders);
+  const { searchAllFiles } = useSelector(selectFolders);
   const [filesArr, setFilesArr] = React.useState([]);
   const { moveSelectedModal } = useAppSelector(selectFolders)
   const dispatch = useAppDispatch();
-  const { moveFiles } = useAppSelector(selectMove);
   const hideRef = React.useRef<HTMLButtonElement | null>(null);
   const menuRef = React.useRef<HTMLDivElement | null>(null);
 
@@ -104,7 +104,19 @@ const AllFiles: React.FC = () => {
             </button>
           ))}
         </div>
-        {allFiles.map((item, i) => {
+        {searchAllFiles.length !== 0 ? 
+        searchAllFiles.map((item, i) => {
+          return (
+            <OneFile
+              filesArr={filesArr}
+              setFilesArr={setFilesArr}
+              key={item.filename}
+              {...item}
+            />
+          );
+        })
+        :
+         allFiles.map((item, i) => {
           return (
             <OneFile
               filesArr={filesArr}

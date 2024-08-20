@@ -28,7 +28,6 @@ const MovedAllFiles: React.FC = () => {
   const handleMove = async (folderName: string) => {
     try {
       dispatch(moveSelectedFiles(folderName));
-  
       // Дожидаемся обновления состояния (опционально через useSelector)
       const updatedMoveFiles = store.getState().moveReducer.moveFiles;
       await dispatch(fetchAllMove(updatedMoveFiles));

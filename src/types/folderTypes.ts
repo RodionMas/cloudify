@@ -5,7 +5,9 @@ export interface FoldersTypeState {
   userMemory: number;
   dragAndDrop: boolean;
   allFiles: FetchFilesUserRes[];
+  searchAllFiles: FetchFilesUserRes[];
   deletedFiles: FetchDeletedFiles[];
+  searchDelFiles: FetchDeletedFiles[];
   createFolderModal: boolean;
   createFolder: CreateFolder;
   folders: FolderType[];

@@ -12,7 +12,7 @@ const FilesSmall: React.FC = () => {
   const [sortArrow, setSortArrow] = React.useState(0);
   const appDispatch = useAppDispatch()
   const { allFiles } = useSelector(selectFolders);
- 
+  const { searchAllFiles } = useSelector(selectFolders);
   React.useEffect(() => {
     appDispatch(fetchGetAllFiles())
   }, [])
@@ -40,7 +40,16 @@ const FilesSmall: React.FC = () => {
             </button>
           ))}
         </div>
-        {allFiles
+        {searchAllFiles.length !== 0 ? 
+          searchAllFiles
+          .filter((_, i) => i <= 3)
+          .map((item, i) => {
+            return (
+              <OneFile key={i} {...item} />
+            );
+          })
+        :
+         allFiles
           .filter((_, i) => i <= 3)
           .map((item, i) => {
             return (

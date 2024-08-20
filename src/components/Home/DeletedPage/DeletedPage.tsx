@@ -21,35 +21,36 @@ const DeletedPage = () => {
   const sortBy = ["Name", "File Size", "Last Changes"];
   const [sortArrow, setSortArrow] = React.useState(0);
   const { deletedFiles } = useAppSelector(selectFolders);
+  const { searchDelFiles } = useAppSelector(selectFolders);
   const { files } = useAppSelector(selectDelete);
-  const appDispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
   const handleRecoverFiles = async () => {
     try {
-      await appDispatch(fetchRecoverFiles(files))
-      await appDispatch(fetchGetDeletedFiles());
+      await dispatch(fetchRecoverFiles(files))
+      await dispatch(fetchGetDeletedFiles());
     } catch (error) {
       console.warn(error)
     }
   }
   const handleDeleteSelected = async () => {
    try {
-    await appDispatch(fetchDeleteSelected(files));
-    await appDispatch(fetchGetDeletedFiles());
+    await dispatch(fetchDeleteSelected(files));
+    await dispatch(fetchGetDeletedFiles());
    } catch (error) {
     console.warn(error)
    }
   };
   const handleDeleteFiles = async () => {
     try {
-      await appDispatch(fetchDeleteFiles({ deletedFiles }));
-      await appDispatch(fetchGetAmountData());
+      await dispatch(fetchDeleteFiles({ deletedFiles }));
+      await dispatch(fetchGetAmountData());
     } catch (error) {
       console.error("Error creating folder:", error);
     }
   };
   React.useEffect(() => {
-    appDispatch(fetchGetDeletedFiles());
-  }, [appDispatch]);
+    dispatch(fetchGetDeletedFiles());
+  }, [dispatch]);
   return (
     <section className={style.wrapper}>
       <Search />
@@ -95,7 +96,12 @@ const DeletedPage = () => {
             </button>
           ))}
         </div>
-        {deletedFiles.map((item) => {
+        {searchDelFiles.length !== 0 ?  
+        searchDelFiles.map((item) => {
+          return <OneFile key={item.filename} {...item} />;
+        })
+        :
+         deletedFiles.map((item) => {
           return <OneFile key={item.filename} {...item} />;
         })}
       </div>
