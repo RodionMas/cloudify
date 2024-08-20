@@ -344,7 +344,7 @@ const initialState: FoldersTypeState = {
   },
   foldersForPagckage: [],
   filesForPackage: [],
-
+  searchFilesForPackage: [],
   colorFolder: {
     name: "",
     newColor: "",

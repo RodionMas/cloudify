@@ -21,6 +21,7 @@ export interface FoldersTypeState {
   createSubfolder: CreateSubfolderType;
   foldersForPagckage: string[];
   filesForPackage: FilesForPackageType[];
+  searchFilesForPackage: FilesForPackageType[];
   renameFolderModal: boolean;
   renameFolder: RenameFolder;
   colorFolder: ColorFolderType;
