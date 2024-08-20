@@ -15,7 +15,8 @@ import { selectFolders, selectMove } from "../../../selectors/selectors";
 import OneFile from "../OneFile/OneFile";
 import MovedAllFiles from "./MovedAllFiles/MovedAllFiles";
 import { useClickOutside } from "../../../tools/UseClickOutside";
-import { fetchDelCheckbox } from "../../../store/moveSlice";
+import { fetchDelCheckbox, moveDelSelectedFiles } from "../../../store/moveSlice";
+import { store } from "../../../store/store";
 
 const AllFiles: React.FC = () => {
   const sortBy = ["Name", "Folder", "File Size", "Last Changes"];
@@ -36,7 +37,9 @@ const AllFiles: React.FC = () => {
 
   async function handleDeleteChebox() {
     try {
-      await dispatch(fetchDelCheckbox(moveFiles));
+      dispatch(moveDelSelectedFiles())
+      const updateFilePath = store.getState().moveReducer.moveFiles
+      await dispatch(fetchDelCheckbox(updateFilePath));
       await dispatch(fetchGetAllFiles());
       await dispatch(fetchGetDeletedFiles())
       setFilesArr([])
@@ -116,4 +119,4 @@ const AllFiles: React.FC = () => {
   );
 };
 
-export default React.memo(AllFiles);
+export default AllFiles;

@@ -73,10 +73,8 @@ const OneFolder: React.FC<any> = ({ folder }) => {
           <MoreSubfolderSmall
             filename={folder}
             name={name}
-            //   customFolderName={customFolderName}
             hideContentFn={hideContentFn}
             ref={moreFileRef}
-            //   filePath={filePath}
             style={{
               position: "absolute",
               top: menuPosition.top - 90,

@@ -1,8 +1,7 @@
 import React from "react";
 import style from "../OneFile.module.css";
 import { useAppDispatch, useAppSelector } from "../../../../store/hooks";
-
-import { selectFolders, selectMove } from "../../../../selectors/selectors";
+import { selectMove } from "../../../../selectors/selectors";
 import { addFile } from "../../../../store/moveSlice";
 
 // Интерфейс для одного файла
@@ -43,11 +42,15 @@ const Checkbox: React.FC<CheckboxProps> =
         dispatch(addFile(filesArr))
       }
     };
+    const { loading } = useAppSelector(selectMove)
     React.useEffect(() => {
       if (filesArr.length !== moveFiles.length) {
         dispatch(addFile(filesArr))
       }
-    }, [filesArr, moveFiles, dispatch])
+      if (loading === 'pending') {
+        setIsChecked(false)
+      }
+    }, [filesArr, moveFiles, dispatch, loading])
     return (
       <input
         checked={isChecked}

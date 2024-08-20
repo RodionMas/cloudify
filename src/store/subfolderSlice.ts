@@ -29,6 +29,19 @@ export const FetchsubfoldersPackage = createAsyncThunk<
   }
 });
 
+export const fetchsubfolderDel = createAsyncThunk<
+  string,
+  {folderPath: string},
+  { rejectValue: string }
+>("subfolder/FetchsubfolderDel", async (folderName, { rejectWithValue }) => {
+  try {
+    const { data } = await axios.delete(`/subfolders`, {data: folderName}); 
+    return data;
+  } catch (error: any) {
+    return rejectWithValue(error.message);
+  }
+});
+
 const initialState: SubfolderState = {
   subfolderModal: false,
   renameSubfolder: {
@@ -107,6 +120,9 @@ export const subfolderSlice = createSlice({
         .addCase(thunk.rejected, handleRejected);
     };
     addAsyncThunkCases(fetchRenameSubfolder, () => {});
+
+    addAsyncThunkCases(fetchsubfolderDel, () => {});
+
     addAsyncThunkCases(FetchsubfoldersPackage, (state, action) => {
       state.subfoldersForPackage = [...action.payload.folders];
       state.subfilesForPackage = [...action.payload.files];

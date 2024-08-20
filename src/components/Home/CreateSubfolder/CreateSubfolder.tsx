@@ -6,13 +6,24 @@ import { useLocation, useParams } from "react-router-dom";
 import { selectSubfolders } from "../../../selectors/selectors";
 import { FetchsubfoldersPackage } from "../../../store/subfolderSlice";
 
-const CreateSubfolder: React.FC =  () => {
+const CreateSubfolder: React.FC = () => {
   const dispatch = useAppDispatch();
   const { pathname } = useLocation();
   const [inputValue, setInputValue] = React.useState('');
   const { foldername } = useParams()
   const { subfoldersURL } = useAppSelector(selectSubfolders)
   async function createSubFolderFn() {
+    const refreshPath = () => {
+      const path = pathname
+        const parts = path.split("/"); // Разбиваем строку на массив по "/"
+        const index = parts.indexOf("userfolder"); // Находим индекс "userfolder"
+  
+        if (index !== -1) {
+          const result = parts.slice(index + 1).join("/"); // Забираем все элементы после "userfolder" и соединяем их обратно в строку
+          const encodedPath = result.replace(/\//g, "%2F");
+          return encodedPath;
+        }
+    } 
     const word = pathname.split('userfolder/')[1].split('/');
     const result = word.join('/'); // Объединяем элементы массива с разделителем "/"
     const subfolderData = {
@@ -22,9 +33,9 @@ const CreateSubfolder: React.FC =  () => {
     dispatch(createSubfolderReducer(subfolderData));
     await dispatch(fetchCreateSubfolder(subfolderData));
     await dispatch(fetchGetFoldersFiles(foldername))
-    await  dispatch(FetchsubfoldersPackage(subfoldersURL));
+    await dispatch(FetchsubfoldersPackage(refreshPath()));
   }
- 
+
   return (
     <div className={style.wrapper}>
       <h1 className={style.title}>Create a subfolder</h1>

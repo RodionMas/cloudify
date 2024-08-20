@@ -23,6 +23,7 @@ export interface FoldersTypeState {
   renameFolder: RenameFolder;
   colorFolder: ColorFolderType;
   moveSelectedModal: boolean;
+  inpValue: string;
 }
 
 export interface FilesForPackageType {

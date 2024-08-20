@@ -11,7 +11,7 @@ import {
 import { selectAuth, selectFolders, selectSubfolders } from "../../../selectors/selectors";
 import filePng from '../../../assets/img/File.png'
 import { useLocation } from "react-router-dom";
-import { FetchsubfoldersPackage } from "../../../store/subfolderSlice";
+import { FetchsubfoldersPackage, setFoldersURL } from "../../../store/subfolderSlice";
 
 const DragAndDrop: React.FC = React.memo(() => {
   const dispatch = useAppDispatch();
@@ -20,7 +20,7 @@ const DragAndDrop: React.FC = React.memo(() => {
   const [drag, setDrag] = React.useState(false);
   const [formData, setFormData] = React.useState<FormData & {folderPath?: string | undefined} | null>(null);
   const { totalSize } = useAppSelector(selectFolders);
-  const { subfoldersURL } = useAppSelector(selectSubfolders)
+  // const { subfoldersURL } = useAppSelector(selectSubfolders)
   const [onVisibleFiles, setOnVisibleFiles] = React.useState<string[]>([]);
   function dragStartHandler(e: React.DragEvent<HTMLDivElement>): void {
     e.preventDefault();
@@ -45,24 +45,38 @@ const DragAndDrop: React.FC = React.memo(() => {
     setFormData(newFormData); // Сохраняем FormData в состоянии
     setDrag(false);
   }
+ 
   async function handleSelectClick() {
+    const refreshPath = () => {
+      const path = pathname
+        const parts = path.split("/"); // Разбиваем строку на массив по "/"
+        const index = parts.indexOf("userfolder"); // Находим индекс "userfolder"
+  
+        if (index !== -1) {
+          const result = parts.slice(index + 1).join("/"); // Забираем все элементы после "userfolder" и соединяем их обратно в строку
+          const encodedPath = result.replace(/\//g, "%2F");
+          return encodedPath;
+        }
+    } 
   try {
     if (pathname.includes('userfolder') && formData) {
       const parts = pathname.split('/');
       const index = parts.indexOf('userfolder');
       const result = parts.slice(index + 1).join("/"); // Забираем все элементы после "userfolder" и соединяем их обратно в строку
-
       // Добавляем поле folderPath в formData
       formData.append('folderPath', result);
 
       // Обновляем состояние formData
       setFormData(formData);
       await dispatch(fetchDrop(formData));
-      await dispatch(FetchsubfoldersPackage(subfoldersURL))
+      dispatch(setFoldersURL(pathname))
+      await dispatch(FetchsubfoldersPackage(refreshPath()))
       await dispatch(fetchGetAmountData());
     } else if (formData) {
+      dispatch(setFoldersURL(pathname))
       await dispatch(fetchDrop(formData));
       await dispatch(fetchGetAllFiles());
+      await dispatch(FetchsubfoldersPackage(refreshPath()))
       await dispatch(fetchGetAmountData());
     }
   } catch (error) {
@@ -71,6 +85,7 @@ const DragAndDrop: React.FC = React.memo(() => {
     dispatch(changeDragDrop());
   }
 }
+
   React.useEffect(() => {}, [totalSize, onVisibleFiles]);
   return (
     <div className={style.wrapper}>

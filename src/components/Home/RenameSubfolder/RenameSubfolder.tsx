@@ -15,11 +15,9 @@ const RenameSubfolder: React.FC = () => {
   const dispatch = useAppDispatch();
   const { renameSubfolder } = useAppSelector(selectSubfolders);
   const { foldername } = useParams();
-  console.log(foldername)
   const { pathname } = useLocation()
   async function handleRenameSubfolder() {
     try {
-      console.log(renameSubfolder)
       await dispatch(fetchRenameSubfolder(renameSubfolder));
       await dispatch(fetchGetFoldersFiles(foldername));
       dispatch(changeModal());

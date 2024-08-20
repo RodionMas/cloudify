@@ -257,6 +257,19 @@ export const fetchDeleteFolder = createAsyncThunk<
   }
 });
 
+export const fetchSearch = createAsyncThunk<
+  string,
+  any,
+  { rejectValue: string }
+>("folder/fetchSearch", async (folderName, { rejectWithValue }) => {
+  try {
+    const { data } = await axios.get(`/files/search?fileName=${folderName}`);
+    return data;
+  } catch (error: any) {
+    return rejectWithValue(error.message);
+  }
+});
+
 const handlePending = (state: FoldersTypeState) => {
   state.loading = "pending";
 };
@@ -320,12 +333,16 @@ const initialState: FoldersTypeState = {
     newColor: "",
   },
   moveSelectedModal: false,
+  inpValue: '',
 };
 
 export const FoldersSlice = createSlice({
   name: "FoldersSlice",
   initialState,
   reducers: {
+    changeInpSearch: (state, action) => {
+      state.inpValue = action.payload
+    },
     changeMoveSelectedModal: (state) => {
       state.moveSelectedModal = !state.moveSelectedModal;
     },
@@ -425,6 +442,10 @@ export const FoldersSlice = createSlice({
       state.deletedFiles = [];
     });
 
+    addAsyncThunkCases(fetchSearch, (state, action) => {
+      console.log(action.payload)
+    })
+
     addAsyncThunkCases(fetchMove, () => {});
 
     addAsyncThunkCases(fetchCreateFolder, () => {});
@@ -467,7 +488,7 @@ export const {
   checkColor,
   SubfolderModal,
   createSubfolderReducer,
-  
+  changeInpSearch,
   changeRenameFolderModal,
   renameNewNameFolder,
   renameLastNameFolder,

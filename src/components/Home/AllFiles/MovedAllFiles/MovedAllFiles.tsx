@@ -1,12 +1,10 @@
 import React from "react";
 import { useAppDispatch, useAppSelector } from "../../../../store/hooks";
-import { selectFolders, selectMove } from "../../../../selectors/selectors";
+import { selectFolders } from "../../../../selectors/selectors";
 import {
   changeMoveSelectedModal,
- 
   fetchGetAllFiles,
   fetchGetMoverShowMore,
-
 } from "../../../../store/foldersSlice";
 import black from "../../../../assets/img/foldersColor/black.png";
 import blue from "../../../../assets/img/foldersColor/blue.png";
@@ -17,23 +15,25 @@ import violet from "../../../../assets/img/foldersColor/violet.png";
 import yellow from "../../../../assets/img/foldersColor/yellow.png";
 import style from "./MovedAllFiles.module.css";
 import { fetchAllMove, moveSelectedFiles } from "../../../../store/moveSlice";
+import { store } from "../../../../store/store";
 
 const MovedAllFiles: React.FC = () => {
   const dispatch = useAppDispatch();
 
   const { foldersShowMore } = useAppSelector(selectFolders);
-  const { moveFiles } = useAppSelector(selectMove);
   
   React.useEffect(() => {
     dispatch(fetchGetMoverShowMore());
-    // console.log("Updated moveFiles in component:", moveFiles);
-  }, [moveFiles]);
+  }, []);
   const handleMove = async (folderName: string) => {
     try {
-      dispatch(moveSelectedFiles(folderName)); // обновляем путь
-      await dispatch(fetchAllMove(moveFiles)); // отправляем обновленные файлы на сервер
-      await dispatch(fetchGetAllFiles()); // обновляем список файлов после перемещения
-      dispatch(changeMoveSelectedModal()); // закрываем модальное окно
+      dispatch(moveSelectedFiles(folderName));
+  
+      // Дожидаемся обновления состояния (опционально через useSelector)
+      const updatedMoveFiles = store.getState().moveReducer.moveFiles;
+      await dispatch(fetchAllMove(updatedMoveFiles));
+      await dispatch(fetchGetAllFiles())
+      dispatch(changeMoveSelectedModal());
     } catch (error) {
       console.warn(error);
     }
