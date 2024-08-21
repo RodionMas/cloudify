@@ -20,8 +20,6 @@ const OneFile: React.FC<any> = React.memo(
     customFolderName,
     filePath,
     color,
-    setFilesArr,
-    filesArr,
   }) => {
     const hideRef = React.useRef<HTMLButtonElement | null>(null);
     const moreFileRef = React.useRef<HTMLDivElement | null>(null);
@@ -67,8 +65,6 @@ const OneFile: React.FC<any> = React.memo(
         <div className={style.fileRow}>
           {pathname === "/home/files" ? (
             <Checkbox
-              filesArr={filesArr}
-              setFilesArr={setFilesArr}
               filename={filename}
               filePath={filePath}
             />

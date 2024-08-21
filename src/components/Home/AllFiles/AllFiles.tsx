@@ -22,7 +22,6 @@ const AllFiles: React.FC = () => {
   const [sortArrow, setSortArrow] = React.useState(0);
   const { allFiles } = useAppSelector(selectFolders);
   const { searchAllFiles } = useAppSelector(selectFolders);
-  const [filesArr, setFilesArr] = React.useState([]);
   const { moveSelectedModal } = useAppSelector(selectFolders)
   const dispatch = useAppDispatch();
   const hideRef = React.useRef<HTMLButtonElement | null>(null);
@@ -41,7 +40,6 @@ const AllFiles: React.FC = () => {
       await dispatch(fetchDelCheckbox(updateFilePath));
       await dispatch(fetchGetAllFiles());
       await dispatch(fetchGetDeletedFiles())
-      setFilesArr([])
     } catch (error) {
       console.warn(error);
     }
@@ -107,8 +105,6 @@ const AllFiles: React.FC = () => {
         searchAllFiles.map((item, i) => {
           return (
             <OneFile
-              filesArr={filesArr}
-              setFilesArr={setFilesArr}
               key={item.filename}
               {...item}
             />
@@ -118,8 +114,6 @@ const AllFiles: React.FC = () => {
          allFiles.map((item, i) => {
           return (
             <OneFile
-              filesArr={filesArr}
-              setFilesArr={setFilesArr}
               key={item.filename}
               {...item}
             />

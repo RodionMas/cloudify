@@ -59,7 +59,7 @@ export const moveState = createSlice({
   initialState,
   reducers: {
     resetMoveFiles: (state) => {
-      state.moveFiles = []
+      state.moveFiles = [];
     },
     // Обновление source и target
     setSourceAndTarget(
@@ -71,12 +71,12 @@ export const moveState = createSlice({
     },
     // Добавление файла в массив files
     addFile(state, action: PayloadAction<any>) {
-      state.moveFiles = [...action.payload];
+      state.moveFiles = [...state.moveFiles, action.payload];
     },
     // Удаление файла из массива files
     removeFile(state, action: PayloadAction<string>) {
-      state.moveFiles.files = state.moveFiles.files.filter(
-        (file: string) => file !== action.payload
+      state.moveFiles = state.moveFiles.filter(
+        (file: { filename: string }) => file.filename !== action.payload
       );
     },
     moveSelectedFiles: (state, action: PayloadAction<string>) => {
@@ -86,12 +86,10 @@ export const moveState = createSlice({
       }));
     },
     moveDelSelectedFiles: (state) => {
-      state.moveFiles = state.moveFiles.map((file: any) => (
-        {
-          ...file,
-          newFilePath: 'deleted'
-        }
-      ))
+      state.moveFiles = state.moveFiles.map((file: any) => ({
+        ...file,
+        newFilePath: "deleted",
+      }));
     },
   },
   extraReducers(builder) {
@@ -109,11 +107,17 @@ export const moveState = createSlice({
     };
     addAsyncThunkCases(fetchAllMove, () => {});
 
-    addAsyncThunkCases(fetchDelCheckbox, () => { });
+    addAsyncThunkCases(fetchDelCheckbox, () => {});
   },
 });
 
-export const { setSourceAndTarget, addFile, removeFile, moveSelectedFiles, moveDelSelectedFiles, resetMoveFiles } =
-  moveState.actions;
+export const {
+  setSourceAndTarget,
+  addFile,
+  removeFile,
+  moveSelectedFiles,
+  moveDelSelectedFiles,
+  resetMoveFiles,
+} = moveState.actions;
 
 export default moveState.reducer;
