@@ -3,20 +3,14 @@ import { useAppSelector } from "../../../../store/hooks";
 import { selectSubfolders } from "../../../../selectors/selectors";
 import OneFolder from "../../OneFolder/OneFolder";
 import { v4 as uuidv4 } from "uuid";
-import OneFileSubfolder from "../../FileSubfolder/OneFileSubfolder";
+import OneFile from "../../OneFile/OneFile";
 const Subfolders: React.FC = () => {
   const { subfilesForPackage, subfoldersForPackage } =
     useAppSelector(selectSubfolders);
   return (
     <>
       {subfilesForPackage.map((file) => (
-        <OneFileSubfolder
-        key={uuidv4()}
-        filename={file.filename} 
-        size={file.size} 
-        lastModified={file.lastModified}
-        filePath={file.filePath} 
-        color={file.color}
+        <OneFile key={uuidv4()} {...file}
       />
       ))}
       {subfoldersForPackage.map((folder) => (

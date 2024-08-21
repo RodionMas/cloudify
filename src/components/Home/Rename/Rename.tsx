@@ -8,21 +8,35 @@ import {
   fetchRenameFile,
 } from "../../../store/foldersSlice";
 import { selectFolders } from "../../../selectors/selectors";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
+import { FetchsubfoldersPackage } from "../../../store/subfolderSlice";
 interface newFileNameType {
   newFileName: string;
 }
 
 const Rename: React.FC = () => {
   const dispatch = useAppDispatch();
+  const { pathname } = useLocation()
   const { renameObj } = useAppSelector(selectFolders);
   const [renameInp, setRenameInp] = React.useState<newFileNameType>(renameObj);
   const { foldername } = useParams();
   const handleRename = async () => {
+    const refreshPath = () => {
+      const path = pathname
+        const parts = path.split("/"); // Разбиваем строку на массив по "/"
+        const index = parts.indexOf("userfolder"); // Находим индекс "userfolder"
+  
+        if (index !== -1) {
+          const result = parts.slice(index + 1).join("/"); // Забираем все элементы после "userfolder" и соединяем их обратно в строку
+          const encodedPath = result.replace(/\//g, "%2F");
+          return encodedPath;
+        }
+    } 
     try {
       await dispatch(fetchRenameFile(renameInp));
       await dispatch(fetchGetAllFiles());
       await dispatch(fetchGetFoldersFiles(foldername));
+      await dispatch(FetchsubfoldersPackage(refreshPath()))
       dispatch(changeRenameModal());
     } catch (error) {
       console.warn(error);
@@ -43,7 +57,7 @@ const Rename: React.FC = () => {
         }}
         className={style.inp}
         type="text"
-        placeholder="Enter a file name and choose a color"
+        placeholder="Enter a file name"
       />
       <div className={style.btnBox}>
         <button

@@ -48,15 +48,26 @@ const MoreFileSmall = React.memo(forwardRef<HTMLDivElement, any>((props, ref) =>
   const { foldername } = useParams();
   const { subfoldersURL } = useAppSelector(selectSubfolders);
   async function deleteMove(item: string) {
+    const refreshPath = () => {
+      const path = pathname
+        const parts = path.split("/"); // Разбиваем строку на массив по "/"
+        const index = parts.indexOf("userfolder"); // Находим индекс "userfolder"
+  
+        if (index !== -1) {
+          const result = parts.slice(index + 1).join("/"); // Забираем все элементы после "userfolder" и соединяем их обратно в строку
+          const encodedPath = result.replace(/\//g, "%2F");
+          return encodedPath;
+        }
+    } 
     if (item === "Delete") {
       setMoveFiles((moveFiles.files = [...moveFiles.files, props.filename]));
       try {
         await dispatch(fetchMove(moveFiles));
         await dispatch(fetchGetAllFiles());
         await dispatch(fetchGetFolder());
+        await dispatch(FetchsubfoldersPackage(refreshPath()));
         await dispatch(fetchGetFoldersFiles(foldername));
         await dispatch(fetchGetDeletedFiles())
-        await dispatch(FetchsubfoldersPackage(subfoldersURL));
       } catch (error) {
         console.warn(error);
       }

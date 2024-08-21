@@ -477,7 +477,6 @@ export const FoldersSlice = createSlice({
 
     addAsyncThunkCases(fetchGetMoverShowMore, (state, action) => {
       state.foldersShowMore = [...action.payload];
-      console.log(state.foldersShowMore)
     });
 
     addAsyncThunkCases(fetchRecover, () => {});
