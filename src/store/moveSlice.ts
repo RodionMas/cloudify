@@ -1,7 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import axios from "../instanceAxios";
-import { RenameSubfolderType, SubfolderState } from "../types/subfolderTypes";
 import { DeleteFiles } from "../types/folderTypes";
 import { MoveState } from "../types/moveTypes";
 
@@ -59,6 +58,9 @@ export const moveState = createSlice({
   name: "subfolderSlice",
   initialState,
   reducers: {
+    resetMoveFiles: (state) => {
+      state.moveFiles = []
+    },
     // Обновление source и target
     setSourceAndTarget(
       state,
@@ -105,13 +107,13 @@ export const moveState = createSlice({
         })
         .addCase(thunk.rejected, handleRejected);
     };
-    addAsyncThunkCases(fetchAllMove, () => { });
+    addAsyncThunkCases(fetchAllMove, () => {});
 
     addAsyncThunkCases(fetchDelCheckbox, () => { });
   },
 });
 
-export const { setSourceAndTarget, addFile, removeFile, moveSelectedFiles, moveDelSelectedFiles } =
+export const { setSourceAndTarget, addFile, removeFile, moveSelectedFiles, moveDelSelectedFiles, resetMoveFiles } =
   moveState.actions;
 
 export default moveState.reducer;

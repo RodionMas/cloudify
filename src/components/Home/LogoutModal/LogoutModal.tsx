@@ -12,8 +12,8 @@ const Logout: React.FC = () => {
   const navigate = useNavigate();
   const logoutFn = () => {
     appDispatch(changeLogout());
-    appDispatch(fetchLogout());
-    navigate("/");
+    appDispatch(fetchLogout()).then(() => navigate("/"));
+    
   };
   return (
     <>

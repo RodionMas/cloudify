@@ -23,6 +23,7 @@ const Checkbox: React.FC<CheckboxProps> =
     const dispatch = useAppDispatch();
     const [isChecked, setIsChecked] = React.useState(false);
     const { moveFiles } = useAppSelector(selectMove)
+    
     const handleCheckboxChange = () => {
       const newCheckedState = !isChecked;
       setIsChecked(newCheckedState);

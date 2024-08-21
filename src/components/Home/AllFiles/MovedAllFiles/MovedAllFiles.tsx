@@ -14,14 +14,14 @@ import red from "../../../../assets/img/foldersColor/red.png";
 import violet from "../../../../assets/img/foldersColor/violet.png";
 import yellow from "../../../../assets/img/foldersColor/yellow.png";
 import style from "./MovedAllFiles.module.css";
-import { fetchAllMove, moveSelectedFiles } from "../../../../store/moveSlice";
+import { fetchAllMove, moveSelectedFiles, resetMoveFiles } from "../../../../store/moveSlice";
 import { store } from "../../../../store/store";
 
 const MovedAllFiles: React.FC = () => {
   const dispatch = useAppDispatch();
 
   const { foldersShowMore } = useAppSelector(selectFolders);
-  
+
   React.useEffect(() => {
     dispatch(fetchGetMoverShowMore());
   }, []);
@@ -29,8 +29,8 @@ const MovedAllFiles: React.FC = () => {
     try {
       dispatch(moveSelectedFiles(folderName));
       // Дожидаемся обновления состояния (опционально через useSelector)
-      const updatedMoveFiles = store.getState().moveReducer.moveFiles;
-      await dispatch(fetchAllMove(updatedMoveFiles));
+      let updatedMoveFiles = store.getState().moveReducer.moveFiles;
+      await dispatch(fetchAllMove(updatedMoveFiles)).then(() => dispatch(resetMoveFiles()));
       await dispatch(fetchGetAllFiles())
       dispatch(changeMoveSelectedModal());
     } catch (error) {

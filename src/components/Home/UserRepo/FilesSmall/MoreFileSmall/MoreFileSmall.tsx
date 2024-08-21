@@ -9,6 +9,7 @@ import cash from "../../../../../assets/img/showMoreSmall/Trash Can.png";
 import recet from "../../../../../assets/img/showMoreSmall/Reset.png";
 import { useAppDispatch, useAppSelector } from "../../../../../store/hooks";
 import {
+  changeInpSearch,
   fetchDeleteFile,
   fetchGetAllFiles,
   fetchGetDeletedFiles,
@@ -16,8 +17,9 @@ import {
   fetchGetFoldersFiles,
   fetchMove,
   fetchRecover,
+  fetchSearchFiles,
 } from "../../../../../store/foldersSlice";
-import { selectFolders, selectSubfolders } from "../../../../../selectors/selectors";
+import { selectFolders } from "../../../../../selectors/selectors";
 import { useLocation, useParams } from "react-router-dom";
 import BtnShowMore from "./BtnShowMore/BtnShowMore";
 import { FetchFilesUserRes } from "../../../../../types/folderTypes";
@@ -42,11 +44,11 @@ const MoreFileSmall = React.memo(forwardRef<HTMLDivElement, any>((props, ref) =>
     target: `deleted/${props.filePath}`,
     files: [],
   });
-
+  const { searchAllFiles } = useAppSelector(selectFolders);
   const dispatch = useAppDispatch();
   const { deletedFiles } = useAppSelector(selectFolders);
   const { foldername } = useParams();
-  const { subfoldersURL } = useAppSelector(selectSubfolders);
+  const { inpValue } = useAppSelector(selectFolders);
   async function deleteMove(item: string) {
     const refreshPath = () => {
       const path = pathname
@@ -63,7 +65,13 @@ const MoreFileSmall = React.memo(forwardRef<HTMLDivElement, any>((props, ref) =>
       setMoveFiles((moveFiles.files = [...moveFiles.files, props.filename]));
       try {
         await dispatch(fetchMove(moveFiles));
-        await dispatch(fetchGetAllFiles());
+        if (searchAllFiles.length !== 0) {
+          await dispatch(fetchSearchFiles(inpValue))
+          dispatch(changeInpSearch(''));
+        }
+          await dispatch(fetchGetAllFiles());
+        
+        
         await dispatch(fetchGetFolder());
         await dispatch(FetchsubfoldersPackage(refreshPath()));
         await dispatch(fetchGetFoldersFiles(foldername));
