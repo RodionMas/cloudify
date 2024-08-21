@@ -30,9 +30,14 @@ export interface FoldersTypeState {
 }
 
 export interface FilesForPackageType {
-  lastModified: LastModifyType;
-  name: string;
+  filename: string;
   size: string;
+  lastModified: {
+    day: string;
+  };
+  customFolderName?: string;
+  filePath?: string;
+  color?: string;
 }
 
 export interface ColorFolderType {

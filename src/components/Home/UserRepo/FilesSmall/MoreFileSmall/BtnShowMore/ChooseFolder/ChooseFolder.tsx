@@ -40,15 +40,17 @@ const ChooseFolder: React.FC<FileNameType> = ({ filename, filePath }) => {
     } catch (error) {}
   };
   React.useEffect(() => {
-    dispatch(fetchGetMoverShowMore());
-  }, []);
+    if (!foldersShowMore.length) {
+      dispatch(fetchGetMoverShowMore());
+    }
+  }, [dispatch, foldersShowMore]);
   return (
     <div className={style.wrapperFolder}>
       <div className={style.wrapperOverflow}>
         <h5 className={style.miniTitle}>Choose a folder</h5>
         {foldersShowMore.map((folder, i) => {
           return (
-            <button
+            <div
               onClick={() => {
                 let moveFile: MoveFileType = {
                   source: filePath,
@@ -80,7 +82,7 @@ const ChooseFolder: React.FC<FileNameType> = ({ filename, filePath }) => {
                 <img className={style.packageImg} src={black} alt="package" />
               )}
               <span>{folder.name}</span>
-            </button>
+            </div>
           );
         })}
       </div>

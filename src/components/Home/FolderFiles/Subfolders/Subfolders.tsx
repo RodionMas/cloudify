@@ -10,7 +10,14 @@ const Subfolders: React.FC = () => {
   return (
     <>
       {subfilesForPackage.map((file) => (
-        <OneFileSubfolder key={uuidv4()} {...file} />
+        <OneFileSubfolder
+        key={uuidv4()}
+        filename={file.filename} 
+        size={file.size} 
+        lastModified={file.lastModified}
+        filePath={file.filePath} 
+        color={file.color}
+      />
       ))}
       {subfoldersForPackage.map((folder) => (
         <OneFolder key={uuidv4()} folder={folder} />

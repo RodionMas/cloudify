@@ -1,5 +1,5 @@
 import React from "react";
-import style from "./BtnShowMoreSub.module.css";
+import style from "../../../UserRepo/FilesSmall/MoreFileSmall/BtnShowMore/BtnShowMore.module.css";
 import forward from "../../../../../assets/img/dots/Forward.png";
 
 import {

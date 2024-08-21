@@ -1,5 +1,5 @@
 import React from "react";
-import style from "./FileSubfolder.module.css";
+import style from "../OneFile/OneFile.module.css";
 import more from "../../../assets/img/More.png";
 import fileImg from "../../../assets/img/File.png";
 import folderImg from "../../../assets/img/Folder.png";
@@ -18,9 +18,8 @@ interface OneFileSubfolderProps {
     day: string;
   };
   customFolderName?: string;
-  filePath: string;
-  color: string;
-  // Другие возможные пропсы...
+  filePath?: string;
+  color?: string;
 }
 
 const OneFileSubfolder: React.FC<OneFileSubfolderProps> = React.memo(
@@ -31,8 +30,6 @@ const OneFileSubfolder: React.FC<OneFileSubfolderProps> = React.memo(
     customFolderName,
     filePath,
     color,
-    // setFilesArr,
-    // filesArr,
   }) => {
     const hideRef = React.useRef<HTMLButtonElement | null>(null);
     const moreFileRef = React.useRef<HTMLDivElement | null>(null);
@@ -86,7 +83,7 @@ const OneFileSubfolder: React.FC<OneFileSubfolderProps> = React.memo(
         {pathname !== "/home/deleted" && (
           <div className={style.fileRow}>
             {pathname.includes("userfolder") ? (
-              <span>File111</span>
+              <span>File</span>
             ) : (
               <div
                 style={{ background: !customFolderName ? `#D9D9D9` : color }}
@@ -100,10 +97,10 @@ const OneFileSubfolder: React.FC<OneFileSubfolderProps> = React.memo(
             )}
           </div>
         )}
-        <div className={style.fileRowDeleted}>
+        <div className={style.fileRow}>
           <span className={style.size}>{size}</span>
         </div>
-        <div className={style.fileRowDeleted}>
+        <div className={style.fileRow}>
           <span>{lastModified.day}</span>
           <button
             ref={hideRef}
