@@ -34,7 +34,7 @@ const Search: React.FC = () => {
             .catch((e) => console.warn(e));
         }
       }, 450),
-    [dispatch]
+    [dispatch, conditionPath]
   );
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(changeInpSearch(e.target.value));

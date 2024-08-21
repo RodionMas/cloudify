@@ -451,22 +451,50 @@ export const FoldersSlice = createSlice({
       state.allFiles = [...action.payload];
     });
 
-    addAsyncThunkCases(fetchGetDeletedFiles, (state, action) => {
-      state.deletedFiles = [...action.payload];
+    // addAsyncThunkCases(fetchGetDeletedFiles, (state, action) => {
+    //   state.deletedFiles = [...action.payload];
+    // });
+    builder.addCase(fetchGetDeletedFiles.pending, (state) => {
+      state.err = null;
+    });
+    builder.addCase(fetchGetDeletedFiles.fulfilled, (state, action: any) => {
+        state.loading = "succeeded";
+        state.deletedFiles = [...action.payload];
+    });
+    builder.addCase(fetchGetDeletedFiles.rejected, (state) => {
+      state.loading = "failed";
     });
 
     addAsyncThunkCases(fetchDeleteFiles, (state) => {
       state.deletedFiles = [];
     });
 
-    addAsyncThunkCases(fetchSearchDel, (state, action) => {
-      state.searchDelFiles = [...action.payload];
+    // addAsyncThunkCases(fetchSearchDel, (state, action) => {
+    //   state.searchDelFiles = [...action.payload];
+    // });
+    builder.addCase(fetchSearchDel.pending, (state) => {
+      state.err = null;
     });
-
-    addAsyncThunkCases(fetchSearchFiles, (state, action) => {
-      state.searchAllFiles = [...action.payload];
+    builder.addCase(fetchSearchDel.fulfilled, (state, action: any) => {
+        state.loading = "succeeded";
+        state.searchDelFiles = [...action.payload];
     });
-
+    builder.addCase(fetchSearchDel.rejected, (state) => {
+      state.loading = "failed";
+    });
+    // addAsyncThunkCases(fetchSearchFiles, (state, action) => {//!!!!!!!!!
+    //   state.searchAllFiles = [...action.payload];
+    // });
+    builder.addCase(fetchSearchFiles.pending, (state) => {
+      state.err = null;
+    });
+    builder.addCase(fetchSearchFiles.fulfilled, (state, action: any) => {
+        state.loading = "succeeded";
+        state.searchAllFiles = [...action.payload];
+    });
+    builder.addCase(fetchSearchFiles.rejected, (state) => {
+      state.loading = "failed";
+    });
     addAsyncThunkCases(fetchMove, () => {});
 
     addAsyncThunkCases(fetchCreateFolder, () => {});
@@ -475,10 +503,19 @@ export const FoldersSlice = createSlice({
       state.folders = [...action.payload];
     });
 
-    addAsyncThunkCases(fetchGetMoverShowMore, (state, action) => {
-      state.foldersShowMore = [...action.payload];
+    // addAsyncThunkCases(fetchGetMoverShowMore, (state, action) => {
+    //   state.foldersShowMore = [...action.payload];
+    // });
+    builder.addCase(fetchGetMoverShowMore.pending, (state) => {
+      state.err = null;
     });
-
+    builder.addCase(fetchGetMoverShowMore.fulfilled, (state, action: any) => {
+        state.loading = "succeeded";
+        state.foldersShowMore = [...action.payload];
+    });
+    builder.addCase(fetchGetMoverShowMore.rejected, (state) => {
+      state.loading = "failed";
+    });
     addAsyncThunkCases(fetchRecover, () => {});
 
     addAsyncThunkCases(fetchRenameFile, () => {});

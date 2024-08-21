@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import style from "./FolderFiles.module.css";
 import Search from "../UserRepo/Search/Search";
 import { Link, useLocation, useParams } from "react-router-dom";
@@ -33,16 +33,16 @@ const FolderFiles: React.FC = () => {
 
   const count = pathname.split("/").length - 1;
 
-  async function handleGetFiles() {
+  const handleGetFiles = useCallback(async () => {
     try {
       await dispatch(fetchGetAllFiles());
       await dispatch(fetchGetFoldersFiles(foldername));
     } catch (error) {
       console.warn(error);
     }
-  }
+  }, [dispatch, foldername]);
 
-  async function handleGetSubfolders() {
+  const handleGetSubfolders = useCallback(async () => {
     try {
       const parts = pathname.split("/");
       const userfolderIndex = parts.indexOf("userfolder");
@@ -60,11 +60,11 @@ const FolderFiles: React.FC = () => {
     } catch (error) {
       console.warn(error);
     }
-  }
+  }, [pathname, subfoldersURL, dispatch]);
 
-  async function handleUploadFiles() {
+  const handleUploadFiles = () => {
     dispatch(changeDragDrop());
-  }
+  };
 
   React.useEffect(() => {
     if (count === 3) {
@@ -72,7 +72,7 @@ const FolderFiles: React.FC = () => {
     } else if (count > 3) {
       handleGetSubfolders();
     }
-  }, [pathname]);
+  }, [count, handleGetFiles, handleGetSubfolders]);
 
   return (
     <section className={style.wrapper}>

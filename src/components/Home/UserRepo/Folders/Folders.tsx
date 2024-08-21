@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import style from "./Folders.module.css";
 import Folder from "./Folder/Folder";
 import { useAppDispatch, useAppSelector } from "../../../../store/hooks";
@@ -15,23 +15,25 @@ const Folders: React.FC = () => {
   const dispatch = useAppDispatch();
   const { folders } = useAppSelector(selectFolders);
   const { colorFolder } = useAppSelector(selectFolders);
-  const handleColorFolder = async () => {
+
+  const handleColorFolder = useCallback(async () => {
     try {
       await dispatch(fetchColorFolder(colorFolder));
-      await dispatch(fetchGetFolder())
-      await dispatch(fetchGetAllFiles())
+      await dispatch(fetchGetFolder());
+      await dispatch(fetchGetAllFiles());
     } catch (error) {
-      console.warn(error)
+      console.warn(error);
     }
-  }
+  }, [dispatch, colorFolder]);
+
   React.useEffect(() => {
     if (folders.length === 0) {
       dispatch(fetchGetFolder());
     }
     if (colorFolder.newColor) {
-      handleColorFolder()
+      handleColorFolder();
     }
-  }, [colorFolder.newColor]);
+  }, [colorFolder.newColor, folders.length, dispatch, handleColorFolder]);
 
   return (
     <div className={style.wrapper}>
