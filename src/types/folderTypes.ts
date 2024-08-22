@@ -27,6 +27,7 @@ export interface FoldersTypeState {
   colorFolder: ColorFolderType;
   moveSelectedModal: boolean;
   inpValue: string;
+  downloadFile: any;
 }
 export interface File {
   color: string;

@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import style from "./BtnShowMore.module.css";
 import forward from "../../../../../../assets/img/dots/Forward.png";
 import ChooseFolder from "./ChooseFolder/ChooseFolder";
 import { useAppDispatch } from "../../../../../../store/hooks";
 import {
   changeRenameModal,
-  fetchGetFoldersFiles,
+  fetchDownload,
   renameFile,
 } from "../../../../../../store/foldersSlice";
 import { useLocation } from "react-router-dom";
@@ -13,34 +13,50 @@ import { useLocation } from "react-router-dom";
 const BtnShowMore: React.FC<any> = React.memo(
   ({ name, image, deleteMove, props }) => {
     const dispatch = useAppDispatch();
-    const { pathname } = useLocation()
-   
+    const { pathname } = useLocation();
     
-    function renameFn(name: string) {
+    const [downloadError, setDownloadError] = useState<string | null>(null);
 
+    async function renameFn(name: string) {
       const refreshPath = () => {
-        const path = pathname
-          const parts = path.split("/"); // Разбиваем строку на массив по "/"
-          const index = parts.indexOf("userfolder"); // Находим индекс "userfolder"
-    
-          if (index !== -1) {
-            const result = parts.slice(index + 1).join("/"); // Забираем все элементы после "userfolder" и соединяем их обратно в строку
-            const encodedPath = result.replace(/\//g, "%2F");
-            return encodedPath;
-          }
-      } 
+        const path = pathname;
+        const parts = path.split("/");
+        const index = parts.indexOf("userfolder");
+
+        if (index !== -1) {
+          const result = parts.slice(index + 1).join("/");
+          const encodedPath = result.replace(/\//g, "%2F");
+          return encodedPath;
+        }
+      };
 
       const renameObjFn = {
         oldFileName: props.filename,
         filepath: props.filePath,
       };
+
       if (name === "Rename") {
         dispatch(changeRenameModal());
         dispatch(renameFile(renameObjFn));
-      } else if(name === "Download"){
-        dispatch(fetchGetFoldersFiles(`${refreshPath()}%2F${props.filename}`))
+      } else if (name === "Download") {
+        try {
+          const blob = await dispatch(fetchDownload(`${refreshPath()}%2F${props.filename}`)).unwrap();
+          
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = props.filename;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          window.URL.revokeObjectURL(url);
+        } catch (error) {
+          setDownloadError('Ошибка загрузки файла');
+          console.error('Ошибка загрузки файла:', error);
+        }
       }
     }
+
     return (
       <>
         <button
@@ -62,6 +78,7 @@ const BtnShowMore: React.FC<any> = React.memo(
             <ChooseFolder filePath={props.filePath} filename={props.filename} />
           )}
         </button>
+        {downloadError && <p>{downloadError}</p>}
       </>
     );
   }

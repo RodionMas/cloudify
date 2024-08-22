@@ -286,18 +286,23 @@ export const fetchSearchFiles = createAsyncThunk<
   }
 });
 
-export const fetchDownload = createAsyncThunk<
-  any,
-  string,
-  { rejectValue: string }
->("folder/fetchDownload", async (folderPath, { rejectWithValue }) => {
-  try {
-    const { data } = await axios.get(`/files/download?fileName=${folderPath}`);
-    return data;
-  } catch (error: any) {
-    return rejectWithValue(error.message);
+export const fetchDownload = createAsyncThunk<any, string, { rejectValue: string }>(
+  "folder/fetchDownload",
+  async (folderPath, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(`/files/download?fileName=${folderPath}`, {
+        headers: {
+          'Content-Type': 'application/octet-stream', // Убедитесь, что заголовок правильный
+        },
+        responseType: 'blob', // Указываем, что ожидаем ответ в виде Blob
+        withCredentials: true // Включаем передачу куков
+      });
+      return response.data; // Возвращаем Blob
+    } catch (error: any) {
+      return rejectWithValue(error.message);
+    }
   }
-});
+);
 
 const handlePending = (state: FoldersTypeState) => {
   state.loading = "pending";
@@ -365,6 +370,7 @@ const initialState: FoldersTypeState = {
   },
   moveSelectedModal: false,
   inpValue: "",
+  downloadFile: null,
 };
 
 //функции для сортировки
@@ -538,14 +544,14 @@ export const FoldersSlice = createSlice({
     builder.addCase(fetchDownload.pending, (state) => {
       state.err = null;
     });
-    builder.addCase(fetchDownload.fulfilled, (state) => {
+    builder.addCase(fetchDownload.fulfilled, (state, action) => {
       state.loading = "succeeded";
+      state.downloadFile = action.payload;
     });
     builder.addCase(fetchDownload.rejected, (state, action) => {
       state.loading = "failed";
       state.err = action.payload
     });
-    // fetchDownload
     addAsyncThunkCases(fetchDeleteFiles, (state) => {
       state.deletedFiles = [];
     });
