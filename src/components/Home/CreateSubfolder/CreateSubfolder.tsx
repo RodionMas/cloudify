@@ -1,9 +1,8 @@
 import React from "react";
 import style from "./CreateSubfolder.module.css";
-import { useAppDispatch, useAppSelector } from "../../../store/hooks";
+import { useAppDispatch } from "../../../store/hooks";
 import { createSubfolderReducer, fetchCreateSubfolder, fetchGetFoldersFiles, SubfolderModal } from "../../../store/foldersSlice";
 import { useLocation, useParams } from "react-router-dom";
-import { selectSubfolders } from "../../../selectors/selectors";
 import { FetchsubfoldersPackage } from "../../../store/subfolderSlice";
 
 const CreateSubfolder: React.FC = () => {
@@ -11,7 +10,6 @@ const CreateSubfolder: React.FC = () => {
   const { pathname } = useLocation();
   const [inputValue, setInputValue] = React.useState('');
   const { foldername } = useParams()
-  const { subfoldersURL } = useAppSelector(selectSubfolders)
   async function createSubFolderFn() {
     const refreshPath = () => {
       const path = pathname
