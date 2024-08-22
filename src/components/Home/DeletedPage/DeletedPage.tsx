@@ -14,12 +14,15 @@ import {
   fetchDeleteFiles,
   fetchGetAmountData,
   fetchGetDeletedFiles,
+  sortDel,
 } from "../../../store/foldersSlice";
 import { fetchDeleteSelected, fetchRecoverFiles } from "../../../store/deleteSlise";
+import { sortToolsDelFiles } from "../../../tools/SortTools";
 
 const DeletedPage = () => {
   const sortBy = ["Name", "File Size", "Last Changes"];
   const [sortArrow, setSortArrow] = React.useState(0);
+  const [rotateArrow, setRotateArrow] = React.useState(false);
   const { deletedFiles } = useAppSelector(selectFolders);
   const { searchDelFiles } = useAppSelector(selectFolders);
   const { files } = useAppSelector(selectDelete);
@@ -80,20 +83,29 @@ const DeletedPage = () => {
       <div className={style.allFiles}>
         <div className={style.sortBy}>
           {sortBy.map((sort, i) => (
-            <button
-              key={i}
-              onClick={() => setSortArrow(i)}
-              className={style.sortText}
-            >
-              {sort}{" "}
-              {sortArrow === i && (
-                <img
-                  className={style.sortDown}
-                  src={arrow}
-                  alt="Chevron Down"
-                />
-              )}{" "}
-            </button>
+           <button
+           key={i}
+           onClick={() => {
+            sortToolsDelFiles({
+              i,
+              setSortArrow,
+              setRotateArrow,
+              sortArrow,
+              rotateArrow,
+              dispatch,
+            })
+           }}
+           className={style.sortText}
+         >
+           {sort}{" "}
+           {sortArrow === i && (
+             <img
+               className={!rotateArrow ? style.sortDown : style.sortRotate}
+               src={arrow}
+               alt="Chevron Down"
+             />
+           )}{" "}
+         </button>
           ))}
         </div>
         {searchDelFiles.length !== 0 ?  

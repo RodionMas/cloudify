@@ -14,15 +14,17 @@ import { selectFolders } from "../../../selectors/selectors";
 import OneFile from "../OneFile/OneFile";
 import MovedAllFiles from "./MovedAllFiles/MovedAllFiles";
 import { useClickOutside } from "../../../tools/UseClickOutside";
-import { fetchDelCheckbox, moveDelSelectedFiles } from "../../../store/moveSlice";
+import { fetchDelCheckbox, moveSelectedFiles, resetMoveFiles } from "../../../store/moveSlice";
 import { store } from "../../../store/store";
+import { sortToolsFiles } from "../../../tools/SortTools";
 
 const AllFiles: React.FC = () => {
   const sortBy = ["Name", "Folder", "File Size", "Last Changes"];
   const [sortArrow, setSortArrow] = React.useState(0);
+  const [rotateArrow, setRotateArrow] = React.useState(false);
   const { allFiles } = useAppSelector(selectFolders);
   const { searchAllFiles } = useAppSelector(selectFolders);
-  const { moveSelectedModal } = useAppSelector(selectFolders)
+  const { moveSelectedModal } = useAppSelector(selectFolders);
   const dispatch = useAppDispatch();
   const hideRef = React.useRef<HTMLButtonElement | null>(null);
   const menuRef = React.useRef<HTMLDivElement | null>(null);
@@ -35,11 +37,11 @@ const AllFiles: React.FC = () => {
 
   async function handleDeleteChebox() {
     try {
-      dispatch(moveDelSelectedFiles())
-      const updateFilePath = store.getState().moveReducer.moveFiles
-      await dispatch(fetchDelCheckbox(updateFilePath));
+      dispatch(moveSelectedFiles("deleted"));
+      const updateFilePath = store.getState().moveReducer.moveFiles;
+      await dispatch(fetchDelCheckbox(updateFilePath)).then(() => dispatch(resetMoveFiles()));
       await dispatch(fetchGetAllFiles());
-      await dispatch(fetchGetDeletedFiles())
+      await dispatch(fetchGetDeletedFiles());
     } catch (error) {
       console.warn(error);
     }
@@ -55,7 +57,7 @@ const AllFiles: React.FC = () => {
       <div className={style.box}>
         <h1 className={style.title}>Files</h1>
         <div className={style.btnAllBox}>
-          <button onClick={() => handleDeleteChebox()} className={style.btnAll}>
+          <button onClick={handleDeleteChebox} className={style.btnAll}>
             Delete selected{" "}
             <img
               className={style.linkImg}
@@ -87,13 +89,22 @@ const AllFiles: React.FC = () => {
           {sortBy.map((sort, i) => (
             <button
               key={i}
-              onClick={() => setSortArrow(i)}
+              onClick={() => {
+                sortToolsFiles({
+                  i,
+                  setSortArrow,
+                  setRotateArrow,
+                  sortArrow,
+                  rotateArrow,
+                  dispatch,
+                });
+              }}
               className={style.sortText}
             >
               {sort}{" "}
               {sortArrow === i && (
                 <img
-                  className={style.sortDown}
+                  className={!rotateArrow ? style.sortDown : style.sortRotate}
                   src={arrow}
                   alt="Chevron Down"
                 />
@@ -101,24 +112,19 @@ const AllFiles: React.FC = () => {
             </button>
           ))}
         </div>
-        {searchAllFiles.length !== 0 ? 
-        searchAllFiles.map((item, i) => {
-          return (
+        {searchAllFiles.length !== 0
+          ? searchAllFiles.map((item, i) => (
             <OneFile
-              key={item.filename}
+              key={`${item.filename}-${i}`}
               {...item}
             />
-          );
-        })
-        :
-         allFiles.map((item, i) => {
-          return (
+          ))
+          : allFiles.map((item, i) => (
             <OneFile
-              key={item.filename}
+              key={`${item.filename}-${i}`}
               {...item}
             />
-          );
-        })}
+          ))}
       </div>
     </section>
   );

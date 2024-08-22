@@ -8,6 +8,7 @@ import {
   changeDragDrop,
   fetchGetAllFiles,
   fetchGetFoldersFiles,
+  sortSubfiles,
   SubfolderModal,
 } from "../../../store/foldersSlice";
 import { selectFolders, selectSubfolders } from "../../../selectors/selectors";
@@ -20,13 +21,14 @@ import {
   FetchsubfoldersPackage,
   setFoldersURL,
 } from "../../../store/subfolderSlice";
+import { sortToolsFiles, sortToolsSubfiles } from "../../../tools/SortTools";
 
 const FolderFiles: React.FC = () => {
   const { foldername } = useParams();
   const sortBy = ["Name", "Folder", "File Size", "Changes"];
   const { pathname } = useLocation();
-  const [sortDownArrow, setSortDownArrow] = React.useState(0);
-
+  const [sortArrow, setSortArrow] = React.useState(0);
+  const [rotateArrow, setRotateArrow] = React.useState(false);
   const { colorForFolder } = useAppSelector(selectFolders);
   const { subfoldersURL } = useAppSelector(selectSubfolders);
   const dispatch = useAppDispatch();
@@ -104,13 +106,22 @@ const FolderFiles: React.FC = () => {
           {sortBy.map((sort, i) => (
             <button
               key={i}
-              onClick={() => setSortDownArrow(i)}
+              onClick={() => {
+                sortToolsSubfiles({
+                  i,
+                  setSortArrow,
+                  setRotateArrow,
+                  sortArrow,
+                  rotateArrow,
+                  dispatch,
+                });
+              }}
               className={style.sortText}
             >
-              {sort}{" "}
-              {sortDownArrow === i && (
+            {sort}{" "}
+              {sortArrow === i && (
                 <img
-                  className={style.sortDownArrow}
+                  className={!rotateArrow ? style.sortDown : style.sortRotate}
                   src={arrow}
                   alt="Chevron Down"
                 />

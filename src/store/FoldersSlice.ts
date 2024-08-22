@@ -7,6 +7,7 @@ import {
   FetchDeletedFiles,
   FetchDelFiles,
   FetchFilesUserRes,
+  File,
   FoldersTypeState,
   FolderType,
   RecoverType,
@@ -285,6 +286,19 @@ export const fetchSearchFiles = createAsyncThunk<
   }
 });
 
+export const fetchDownload = createAsyncThunk<
+  any,
+  string,
+  { rejectValue: string }
+>("folder/fetchDownload", async (folderPath, { rejectWithValue }) => {
+  try {
+    const { data } = await axios.get(`/files/download?fileName=${folderPath}`);
+    return data;
+  } catch (error: any) {
+    return rejectWithValue(error.message);
+  }
+});
+
 const handlePending = (state: FoldersTypeState) => {
   state.loading = "pending";
 };
@@ -353,10 +367,66 @@ const initialState: FoldersTypeState = {
   inpValue: "",
 };
 
+//функции для сортировки
+const getSizeInBytes = (size: string): number => {
+  const units: { [key: string]: number } = { 'KB': 1024, 'MB': 1024 * 1024, 'GB': 1024 * 1024 * 1024 };
+  const [value, unit] = size.split(/(?<=\d),(?=\d)|(?<=\d)\s+/);
+  const numericValue = parseFloat(value.replace(',', '.'));
+  return numericValue * (units[unit.toUpperCase()] || 1);
+};
+const compareFiles = (a: File, b: File, ind: number, rotate: boolean): number => {
+  let comparison = 0;
+
+  if (ind === 0) { // сортировка по имени файла
+    comparison = a.filename.localeCompare(b.filename);
+  } else if (ind === 1) { // сортировка по названию папки
+    comparison = a.filePath.localeCompare(b.filePath);
+  } else if (ind === 2) { // сортировка по размеру файла
+    const sizeA = getSizeInBytes(a.size);
+    const sizeB = getSizeInBytes(b.size);
+    comparison = sizeA - sizeB;
+  } else if (ind === 3) { // сортировка по дате
+    const dateA = new Date(a.lastModified.day);
+    const dateB = new Date(b.lastModified.day);
+    comparison = dateA.getTime() - dateB.getTime();
+  }
+
+  // Если rotate истинно, сортируем в обычном порядке, иначе - в обратном
+  return rotate ? comparison : -comparison;
+};
+
 export const FoldersSlice = createSlice({
   name: "FoldersSlice",
   initialState,
   reducers: {
+    sortFiles: (state, action: PayloadAction<{
+      ind: number;
+      rotate: boolean;
+    }>) => {
+      const { ind, rotate } = action.payload;
+      // Сортируем массив allFiles
+      if (state.searchAllFiles.length === 0) {
+        state.allFiles.sort((a: any, b: any) => compareFiles(a, b, ind, rotate));
+      } else {
+        state.searchAllFiles.sort((a: any, b: any) => compareFiles(a, b, ind, rotate));
+      }
+    },
+    sortDel: (state, action: PayloadAction<{
+      ind: number;
+      rotate: boolean;
+    }>) => {
+      const { ind, rotate } = action.payload;
+      // Сортируем массив deletedFiles
+      state.deletedFiles.sort((a: any, b: any) => compareFiles(a, b, ind, rotate));
+    },
+    sortSubfiles: (state, action: PayloadAction<{
+      ind: number;
+      rotate: boolean;
+    }>) => {
+      const { ind, rotate } = action.payload;
+      // Сортируем массив filesForPackage
+      state.filesForPackage.sort((a: any, b: any) => compareFiles(a, b, ind, rotate));
+    },
     changeInpSearch: (state, action) => {
       state.inpValue = action.payload;
     },
@@ -445,7 +515,7 @@ export const FoldersSlice = createSlice({
       state.userMemory = action.payload.userMemory;
     });
 
-    addAsyncThunkCases(fetchDrop, () => {});
+    addAsyncThunkCases(fetchDrop, () => { });
 
     addAsyncThunkCases(fetchGetAllFiles, (state, action) => {
       state.allFiles = [...action.payload];
@@ -458,13 +528,24 @@ export const FoldersSlice = createSlice({
       state.err = null;
     });
     builder.addCase(fetchGetDeletedFiles.fulfilled, (state, action: any) => {
-        state.loading = "succeeded";
-        state.deletedFiles = [...action.payload];
+      state.loading = "succeeded";
+      state.deletedFiles = [...action.payload];
     });
     builder.addCase(fetchGetDeletedFiles.rejected, (state) => {
       state.loading = "failed";
     });
 
+    builder.addCase(fetchDownload.pending, (state) => {
+      state.err = null;
+    });
+    builder.addCase(fetchDownload.fulfilled, (state) => {
+      state.loading = "succeeded";
+    });
+    builder.addCase(fetchDownload.rejected, (state, action) => {
+      state.loading = "failed";
+      state.err = action.payload
+    });
+    // fetchDownload
     addAsyncThunkCases(fetchDeleteFiles, (state) => {
       state.deletedFiles = [];
     });
@@ -476,8 +557,8 @@ export const FoldersSlice = createSlice({
       state.err = null;
     });
     builder.addCase(fetchSearchDel.fulfilled, (state, action: any) => {
-        state.loading = "succeeded";
-        state.searchDelFiles = [...action.payload];
+      state.loading = "succeeded";
+      state.searchDelFiles = [...action.payload];
     });
     builder.addCase(fetchSearchDel.rejected, (state) => {
       state.loading = "failed";
@@ -489,15 +570,15 @@ export const FoldersSlice = createSlice({
       state.err = null;
     });
     builder.addCase(fetchSearchFiles.fulfilled, (state, action: any) => {
-        state.loading = "succeeded";
-        state.searchAllFiles = [...action.payload];
+      state.loading = "succeeded";
+      state.searchAllFiles = [...action.payload];
     });
     builder.addCase(fetchSearchFiles.rejected, (state) => {
       state.loading = "failed";
     });
-    addAsyncThunkCases(fetchMove, () => {});
+    addAsyncThunkCases(fetchMove, () => { });
 
-    addAsyncThunkCases(fetchCreateFolder, () => {});
+    addAsyncThunkCases(fetchCreateFolder, () => { });
 
     addAsyncThunkCases(fetchGetFolder, (state, action) => {
       state.folders = [...action.payload];
@@ -510,28 +591,28 @@ export const FoldersSlice = createSlice({
       state.err = null;
     });
     builder.addCase(fetchGetMoverShowMore.fulfilled, (state, action: any) => {
-        state.loading = "succeeded";
-        state.foldersShowMore = [...action.payload];
+      state.loading = "succeeded";
+      state.foldersShowMore = [...action.payload];
     });
     builder.addCase(fetchGetMoverShowMore.rejected, (state) => {
       state.loading = "failed";
     });
-    addAsyncThunkCases(fetchRecover, () => {});
+    addAsyncThunkCases(fetchRecover, () => { });
 
-    addAsyncThunkCases(fetchRenameFile, () => {});
+    addAsyncThunkCases(fetchRenameFile, () => { });
 
-    addAsyncThunkCases(fetchCreateSubfolder, () => {});
+    addAsyncThunkCases(fetchCreateSubfolder, () => { });
 
     addAsyncThunkCases(fetchGetFoldersFiles, (state, action) => {
       state.foldersForPagckage = [...action.payload.folders];
       state.filesForPackage = [...action.payload.files];
     });
 
-    addAsyncThunkCases(fetchRenameFodler, () => {});
+    addAsyncThunkCases(fetchRenameFodler, () => { });
 
-    addAsyncThunkCases(fetchColorFolder, () => {});
+    addAsyncThunkCases(fetchColorFolder, () => { });
 
-    addAsyncThunkCases(fetchDeleteFolder, () => {});
+    addAsyncThunkCases(fetchDeleteFolder, () => { });
   },
 });
 // fetchDeleteFolder
@@ -553,6 +634,9 @@ export const {
   changeColorFolderName,
   changeColorFolder,
   changeMoveSelectedModal,
+  sortFiles,
+  sortDel,
+  sortSubfiles,
 } = FoldersSlice.actions;
 
 export default FoldersSlice.reducer;

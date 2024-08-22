@@ -103,6 +103,12 @@ margin-left: 15px;
   height: 16px;
   margin-left: 15px;
 }
+.sortRotate {
+  width: 16px;
+  height: 16px;
+  margin-left: 15px;
+  rotate: 180deg;
+}
 .files {
     display: flex;
     justify-content: space-between;

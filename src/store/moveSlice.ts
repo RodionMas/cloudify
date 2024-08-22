@@ -85,12 +85,6 @@ export const moveState = createSlice({
         newFilePath: action.payload,
       }));
     },
-    moveDelSelectedFiles: (state) => {
-      state.moveFiles = state.moveFiles.map((file: any) => ({
-        ...file,
-        newFilePath: "deleted",
-      }));
-    },
   },
   extraReducers(builder) {
     const addAsyncThunkCases = (
@@ -116,7 +110,6 @@ export const {
   addFile,
   removeFile,
   moveSelectedFiles,
-  moveDelSelectedFiles,
   resetMoveFiles,
 } = moveState.actions;
 

@@ -19,6 +19,8 @@ const BtnShowMore: React.FC<any> = React.memo(
       if (name === "Rename") {
         dispatch(changeRenameModal());
         dispatch(renameFile(renameObjFn));
+      } else if(name === "Download"){
+        console.log(123)
       }
     }
     return (

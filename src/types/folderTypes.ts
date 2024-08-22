@@ -28,6 +28,17 @@ export interface FoldersTypeState {
   moveSelectedModal: boolean;
   inpValue: string;
 }
+export interface File {
+  color: string;
+  customFolderName: string;
+  filePath: string;
+  filename: string;
+  lastModified: {
+      day: string;  // формат "YYYY-MM-DD"
+      time: string; // формат "HH:MM:SS.sss"
+  };
+  size: string;  // формат "240,66KB", "1,5MB" и т.д.
+}
 
 export interface FilesForPackageType {
   filename: string;

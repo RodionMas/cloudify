@@ -90,12 +90,20 @@
 .sortText:nth-child(4) {
   margin-left: 100px;
 }
-.sortDownArrow {
+.sortDown {
   position: absolute;
   width: 16px;
   height: 16px;
   margin-left: 15px;
   left: 93px;
+}
+.sortRotate{
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  margin-left: 15px;
+  left: 93px;
+  rotate: 180deg;
 }
 .files {
   display: flex;

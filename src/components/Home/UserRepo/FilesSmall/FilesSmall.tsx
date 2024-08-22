@@ -4,17 +4,19 @@ import arrow from "../../../../assets/img/Chevron Down.png";
 import { useSelector } from "react-redux";
 import { selectFolders } from "../../../../selectors/selectors";
 import { useAppDispatch } from "../../../../store/hooks";
-import { fetchGetAllFiles } from "../../../../store/foldersSlice";
+import { fetchGetAllFiles, sortFiles } from "../../../../store/foldersSlice";
 import OneFile from "../../OneFile/OneFile";
+import { sortToolsFiles } from "../../../../tools/SortTools";
 
 const FilesSmall: React.FC = () => {
   const sortBy = ["Name", "Folder", "File Size", "Last Changes"];
   const [sortArrow, setSortArrow] = React.useState(0);
-  const appDispatch = useAppDispatch()
+  const [rotateArrow, setRotateArrow] = React.useState(false);
+  const dispatch = useAppDispatch()
   const { allFiles } = useSelector(selectFolders);
   const { searchAllFiles } = useSelector(selectFolders);
   React.useEffect(() => {
-    appDispatch(fetchGetAllFiles())
+    dispatch(fetchGetAllFiles())
   }, [])
   return (
     <div className={style.wrapper}>
@@ -24,20 +26,29 @@ const FilesSmall: React.FC = () => {
       <div className={style.fileContainer}>
         <div className={style.sortBy}>
           {sortBy.map((sort, i) => (
-            <button
-              key={i}
-              onClick={() => setSortArrow(i)}
-              className={style.sortText}
-            >
-              {sort}{" "}
-              {sortArrow === i && (
-                <img
-                  className={style.sortDown}
-                  src={arrow}
-                  alt="Chevron Down"
-                />
-              )}{" "}
-            </button>
+             <button
+             key={i}
+             onClick={() => {
+              sortToolsFiles({
+                i,
+                setSortArrow,
+                setRotateArrow,
+                sortArrow,
+                rotateArrow,
+                dispatch,
+              });
+            }}
+             className={style.sortText}
+           >
+             {sort}{" "}
+             {sortArrow === i && (
+               <img
+                 className={!rotateArrow ? style.sortDown : style.sortRotate}
+                 src={arrow}
+                 alt="Chevron Down"
+               />
+             )}{" "}
+           </button>
           ))}
         </div>
         {searchAllFiles.length !== 0 ? 

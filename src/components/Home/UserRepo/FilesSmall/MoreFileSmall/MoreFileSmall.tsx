@@ -52,15 +52,15 @@ const MoreFileSmall = React.memo(forwardRef<HTMLDivElement, any>((props, ref) =>
   async function deleteMove(item: string) {
     const refreshPath = () => {
       const path = pathname
-        const parts = path.split("/"); // Разбиваем строку на массив по "/"
-        const index = parts.indexOf("userfolder"); // Находим индекс "userfolder"
-  
-        if (index !== -1) {
-          const result = parts.slice(index + 1).join("/"); // Забираем все элементы после "userfolder" и соединяем их обратно в строку
-          const encodedPath = result.replace(/\//g, "%2F");
-          return encodedPath;
-        }
-    } 
+      const parts = path.split("/"); // Разбиваем строку на массив по "/"
+      const index = parts.indexOf("userfolder"); // Находим индекс "userfolder"
+
+      if (index !== -1) {
+        const result = parts.slice(index + 1).join("/"); // Забираем все элементы после "userfolder" и соединяем их обратно в строку
+        const encodedPath = result.replace(/\//g, "%2F");
+        return encodedPath;
+      }
+    }
     if (item === "Delete") {
       setMoveFiles((moveFiles.files = [...moveFiles.files, props.filename]));
       try {
@@ -69,9 +69,7 @@ const MoreFileSmall = React.memo(forwardRef<HTMLDivElement, any>((props, ref) =>
           await dispatch(fetchSearchFiles(inpValue))
           dispatch(changeInpSearch(''));
         }
-          await dispatch(fetchGetAllFiles());
-        
-        
+        await dispatch(fetchGetAllFiles());
         await dispatch(fetchGetFolder());
         await dispatch(FetchsubfoldersPackage(refreshPath()));
         await dispatch(fetchGetFoldersFiles(foldername));
@@ -81,7 +79,7 @@ const MoreFileSmall = React.memo(forwardRef<HTMLDivElement, any>((props, ref) =>
       }
     }
   }
-  const {pathname} = useLocation();
+  const { pathname } = useLocation();
   const isDeleted = pathname === "/home/deleted";
   const handleDeleteFile = async (delFile: FetchFilesUserRes[]) => {
     try {
@@ -104,39 +102,39 @@ const MoreFileSmall = React.memo(forwardRef<HTMLDivElement, any>((props, ref) =>
     <div ref={ref} className={style.wrapper} style={props.style}>
       {isDeleted
         ? showMoreDeleted.map((item) => (
-            <button
-              onClick={() => {
-                if (item.name === "Delete") {
-                  const delFile = deletedFiles.filter(
-                    (deleteItem) => deleteItem.filename === props.filename
-                  );
-                  handleDeleteFile(delFile);
-                } else if (item.name === "Recover") {
-                  const recover = [
-                    {
-                      filePath: props.filePath,
-                      filename: props.filename ? props.filename : "",
-                    },
-                  ];
-                  handleRecover(recover);
-                }
-                props.hideContentFn();
-              }}
-              key={item.name}
-              className={style.moreBox}
-            >
-              <img src={item.image} alt={item.name} />
-              <span className={style.name}>{item.name}</span>
-            </button>
-          ))
+          <button
+            onClick={() => {
+              if (item.name === "Delete") {
+                const delFile = deletedFiles.filter(
+                  (deleteItem) => deleteItem.filename === props.filename
+                );
+                handleDeleteFile(delFile);
+              } else if (item.name === "Recover") {
+                const recover = [
+                  {
+                    filePath: props.filePath,
+                    filename: props.filename ? props.filename : "",
+                  },
+                ];
+                handleRecover(recover);
+              }
+              props.hideContentFn();
+            }}
+            key={item.name}
+            className={style.moreBox}
+          >
+            <img src={item.image} alt={item.name} />
+            <span className={style.name}>{item.name}</span>
+          </button>
+        ))
         : showMoreArr.map((item) => (
-            <BtnShowMore
-              key={item.name}
-              props={props}
-              deleteMove={() => deleteMove(item.name)}
-              {...item}
-            />
-          ))}
+          <BtnShowMore
+            key={item.name}
+            props={props}
+            deleteMove={() => deleteMove(item.name)}
+            {...item}
+          />
+        ))}
     </div>
   );
 
