@@ -8,7 +8,6 @@ import {
   changeDragDrop,
   fetchGetAllFiles,
   fetchGetFoldersFiles,
-  sortSubfiles,
   SubfolderModal,
 } from "../../../store/foldersSlice";
 import { selectFolders, selectSubfolders } from "../../../selectors/selectors";
@@ -21,7 +20,7 @@ import {
   FetchsubfoldersPackage,
   setFoldersURL,
 } from "../../../store/subfolderSlice";
-import { sortToolsFiles, sortToolsSubfiles } from "../../../tools/SortTools";
+import { sortToolsSubfiles } from "../../../tools/SortTools";
 
 const FolderFiles: React.FC = () => {
   const { foldername } = useParams();

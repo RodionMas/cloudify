@@ -59,8 +59,12 @@ const Folders: React.FC = () => {
             ))}
           </Swiper>
         )}
+        {folders.length > 2 && 
+        <>
         <div className={style.swiperButtonPrev}></div>
         <div className={style.swiperButtonNext}></div>
+        </>
+        }
       </div>
     </div>
   );
