@@ -13,6 +13,10 @@ import green from "../../../../assets/img/foldersColor/green.png";
 import red from "../../../../assets/img/foldersColor/red.png";
 import violet from "../../../../assets/img/foldersColor/violet.png";
 import yellow from "../../../../assets/img/foldersColor/yellow.png";
+import darkblue from "../../../../assets/img/foldersColor/darkblue.png";
+import orange from "../../../../assets/img/foldersColor/orange.png";
+import verdigris from "../../../../assets/img/foldersColor/verdigris.png";
+import pink from "../../../../assets/img/foldersColor/pink.png";
 import style from "./MovedAllFiles.module.css";
 import { fetchAllMove, moveSelectedFiles, resetMoveFiles } from "../../../../store/moveSlice";
 import { store } from "../../../../store/store";
@@ -50,11 +54,11 @@ const MovedAllFiles: React.FC = () => {
               className={style.btnFolder}
               key={i}
             >
-              {folder.color === "#ffb800" ? (
+               {folder.color === "#ffb800" ? (
                 <img className={style.packageImg} src={yellow} alt="package" />
               ) : folder.color === "#D23434" ? (
                 <img className={style.packageImg} src={red} alt="package" />
-              ) : folder.color === "#D23434" ? (
+              ) : folder.color === "#962EE8" ? (
                 <img className={style.packageImg} src={violet} alt="package" />
               ) : folder.color === "#0094FF" ? (
                 <img className={style.packageImg} src={blue} alt="package" />
@@ -62,6 +66,22 @@ const MovedAllFiles: React.FC = () => {
                 <img className={style.packageImg} src={green} alt="package" />
               ) : folder.color === "#A76E2B" ? (
                 <img className={style.packageImg} src={brown} alt="package" />
+              ) : folder.color === "#1F4C6D" ? (
+                <img
+                  className={style.packageImg}
+                  src={darkblue}
+                  alt="package"
+                />
+              ) : folder.color === "#FF7B31" ? (
+                <img className={style.packageImg} src={orange} alt="package" />
+              ) : folder.color === "#56ABB0" ? (
+                <img
+                  className={style.packageImg}
+                  src={verdigris}
+                  alt="package"
+                />
+              ) : folder.color === "#E241B5" ? (
+                <img className={style.packageImg} src={pink} alt="package" />
               ) : (
                 <img className={style.packageImg} src={black} alt="package" />
               )}

@@ -21,7 +21,7 @@ const ProgressBar: React.FC = () => {
         ></div>
       </div>
       <div className={style.progressLabel}>
-        {err ? `0 Mb of 500` : `${totalSize}Mb of ${userMemory}`}
+        {err ? `0 Mb of 500` : `${totalSize}Mb of ${userMemory}Mb`}
       </div>
     </div>
   );

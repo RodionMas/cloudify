@@ -6,6 +6,7 @@ import {
   fetchGetAllFiles,
   fetchGetFoldersFiles,
   fetchRenameFile,
+  fetchSearchFiles,
 } from "../../../store/foldersSlice";
 import { selectFolders } from "../../../selectors/selectors";
 import { useLocation, useParams } from "react-router-dom";
@@ -19,6 +20,7 @@ const Rename: React.FC = () => {
   const { pathname } = useLocation()
   const { renameObj } = useAppSelector(selectFolders);
   const [renameInp, setRenameInp] = React.useState<newFileNameType>(renameObj);
+  const { inpValue } = useAppSelector(selectFolders);
   const { foldername } = useParams();
   const handleRename = async () => {
     const refreshPath = () => {
@@ -33,10 +35,12 @@ const Rename: React.FC = () => {
         }
     } 
     try {
+      
       await dispatch(fetchRenameFile(renameInp));
       await dispatch(fetchGetAllFiles());
       await dispatch(fetchGetFoldersFiles(foldername));
       await dispatch(FetchsubfoldersPackage(refreshPath()))
+      await dispatch(fetchSearchFiles(inpValue))
       dispatch(changeRenameModal());
     } catch (error) {
       console.warn(error);

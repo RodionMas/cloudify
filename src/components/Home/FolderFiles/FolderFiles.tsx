@@ -30,7 +30,6 @@ const FolderFiles: React.FC = () => {
   const [sortArrow, setSortArrow] = React.useState(0);
   const [rotateArrow, setRotateArrow] = React.useState(false);
   const { colorForFolder } = useAppSelector(selectFolders);
-  const { colorForSubfolder } = useAppSelector(selectSubfolders)
   const { subfoldersURL } = useAppSelector(selectSubfolders);
   const dispatch = useAppDispatch();
 
@@ -110,7 +109,7 @@ const FolderFiles: React.FC = () => {
           </div>
           <div className={style.allFiles}>
             <div
-              style={{ backgroundColor: colorForFolder ? colorForFolder : colorForSubfolder}}
+              style={{ backgroundColor: colorForFolder }}
               className={style.color}
             ></div>
             <div className={style.sortBy}>
@@ -142,7 +141,10 @@ const FolderFiles: React.FC = () => {
                 </button>
               ))}
             </div>
-            {count === 3 ? <FolderFilesArr /> : <Subfolders />}
+            <div className={style.allBlock}>
+             {count === 3 ? <FolderFilesArr /> : <Subfolders />}
+            </div>
+            
           </div>
         </>
       )}

@@ -280,6 +280,7 @@ export const fetchSearchFiles = createAsyncThunk<
 >("folder/fetchSearchFiles", async (folderName, { rejectWithValue }) => {
   try {
     const { data } = await axios.get(`/files/search?fileName=${folderName}`);
+    console.log(folderName)
     return data;
   } catch (error: any) {
     return rejectWithValue(error.message);
