@@ -9,7 +9,6 @@ import { useNavigate } from "react-router-dom";
 const Register: React.FC = () => {
   const appDispatch = useAppDispatch();
   const errReducer = useAppSelector(selectAuth).err;
-  // let {userRegister} = useAppSelector(selectAuth);
   const navigate = useNavigate();
   type Inputs = {
     username: string | undefined;
@@ -28,7 +27,11 @@ const Register: React.FC = () => {
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     appDispatch(fetchRegister(data))
     appDispatch(changeRegUser(data))
-    return navigate('/login')
+    if(!errReducer){
+      navigate('/login')
+    } else {
+      return
+    }
   };
   return (
     <div className={style.wrapper}>
