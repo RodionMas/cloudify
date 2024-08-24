@@ -24,7 +24,7 @@ const MovedAllFiles: React.FC = () => {
 
   React.useEffect(() => {
     dispatch(fetchGetMoverShowMore());
-  }, []);
+  }, [dispatch]);
   const handleMove = async (folderName: string) => {
     try {
       dispatch(moveSelectedFiles(folderName));

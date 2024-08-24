@@ -4,7 +4,7 @@ import arrow from "../../../../assets/img/Chevron Down.png";
 import { useSelector } from "react-redux";
 import { selectFolders } from "../../../../selectors/selectors";
 import { useAppDispatch } from "../../../../store/hooks";
-import { fetchGetAllFiles, sortFiles } from "../../../../store/foldersSlice";
+import { fetchGetAllFiles } from "../../../../store/foldersSlice";
 import OneFile from "../../OneFile/OneFile";
 import { sortToolsFiles } from "../../../../tools/SortTools";
 
@@ -17,7 +17,7 @@ const FilesSmall: React.FC = () => {
   const { searchAllFiles } = useSelector(selectFolders);
   React.useEffect(() => {
     dispatch(fetchGetAllFiles())
-  }, [])
+  }, [dispatch])
   return (
     <div className={style.wrapper}>
       <div className={style.box}>

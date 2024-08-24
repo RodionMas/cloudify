@@ -36,7 +36,7 @@ const FileActions: React.FC = () => {
       setActiveLink(2)
     }
     dispatch(fetchGetDeletedFiles())
-  }, [pathname, deletedFiles.length])
+  }, [pathname, deletedFiles.length, dispatch])
   return (
     <div className={style.wrapper}>
       {categoryArr.map((category, i) => {

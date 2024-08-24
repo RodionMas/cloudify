@@ -8,7 +8,7 @@ import {
   fetchGetAmountData,
   
 } from "../../../store/foldersSlice";
-import { selectAuth, selectFolders, selectSubfolders } from "../../../selectors/selectors";
+import { selectAuth, selectFolders } from "../../../selectors/selectors";
 import filePng from '../../../assets/img/File.png'
 import { useLocation } from "react-router-dom";
 import { FetchsubfoldersPackage, setFoldersURL } from "../../../store/subfolderSlice";
@@ -20,7 +20,6 @@ const DragAndDrop: React.FC = React.memo(() => {
   const [drag, setDrag] = React.useState(false);
   const [formData, setFormData] = React.useState<FormData & {folderPath?: string | undefined} | null>(null);
   const { totalSize } = useAppSelector(selectFolders);
-  // const { subfoldersURL } = useAppSelector(selectSubfolders)
   const [onVisibleFiles, setOnVisibleFiles] = React.useState<string[]>([]);
   function dragStartHandler(e: React.DragEvent<HTMLDivElement>): void {
     e.preventDefault();

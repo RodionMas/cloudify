@@ -1,9 +1,7 @@
-// await dispatch(fetchColorFolder(colorFolder))
-import React, { useEffect } from "react";
+import React from "react";
 import style from '../DotsBlok.module.css';
-import { useAppDispatch, useAppSelector } from "../../../../../../../store/hooks";
-import { changeColorFolder, changeColorFolderName, fetchColorFolder } from "../../../../../../../store/foldersSlice";
-import { selectFolders } from "../../../../../../../selectors/selectors";
+import { useAppDispatch } from "../../../../../../../store/hooks";
+import { changeColorFolder, changeColorFolderName,  } from "../../../../../../../store/foldersSlice";
 
 interface ColorType {
   color: string;
