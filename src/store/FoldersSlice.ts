@@ -362,9 +362,20 @@ const getSizeInBytes = (size: string): number => {
     MB: 1024 * 1024,
     GB: 1024 * 1024 * 1024,
   };
-  const [value, unit] = size.split(/(?<=\d),(?=\d)|(?<=\d)\s+/);
+
+  // Попробуем разбить строку на значение и единицу измерения
+  const [value, unit] = size.trim().split(/\s+/);
+
+  // Преобразуем значение в число
   const numericValue = parseFloat(value.replace(",", "."));
-  return numericValue * (units[unit.toUpperCase()] || 1);
+
+  // Если единица измерения определена, преобразуем в верхний регистр и находим соответствующий множитель
+  if (unit && units[unit.toUpperCase()]) {
+    return numericValue * units[unit.toUpperCase()];
+  }
+
+  // Если не удалось определить единицу измерения, возвращаем числовое значение
+  return numericValue;
 };
 const compareFiles = (
   a: File,
