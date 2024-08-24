@@ -59,7 +59,7 @@ const Folders: React.FC = () => {
             ))}
           </Swiper>
         )}
-        {folders.length > 2 && 
+        {folders.length > 3 && 
         <>
         <div className={style.swiperButtonPrev}></div>
         <div className={style.swiperButtonNext}></div>
