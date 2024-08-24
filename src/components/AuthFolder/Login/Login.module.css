@@ -42,5 +42,10 @@
       background-repeat: no-repeat;
       background-position: 277px center; 
   }
-  
-  
+  .errorInpValue{
+    color: red;
+  }
+  .nonUser{
+    margin-top: 5px;
+    text-align: center;
+  }

@@ -6,11 +6,21 @@ import OneFolder from "../../OneFolder/OneFolder";
 
 const FolderFilesArr: React.FC = () => {
   const { filesForPackage, foldersForPagckage } = useAppSelector(selectFolders);
+  const { searchAllFiles } = useAppSelector(selectFolders);
+  const { inpValue } = useAppSelector(selectFolders);
   return (
     <>
-      {filesForPackage.map((item, i) => (
-        <OneFile key={i} {...item} />
-      ))}
+    {searchAllFiles.length !== 0 && inpValue
+          ? searchAllFiles.map((item, i) => (
+            <OneFile
+              key={`${item.filename}-${i}`}
+              {...item}
+            />
+          ))
+          : filesForPackage.map((item, i) => (
+            <OneFile key={i} {...item} />
+          ))}
+      {}
       {foldersForPagckage.map((folder, i) => (
         <OneFolder key={i} folder={folder} />
       ))}

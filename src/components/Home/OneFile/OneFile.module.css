@@ -81,6 +81,10 @@
   text-overflow: ellipsis; /* Добавляем троеточие в конце */
 }
 .folderNameText {
+  max-width: 60px;       /* Максимальная ширина текста */
+  white-space: nowrap;   /* Запрещает перенос текста на новую строку */
+  overflow: hidden;      /* Скрывает текст, который не помещается */
+  text-overflow: ellipsis; /* Добавляет троеточие в конце обрезанного текста */
   font-size: 14px;
   color: #fff;
   font-weight: 400;

@@ -63,3 +63,7 @@
 .cancel {
   background: rgb(217, 217, 217);
 }
+.messageCheck{
+  position: absolute;
+  color: red;
+}

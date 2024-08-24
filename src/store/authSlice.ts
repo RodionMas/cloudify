@@ -96,8 +96,9 @@ export const authSlice = createSlice({
         state.username = action.payload.message
       }
     });
-    builder.addCase(fetchLogin.rejected, (state) => {
+    builder.addCase(fetchLogin.rejected, (state, action) => {
       state.loading = "failed";
+      state.err = action.payload;
     });
     builder.addCase(fetchRegister.pending, (state) => {
       state.loading = "pending";

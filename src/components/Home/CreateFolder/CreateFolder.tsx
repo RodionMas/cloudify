@@ -1,8 +1,7 @@
 import React from "react";
 import style from "./CreateFolder.module.css";
-import { useSelector } from "react-redux";
 import { selectFolders } from "../../../selectors/selectors";
-import { useAppDispatch } from "../../../store/hooks";
+import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import {
   changeFolderModal,
   createModalColor,
@@ -13,8 +12,10 @@ import {
 
 const CreateFolder: React.FC = () => {
   const [selectedColor, setSelectedColor] = React.useState(0);
-  const { createFolder } = useSelector(selectFolders);
-  const appDispatch = useAppDispatch();
+  const [checkMessage, setCheckMessage] = React.useState(false);
+  const { folders } = useAppSelector(selectFolders);
+  const { createFolder } = useAppSelector(selectFolders);
+  const dispatch = useAppDispatch();
   const colorArr = [
     "#FFB800", //yellow
     "#FF7B31",
@@ -29,12 +30,18 @@ const CreateFolder: React.FC = () => {
   ];
   const handleCreateFolder = async () => {
     try {
-      await appDispatch(fetchCreateFolder(createFolder));
-      await appDispatch(fetchGetFolder());
+      const checkFolders = folders.every(
+        (folder) => folder.name !== createFolder.name
+      );
+      if (checkFolders) {
+      await dispatch(fetchCreateFolder(createFolder));
+      await dispatch(fetchGetFolder());
+      dispatch(changeFolderModal());
+      } else {
+        setCheckMessage((prev) => (prev = true));
+      }
     } catch (error) {
       console.error('Error creating folder:', error);
-    } finally {
-      appDispatch(changeFolderModal());
     }
   };
   return (
@@ -42,17 +49,22 @@ const CreateFolder: React.FC = () => {
       <h1 className={style.title}>Create a folder</h1>
       <input
         onChange={(e) => {
-          appDispatch(createModalName(e.target.value));
+          dispatch(createModalName(e.target.value));
         }}
         className={style.inp}
         type="text"
         placeholder="Enter a folder name and choose a color"
       />
+      {checkMessage && (
+        <span className={style.messageCheck}>
+          A folder with the same name already exists
+        </span>
+      )}
       <div className={style.colorBlock}>
         {colorArr.map((color, i) => (
           <button
             onClick={() => {
-              appDispatch(createModalColor(color))
+              dispatch(createModalColor(color))
               setSelectedColor(i)
             }}
             key={i}
@@ -69,7 +81,7 @@ const CreateFolder: React.FC = () => {
           Create
         </button>
         <button
-          onClick={() => appDispatch(changeFolderModal())}
+          onClick={() => dispatch(changeFolderModal())}
           className={style.cancel}
         >
           Cancel

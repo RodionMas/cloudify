@@ -357,23 +357,36 @@ const initialState: FoldersTypeState = {
 
 //функции для сортировки
 const getSizeInBytes = (size: string): number => {
-  const units: { [key: string]: number } = { 'KB': 1024, 'MB': 1024 * 1024, 'GB': 1024 * 1024 * 1024 };
+  const units: { [key: string]: number } = {
+    KB: 1024,
+    MB: 1024 * 1024,
+    GB: 1024 * 1024 * 1024,
+  };
   const [value, unit] = size.split(/(?<=\d),(?=\d)|(?<=\d)\s+/);
-  const numericValue = parseFloat(value.replace(',', '.'));
+  const numericValue = parseFloat(value.replace(",", "."));
   return numericValue * (units[unit.toUpperCase()] || 1);
 };
-const compareFiles = (a: File, b: File, ind: number, rotate: boolean): number => {
+const compareFiles = (
+  a: File,
+  b: File,
+  ind: number,
+  rotate: boolean
+): number => {
   let comparison = 0;
 
-  if (ind === 0) { // сортировка по имени файла
+  if (ind === 0) {
+    // сортировка по имени файла
     comparison = a.filename.localeCompare(b.filename);
-  } else if (ind === 1) { // сортировка по названию папки
+  } else if (ind === 1) {
+    // сортировка по названию папки
     comparison = a.filePath.localeCompare(b.filePath);
-  } else if (ind === 2) { // сортировка по размеру файла
+  } else if (ind === 2) {
+    // сортировка по размеру файла
     const sizeA = getSizeInBytes(a.size);
     const sizeB = getSizeInBytes(b.size);
     comparison = sizeA - sizeB;
-  } else if (ind === 3) { // сортировка по дате
+  } else if (ind === 3) {
+    // сортировка по дате
     const dateA = new Date(a.lastModified.day);
     const dateB = new Date(b.lastModified.day);
     comparison = dateA.getTime() - dateB.getTime();
@@ -387,33 +400,50 @@ export const FoldersSlice = createSlice({
   name: "FoldersSlice",
   initialState,
   reducers: {
-    sortFiles: (state, action: PayloadAction<{
-      ind: number;
-      rotate: boolean;
-    }>) => {
+    sortFiles: (
+      state,
+      action: PayloadAction<{
+        ind: number;
+        rotate: boolean;
+      }>
+    ) => {
       const { ind, rotate } = action.payload;
       // Сортируем массив allFiles
       if (state.searchAllFiles.length === 0) {
-        state.allFiles.sort((a: any, b: any) => compareFiles(a, b, ind, rotate));
+        state.allFiles.sort((a: any, b: any) =>
+          compareFiles(a, b, ind, rotate)
+        );
       } else {
-        state.searchAllFiles.sort((a: any, b: any) => compareFiles(a, b, ind, rotate));
+        state.searchAllFiles.sort((a: any, b: any) =>
+          compareFiles(a, b, ind, rotate)
+        );
       }
     },
-    sortDel: (state, action: PayloadAction<{
-      ind: number;
-      rotate: boolean;
-    }>) => {
+    sortDel: (
+      state,
+      action: PayloadAction<{
+        ind: number;
+        rotate: boolean;
+      }>
+    ) => {
       const { ind, rotate } = action.payload;
       // Сортируем массив deletedFiles
-      state.deletedFiles.sort((a: any, b: any) => compareFiles(a, b, ind, rotate));
+      state.deletedFiles.sort((a: any, b: any) =>
+        compareFiles(a, b, ind, rotate)
+      );
     },
-    sortSubfiles: (state, action: PayloadAction<{
-      ind: number;
-      rotate: boolean;
-    }>) => {
+    sortSubfiles: (
+      state,
+      action: PayloadAction<{
+        ind: number;
+        rotate: boolean;
+      }>
+    ) => {
       const { ind, rotate } = action.payload;
       // Сортируем массив filesForPackage
-      state.filesForPackage.sort((a: any, b: any) => compareFiles(a, b, ind, rotate));
+      state.filesForPackage.sort((a: any, b: any) =>
+        compareFiles(a, b, ind, rotate)
+      );
     },
     changeInpSearch: (state, action) => {
       state.inpValue = action.payload;
@@ -503,7 +533,7 @@ export const FoldersSlice = createSlice({
       state.userMemory = action.payload.userMemory;
     });
 
-    addAsyncThunkCases(fetchDrop, () => { });
+    addAsyncThunkCases(fetchDrop, () => {});
 
     addAsyncThunkCases(fetchGetAllFiles, (state, action) => {
       state.allFiles = [...action.payload];
@@ -545,9 +575,9 @@ export const FoldersSlice = createSlice({
     builder.addCase(fetchSearchFiles.rejected, (state) => {
       state.loading = "failed";
     });
-    addAsyncThunkCases(fetchMove, () => { });
+    addAsyncThunkCases(fetchMove, () => {});
 
-    addAsyncThunkCases(fetchCreateFolder, () => { });
+    addAsyncThunkCases(fetchCreateFolder, () => {});
 
     addAsyncThunkCases(fetchGetFolder, (state, action) => {
       state.folders = [...action.payload];
@@ -563,22 +593,22 @@ export const FoldersSlice = createSlice({
     builder.addCase(fetchGetMoverShowMore.rejected, (state) => {
       state.loading = "failed";
     });
-    addAsyncThunkCases(fetchRecover, () => { });
+    addAsyncThunkCases(fetchRecover, () => {});
 
-    addAsyncThunkCases(fetchRenameFile, () => { });
+    addAsyncThunkCases(fetchRenameFile, () => {});
 
-    addAsyncThunkCases(fetchCreateSubfolder, () => { });
+    addAsyncThunkCases(fetchCreateSubfolder, () => {});
 
     addAsyncThunkCases(fetchGetFoldersFiles, (state, action) => {
       state.foldersForPagckage = [...action.payload.folders];
       state.filesForPackage = [...action.payload.files];
     });
 
-    addAsyncThunkCases(fetchRenameFodler, () => { });
+    addAsyncThunkCases(fetchRenameFodler, () => {});
 
-    addAsyncThunkCases(fetchColorFolder, () => { });
+    addAsyncThunkCases(fetchColorFolder, () => {});
 
-    addAsyncThunkCases(fetchDeleteFolder, () => { });
+    addAsyncThunkCases(fetchDeleteFolder, () => {});
   },
 });
 

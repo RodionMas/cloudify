@@ -2,7 +2,6 @@ import { forwardRef } from "react";
 import ReactDOM from "react-dom";
 import style from "./DotsBlok.module.css";
 import Forward from "../../../../../../assets/img/dots/Forward.png";
-import download from "../../../../../../assets/img/dots/Download.png";
 import Label from "../../../../../../assets/img/dots/PriceTag.png";
 import Rename from "../../../../../../assets/img/dots/EditFile.png";
 import Delete from "../../../../../../assets/img/dots/TrashCan.png";
@@ -16,10 +15,6 @@ interface DotsBlokProps {
 
 const DotsBlok = forwardRef<HTMLDivElement, DotsBlokProps & any>(({setHiddenDotsMenu, position, name }, ref) => {
   const dots = [
-    {
-      name: "Download",
-      image: download,
-    },
     {
       name: "Label",
       image: Label,

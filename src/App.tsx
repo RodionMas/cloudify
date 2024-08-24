@@ -1,7 +1,7 @@
 import React, { Suspense } from "react";
 import style from "./App.module.css";
 import AuthFolder from "./components/AuthFolder/AuthFolder";
-import { Route, Routes, Navigate, useNavigate } from "react-router-dom";
+import { Route, Routes, Navigate } from "react-router-dom";
 import NonAuth from "./components/AuthFolder/NonAuth/NonAuth";
 import { useSelector } from "react-redux";
 import { selectAuth, selectFolders } from "./selectors/selectors";
@@ -17,11 +17,7 @@ const App: React.FC = () => {
   const { isAuth } = useSelector(selectAuth);
   const appDispatch = useAppDispatch();
   const { loading } = useAppSelector(selectFolders);
-  const navigatePath = useNavigate();
   const AllFiles = lazy(() => import("./components/Home/AllFiles/AllFiles"));
-  // const FolderFiles = lazy(
-  //   () => import("./components/Home/FolderFiles/FolderFiles")
-  // );
   const DeletedPage = lazy(
     () => import("./components/Home/DeletedPage/DeletedPage")
   );
@@ -32,9 +28,6 @@ const App: React.FC = () => {
 
   React.useEffect(() => {
     appDispatch(fetchGetMe());
-    if (!isAuth) {
-      navigatePath("/");
-    }
   }, [appDispatch]);
   return (
     <div className={isAuth ? style.wrapperHome : style.wrapperAuth}>

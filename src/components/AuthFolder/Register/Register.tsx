@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 const Register: React.FC = () => {
   const appDispatch = useAppDispatch();
   const errReducer = useAppSelector(selectAuth).err;
-  let userRegister = useAppSelector(selectAuth).userRegister;
+  // let {userRegister} = useAppSelector(selectAuth);
   const navigate = useNavigate();
   type Inputs = {
     username: string | undefined;
