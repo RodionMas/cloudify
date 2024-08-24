@@ -40,7 +40,6 @@ const BtnShowMore: React.FC<any> = React.memo(
     
       try {
         const pathDownload = `${refreshPath()}%2F${props.filename}`
-        console.log(props)
         const response = await axios.get(`/files/download?fileName=${!refreshPath() ? props.filePath + '%2F' + props.filename : pathDownload}`, {
           headers: {
             'Content-Type': 'application/octet-stream',

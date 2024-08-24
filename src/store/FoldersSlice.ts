@@ -65,7 +65,6 @@ export const fetchDrop = createAsyncThunk<string, any, { rejectValue: string }>(
       });
       return data;
     } catch (error: any) {
-      console.log(error)
       return rejectWithValue(error.response.data.message);
     }
   }

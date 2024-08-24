@@ -42,8 +42,6 @@
 /* Для hover */
 
 .wrapperColors {
-  width: 228px;
-  height: 94px;
   position: absolute;
   box-sizing: border-box;
   border: 1px solid rgba(144, 144, 144, 0.2);
@@ -69,6 +67,9 @@
   border-radius: 50%;
 }
 .colorsBox {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+grid-template-columns: repeat(5, 1fr);
+grid-template-rows: repeat(2, 1fr);
+grid-column-gap: 10px;
+grid-row-gap: 10px;
 }
