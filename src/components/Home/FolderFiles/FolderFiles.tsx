@@ -30,6 +30,7 @@ const FolderFiles: React.FC = () => {
   const [sortArrow, setSortArrow] = React.useState(0);
   const [rotateArrow, setRotateArrow] = React.useState(false);
   const { colorForFolder } = useAppSelector(selectFolders);
+  const { colorForSubfolder } = useAppSelector(selectSubfolders)
   const { subfoldersURL } = useAppSelector(selectSubfolders);
   const dispatch = useAppDispatch();
 
@@ -109,7 +110,7 @@ const FolderFiles: React.FC = () => {
           </div>
           <div className={style.allFiles}>
             <div
-              style={{ backgroundColor: colorForFolder }}
+              style={{ backgroundColor: colorForFolder ? colorForFolder : colorForSubfolder}}
               className={style.color}
             ></div>
             <div className={style.sortBy}>

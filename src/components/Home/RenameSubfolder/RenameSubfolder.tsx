@@ -49,12 +49,10 @@ const RenameSubfolder: React.FC = () => {
         (subfolder: Subfolder) => subfolder.name !== lastPart
       );
       if (check) {
-        console.log(check)
         await dispatch(fetchRenameSubfolder(renameSubfolder));
         await dispatch(fetchGetFoldersFiles(foldername));
         dispatch(changeModal());
       } else {
-        console.log(check)
         setCheckMessage(true);
       }
     } catch (error) {

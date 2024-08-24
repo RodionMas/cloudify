@@ -65,7 +65,8 @@ export const fetchDrop = createAsyncThunk<string, any, { rejectValue: string }>(
       });
       return data;
     } catch (error: any) {
-      return rejectWithValue(error.message);
+      console.log(error)
+      return rejectWithValue(error.response.data.message);
     }
   }
 );
@@ -302,7 +303,7 @@ const handleRejected = (
   state: FoldersTypeState,
   action: PayloadAction<string | undefined>
 ) => {
-  state.err = action.payload ?? "Something went wrong";
+  state.err = action.payload ?? "File size exceeds the maximum limit.";
   state.loading = "failed";
 };
 
@@ -602,6 +603,7 @@ export const FoldersSlice = createSlice({
     addAsyncThunkCases(fetchGetFoldersFiles, (state, action) => {
       state.foldersForPagckage = [...action.payload.folders];
       state.filesForPackage = [...action.payload.files];
+      state.colorForFolder = action.payload.color;
     });
 
     addAsyncThunkCases(fetchRenameFodler, () => {});

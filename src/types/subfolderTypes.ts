@@ -6,6 +6,7 @@ export interface SubfolderState {
   subfoldersForPackage: string[];
   subfilesForPackage: FilesForPackageType[];
   subfoldersURL: string;
+  colorForSubfolder: string;
 }
 export interface RenameSubfolderType {
   oldName: string;

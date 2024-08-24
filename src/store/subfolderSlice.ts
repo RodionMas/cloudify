@@ -54,6 +54,7 @@ const initialState: SubfolderState = {
   subfoldersForPackage: [],
   subfilesForPackage: [],
   subfoldersURL: '',
+  colorForSubfolder: '',
 };
 
 const handlePending = (state: SubfolderState) => {
@@ -164,6 +165,7 @@ export const subfolderSlice = createSlice({
     addAsyncThunkCases(FetchsubfoldersPackage, (state, action) => {
       state.subfoldersForPackage = [...action.payload.folders];
       state.subfilesForPackage = [...action.payload.files];
+      state.colorForSubfolder = action.payload.color;
     });
   },
 });
